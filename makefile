@@ -4,13 +4,14 @@ CC = cc
 CFLAGS = -Wall -Wextra -pedantic
 LIBS = -lreadline
 LIBFT = includes/libft/libft.a
+PRINTF = includes/printf/libftprintf.a
 
 SRC = src/main.c
 OBJ = $(SRC:.c=.o)
 
 all: $(NAME)
 
-$(NAME): $(OBJ) $(LIBFT)
+$(NAME): $(OBJ) $(LIBFT) $(PRINTF)
 	$(CC) $(CFLAGS) $^ -o $@ $(LIBS)
 
 %.o: %.c
@@ -18,7 +19,8 @@ $(NAME): $(OBJ) $(LIBFT)
 
 $(LIBFT):
 	$(MAKE) -C includes/libft
-
+$(PRINTF) :
+	$(MAKE) -C includes/printf
 clean:
 	rm -f $(OBJ)
 	$(MAKE) -C includes/libft clean

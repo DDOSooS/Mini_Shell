@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   mshell.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aghergho <aghergho@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: aghergho <aghergho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/06 16:01:09 by aghergho          #+#    #+#             */
-/*   Updated: 2024/05/07 10:21:24 by aghergho         ###   ########.fr       */
+/*   Updated: 2024/05/07 14:25:53 by aghergho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,6 @@ typedef struct mshell
  t_env      *env;
  t_history  *history;
  int        exit_value;
- 
-}
+} t_mshell;
 
 #endif
