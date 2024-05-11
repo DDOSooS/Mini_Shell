@@ -6,7 +6,7 @@ LIBS = -lreadline
 LIBFT = includes/libft/libft.a
 PRINTF = includes/printf/libftprintf.a
 
-SRC = src/main.c
+SRC = src/main.c src/parsing/syntax-error.c
 OBJ = $(SRC:.c=.o)
 
 all: $(NAME)
