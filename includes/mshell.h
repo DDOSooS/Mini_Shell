@@ -6,7 +6,7 @@
 /*   By: aghergho <aghergho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/06 16:01:09 by aghergho          #+#    #+#             */
-/*   Updated: 2024/05/11 08:48:36 by aghergho         ###   ########.fr       */
+/*   Updated: 2024/05/11 20:13:24 by aghergho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,6 +96,7 @@ typedef struct mshell
     minishell_functions
 */
 int ft_check_syntax(char *cmd_line);
+
 // void ft_parse_input(char *cmd);
 
 #endif

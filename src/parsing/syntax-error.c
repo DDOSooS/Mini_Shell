@@ -6,7 +6,7 @@
 /*   By: aghergho <aghergho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/10 18:51:59 by aghergho          #+#    #+#             */
-/*   Updated: 2024/05/11 20:04:43 by aghergho         ###   ########.fr       */
+/*   Updated: 2024/05/11 20:23:17 by aghergho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -336,7 +336,10 @@ int ft_check_closed_parenthise(char *cmd_line)
             closed_parenth++;
     }
     if (closed_parenth)
+    {
+        ft_printf("parenthisec are not closed correctly");
         return (0);
+    }
     return (1);
 }
 
@@ -359,7 +362,7 @@ int ft_check_empty_parenthise(char *cmd_line)
         }
         i++;
     }
-    return (0);
+    return (1);
 }
 
 int ft_check_parenthise_error(char *cmd_line)
@@ -369,8 +372,26 @@ int ft_check_parenthise_error(char *cmd_line)
     return (1);
 }
 
+int ft_check_empty_command(char *cmd_line)
+{
+    int i;
+    int len;
+
+    i = 0;
+    len = ft_strlen(cmd_line);
+    while (i < len && is_whites_space(cmd_line[i]))
+        i++;
+    if (i == len)
+        return (1);
+    return (0);
+}
+
 int ft_check_syntax(char *cmd_line)
 {
+    if (!ft_strlen(cmd_line))
+        return (1);
+    if (ft_check_empty_command(cmd_line))
+        return (1);
     if (ft_check_pipe_error(cmd_line) || ft_check_quote_error(cmd_line)
         || !ft_check_redirection_error(cmd_line) || !ft_check_parenthise_error(cmd_line))
         exit(EXIT_FAILURE);
