@@ -6,7 +6,7 @@
 /*   By: aghergho <aghergho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/06 16:01:09 by aghergho          #+#    #+#             */
-/*   Updated: 2024/05/11 20:13:24 by aghergho         ###   ########.fr       */
+/*   Updated: 2024/05/14 18:00:38 by aghergho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,12 +51,10 @@ typedef struct cmd
 {
     char            *cmd;
     char            **args;
-    char            *in_file;
-    char            *out_file;
-    char            *err_file;
     int             is_herdoc;
     int             check_operation;
     int             check_wildcard;
+    int             in_group;
     struct  cmd     *next;
 } t_cmd;
 
@@ -66,20 +64,31 @@ typedef struct cmd_table
     struct  cmd_table   *next;
 } cmd_table;
 
+typedef struct redirection
+{
+    char                    *in_file;
+    char                    *out_file;
+    int                     mode;
+    struct redirection*     next;
+} t_redirection;
+
 enum TokenType
 {
-    TOKEN_WORD,
+    TOKEN_WORD ,
     TOKEN_PIPE,
-    TOKEN_REDIRECTION,
-    TOKEN_REDIRECT_APPEND,
+    TOKEN_IN_REDIRECTION,
+    TOKEN_OUT_REDIRECTION,
     TOKEN_LOGICAL_OPERATOR,
-    TOKEN_PARENTHISE
+    TOKEN_L_PARENTHISE,
+    TOKEN_R_PARENTHISE
+    
 } ;
 
 typedef struct token
 {
-    enum TokenType     type;
+    char            *type;
     char            *value;
+    int             t_number;
     struct token    *next;
 }t_token;
 
@@ -95,8 +104,20 @@ typedef struct mshell
 /*
     minishell_functions
 */
+t_token *ft_tokinizer(char *cmd_line);
 int ft_check_syntax(char *cmd_line);
-
+int in_redirection(char c);
+int out_redirection(char c);
+int is_pipe(char c);
+int is_operator(char c);
+int is_r_parenthise(char c);
+int is_l_parenthise(char c);
+int is_whites_space(char c);
+int is_charachter(char c);
+int ft_check_quote(char *cmd_line, int len);
+int is_single_quote(char c);
+int is_double_quote(char c);
+int is_quote(char c);
 // void ft_parse_input(char *cmd);
 
 #endif

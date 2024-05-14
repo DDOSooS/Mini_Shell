@@ -6,7 +6,7 @@
 /*   By: aghergho <aghergho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/10 18:51:59 by aghergho          #+#    #+#             */
-/*   Updated: 2024/05/11 20:23:17 by aghergho         ###   ########.fr       */
+/*   Updated: 2024/05/13 14:01:16 by aghergho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,27 @@ int is_l_parenthise(char c)
 int is_whites_space(char c)
 {
     if (c == ' ' || c == '\t')
+        return (1);
+    return (0);
+}
+
+int is_quote(char c)
+{
+    if (is_double_quote(c) || is_single_quote(c))
+        return (1);
+    return (0);
+}
+
+int is_single_quote(char c)
+{
+    if (c == 39)
+        return (1);
+    return (0);
+}
+
+int is_double_quote(char c)
+{
+    if (c == 34)
         return (1);
     return (0);
 }
@@ -125,9 +146,12 @@ int ft_check_operator_sequence(char *cmd_line)
     {
         if (cmd_line[i] == '&' && cmd_line[i + 1] && cmd_line[i + 1] == '&'
             && cmd_line[i + 2] && cmd_line[i + 2] == '&' && !ft_check_quote(cmd_line, i))
-        return (1);
-		if (cmd_line[i] == '&' && cmd_line[i + 1] && !is_operator(cmd_line[i + 1]))
-			return (1);
+            return (1);
+		if (cmd_line[i] == '&' && !is_operator(cmd_line[i - 1]) && !is_operator(cmd_line[i + 1]))
+		{
+            // ft_printf("errors comes from here | %c | %c\n", cmd_line[i], cmd_line[i - 1]);
+            return (1);
+        }
         i++;
     }
     return (0);
@@ -142,17 +166,17 @@ int ft_check_pipe_error(char *cmd)
 	len = ft_strlen(cmd);
 	while ( i < len && (cmd[i] == ' ' || cmd[i] == '\t'))
 			i++;
-		if (cmd[i] && ((cmd[i] == '&' && cmd[i + 1] == '&')
-			|| (cmd[len - 1] == '&' && cmd[len - 2] == '&')))
-			return (perror("parse error near `&&'"),1);
-		if (cmd[i] && ((cmd[i] == '|' && cmd[i + 1] == '|')
-			|| (cmd[len - 1] == '|' && cmd[len - 2] == '|')))
-			return (perror("parse error near `||'"),1);
-		if (cmd[i] && (cmd[i] == '|'  ||  cmd[len - 1] == '|' || ft_check_pipe_sequence(cmd)))
-			return (perror("parse error near `|'"),1);
-        if (cmd[i] && (cmd[i] == '&'  ||  cmd[len - 1] == '&' || ft_check_operator_sequence(cmd)))
-			return (perror("parse error near `&'"),1);
-		i++;
+    if (cmd[i] && ((cmd[i] == '&' && cmd[i + 1] == '&')
+        || (cmd[len - 1] == '&' && cmd[len - 2] == '&')))
+        return (perror("parse error near `&&'"),1);
+    if (cmd[i] && ((cmd[i] == '|' && cmd[i + 1] == '|')
+        || (cmd[len - 1] == '|' && cmd[len - 2] == '|')))
+        return (perror("parse error near `||'"),1);
+    if (cmd[i] && (cmd[i] == '|'  ||  cmd[len - 1] == '|' || ft_check_pipe_sequence(cmd)))
+        return (perror("parse error near `|'"),1);
+    if (cmd[i] && (cmd[i] == '&'  ||  cmd[len - 1] == '&' || ft_check_operator_sequence(cmd)))
+        return (perror("parse error near `&'"),1);
+    i++;
     ft_printf("===> pipe test pass successfully\n");
 	return (0);
 }
@@ -388,9 +412,7 @@ int ft_check_empty_command(char *cmd_line)
 
 int ft_check_syntax(char *cmd_line)
 {
-    if (!ft_strlen(cmd_line))
-        return (1);
-    if (ft_check_empty_command(cmd_line))
+    if (!ft_strlen(cmd_line) || ft_check_empty_command(cmd_line))
         return (1);
     if (ft_check_pipe_error(cmd_line) || ft_check_quote_error(cmd_line)
         || !ft_check_redirection_error(cmd_line) || !ft_check_parenthise_error(cmd_line))

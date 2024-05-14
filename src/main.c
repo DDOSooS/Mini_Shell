@@ -6,7 +6,7 @@
 /*   By: aghergho <aghergho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/06 16:02:56 by aghergho          #+#    #+#             */
-/*   Updated: 2024/05/11 08:46:33 by aghergho         ###   ########.fr       */
+/*   Updated: 2024/05/14 14:24:40 by aghergho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,23 +28,29 @@ void	var_dump(char **str)
 		i++;
 	}
 }
+
+void	var_dump_token(t_token *tokens)
+{
+	while (tokens)
+	{
+		ft_printf("==type===%s-----\n",tokens->type);
+		ft_printf("===value==%s\n================\n",tokens->value);
+		tokens = tokens->next;
+	}
+	
+}
 int main()
 {
 	char	*cmd_line;
-	
+	t_token *tokens;
 	while (1)
 	{
 			cmd_line = readline("minishell ;)>  ");
-			// ft_printf("%s\n", cmd_line);
-			// char **args = ft_split(cmd_line, '|');
-			// var_dump(args);
-			// ft_parse_input(cmd_line);
 			ft_check_syntax(cmd_line);
+			tokens = ft_tokinizer(cmd_line);
+			var_dump_token(tokens);
 			if (ft_strcmp(cmd_line, "exit") == 0)
-			{
-				free(cmd_line);
-				return (0);
-			}
+				return (free(cmd_line),0);
 			free(cmd_line);
 	}
     return (0);
