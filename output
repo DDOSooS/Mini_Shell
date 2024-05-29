@@ -1,3 +1,16 @@
+cmd.txt
+in
+includes
+makefil
+makefile
+minishell
+ou1
+out
+outp
+output
+src
+subject
+test
 NAME = minishell
 
 CC = cc

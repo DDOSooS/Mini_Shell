@@ -1,0 +1,14 @@
+total 84
+drwxr-xr-x 7 aghergho candidates  4096 May 25 16:16 .
+drwxr-xr-x 3 aghergho candidates  4096 May  7 12:51 ..
+-rw-r--r-- 1 aghergho candidates   447 May 23 19:07 cmd.txt
+drwxr-xr-x 8 aghergho candidates  4096 May 24 12:45 .git
+-rw-r--r-- 1 aghergho candidates     0 May 25 16:16 in
+drwxr-xr-x 5 aghergho candidates  4096 May  7 12:51 includes
+-rw-r--r-- 1 aghergho candidates   640 May 24 20:57 makefile
+-rwxr-xr-x 1 aghergho candidates 40624 May 25 14:36 minishell
+-rw-r--r-- 1 aghergho candidates     0 May 25 16:16 out
+-rw-r--r-- 1 aghergho candidates  1853 May 25 16:02 output
+drwxr-xr-x 3 aghergho candidates  4096 May 25 14:33 src
+drwxr-xr-x 2 aghergho candidates  4096 May  7 12:51 subject
+drwxr-xr-x 2 aghergho candidates  4096 May  7 12:51 .vscode

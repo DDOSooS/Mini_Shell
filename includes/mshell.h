@@ -6,7 +6,7 @@
 /*   By: aghergho <aghergho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/06 16:01:09 by aghergho          #+#    #+#             */
-/*   Updated: 2024/05/14 18:00:38 by aghergho         ###   ########.fr       */
+/*   Updated: 2024/05/29 19:43:44 by aghergho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,9 +19,8 @@
 #include <readline/readline.h>
 #include <readline/history.h>
 #include "./libft/libft.h"
-#include "./printf/ft_printf.h"
-
-
+#include "./printf/ft_printf.h" 
+#include <stdio.h>
 /*
     get_next_line functions declaration
 */
@@ -32,6 +31,13 @@ char	*str_sub(char *str, int len);
 /*
     end of gnl funtion's declaration
 */
+typedef struct token
+{
+    char            *type;
+    int             typeId;
+    char            *value;
+    struct token    *next;
+}   t_token;
 
 typedef struct  env
 {
@@ -49,28 +55,47 @@ typedef struct history
 
 typedef struct cmd
 {
-    char            *cmd;
-    char            **args;
-    int             is_herdoc;
-    int             check_operation;
+    char            *arg;
     int             check_wildcard;
-    int             in_group;
-    struct  cmd     *next;
+    struct cmd      *next;
 } t_cmd;
 
-typedef struct cmd_table
+typedef struct infile
 {
-    t_cmd                *cmd;
-    struct  cmd_table   *next;
-} cmd_table;
+    int             is_herdoc;
+    char            *filename;
+    int             mode;
+    struct infile   *next;
+}   t_infile;
+
+typedef struct outfile
+{
+    char                *filename;
+    int                 mode;
+    struct outfile      *next;
+}   t_outfile;
 
 typedef struct redirection
 {
-    char                    *in_file;
-    char                    *out_file;
-    int                     mode;
-    struct redirection*     next;
+    t_infile        *in_file;
+    t_outfile        *out_file;
 } t_redirection;
+
+typedef struct treeNode
+{
+    int                 node_type;
+    // char             *cmd;
+    t_cmd            *cmd;
+    t_redirection       *redirection;
+    struct treeNode     *t_left;
+    // struct treeNode     *t_parent;
+    struct treeNode     *t_right;
+}   t_tnode;
+
+// typedef struct tree
+// {
+//     t_tnode **root;
+// }   Tree;
 
 enum TokenType
 {
@@ -81,16 +106,7 @@ enum TokenType
     TOKEN_LOGICAL_OPERATOR,
     TOKEN_L_PARENTHISE,
     TOKEN_R_PARENTHISE
-    
 } ;
-
-typedef struct token
-{
-    char            *type;
-    char            *value;
-    int             t_number;
-    struct token    *next;
-}t_token;
 
 
 typedef struct mshell
@@ -100,10 +116,29 @@ typedef struct mshell
  int        exit_value;
 } t_mshell;
 
-
 /*
     minishell_functions
 */
+void	varDumpOutFile(t_outfile *redirection);
+
+void	varDumpInFile(t_infile *redirection);
+int ftGetTokenId(char *token);
+int ft_check_and_operator(t_token *token);
+int ft_check_or_operator(t_token *token);
+void ft_parse_ast(t_tnode **root, t_token **tokens);
+int is_append(char *cmd);
+int is_herdoc(char *cmd);
+int is_redirection(char c);
+int is_character(char c);
+t_token *ft_tokinizer(char *cmd);
+int is_closed_parenthise(char *cmd_line, int len);
+// void ft_parse_ast(Tree **root, t_token *tokens);
+int is_doubled_token(char *cmd);
+int is_herapp_redirection(char *cmd);
+int is_logical_operator(char *cmd);
+int is_herdoc(char *cmd);
+int is_append(char *cmd);
+void	var_dump_token(t_token *tokens);
 t_token *ft_tokinizer(char *cmd_line);
 int ft_check_syntax(char *cmd_line);
 int in_redirection(char c);
@@ -119,5 +154,4 @@ int is_single_quote(char c);
 int is_double_quote(char c);
 int is_quote(char c);
 // void ft_parse_input(char *cmd);
-
 #endif
