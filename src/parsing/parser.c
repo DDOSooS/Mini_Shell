@@ -6,7 +6,7 @@
 /*   By: aghergho <aghergho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/11 20:05:21 by aghergho          #+#    #+#             */
-/*   Updated: 2024/05/29 19:42:43 by aghergho         ###   ########.fr       */
+/*   Updated: 2024/05/30 17:49:37 by aghergho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -280,20 +280,27 @@ t_redirection *ftGetRedirection(t_token *token)
 
     while (token)
     {
-        // ft_printf("----token->type --- (%d)-----\n\n", token->typeId);
-
-        if (token->typeId >= 1 && token->typeId <= 3)
+        if ((token->typeId >= 1 && token->typeId <= 3) || token->typeId == 5)
             break;
         if (token->typeId >= 6 && token->typeId <= 9)
         {
             ftAddRedirection(&redirection , token);
-            // ft_printf("------done-----\n");
             token = token->next;
         }
         token = token->next;
     }
-    // ft_printf("------done redirection-----\n");
     return (redirection);
+}
+
+int is_parenthise_redirection(t_token *tokens)
+{
+	while (tokens)
+	{
+		if (tokens->typeId == 5)
+			return (1);
+		tokens = tokens->next;
+	}
+	return (0);
 }
 
 t_tnode	*ft_new_tnode(int n_type, t_token *tokens)
@@ -309,10 +316,19 @@ t_tnode	*ft_new_tnode(int n_type, t_token *tokens)
 	new->node_type = n_type;
 	new->t_right = NULL;
 	new->t_left = NULL;
+	new->t_parent = NULL;
 	if (n_type)
 	{
 		new->cmd = NULL;
-		new->redirection = NULL;
+		if (is_parenthise_redirection(tokens))
+		{
+			ft_printf("yes>>>>>>>>>>>>>>>>>>>>>>there is<<<<<<<\n");
+			while (tokens && tokens->typeId != 5)
+				tokens = tokens->next;
+			new->redirection = ftGetRedirection(tokens->next);
+		}
+		else
+			new->redirection = NULL;
 	}
 	else
 	{
@@ -437,7 +453,7 @@ void	ft_parse_or_operator(t_tnode **root, t_token **tokens)
 	// var_dump_token(tmp->next);
 	// ft_printf("<><><><><><><><><><><>)(())(())(())(<><><><><><><><><><><>\n");
 	// ft_printf("====parese or tokens--------(%d)==========\n", new->node_type);
-	// new->t_parent = *root;
+	new->t_parent = *root;
 	// ft_printf("=========================================================\n");
 	// var_dump_token(tmp->next);
 	// ft_printf("==========================================================\n");
@@ -498,13 +514,17 @@ void	ft_parse_cmd(t_tnode **root, t_token **tokens)
 	// 	return (ft_free_mshell());
 	// var_dump_token(*tokens);
 	if (!*root)
+	{
 		*root = new;
+		return ;
+	}
 	else
 	{
 		if 	(!(*root)->t_left)
 			(*root)->t_left = new;
 		else
 			(*root)->t_right = new;
+		new->t_parent = *root;
 	}
 	// ft_printf("=========================================================\n");
 	// // var_dump_token(tmp->next);
@@ -532,10 +552,8 @@ void ft_parse_ast(t_tnode **root, t_token **tokens)
 			return (ft_parse_pipe(root, tokens));
 		if (ft_check_parenthises(tmp))
 		{
-			// ft_printf("ther is a left_prenthise\n");
 			return (ft_parse_parenthise(root, tokens));
 		}
-		// ft_printf("printf ==rotttttt(%d) cmd_parsing===\n", (*root)->node_type);
 		return ft_parse_cmd(root, tokens);
 		tmp = tmp->next;
 	}

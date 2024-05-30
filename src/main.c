@@ -6,7 +6,7 @@
 /*   By: aghergho <aghergho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/06 16:02:56 by aghergho          #+#    #+#             */
-/*   Updated: 2024/05/29 19:58:11 by aghergho         ###   ########.fr       */
+/*   Updated: 2024/05/30 18:02:51 by aghergho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,45 +81,43 @@ void var_dump_tree(t_tnode *tree)
     if (tree)
     {
         ft_printf("\n|\n|==================>((N_TYPE))(%d)=============>)\n", tree->node_type);
-
         var_dump_cmd(tree->cmd);
-
+		if (tree->t_parent)
+		{
+			if (tree->t_parent->redirection)
+			{
+				ft_printf("=================parent redirection ()*)*)*)*)(*)*)*)=======\n\n");
+				varDumpInFile(tree->t_parent->redirection->in_file);
+				varDumpOutFile(tree->t_parent->redirection->out_file);
+				ft_printf("==========END=======parent redirection ()*)*)*)*)(*)*)*)=======\n\n");
+			}
+			else
+				ft_printf("=================parent redirection NUUUUUUUUUULLLLLLLLLLLLLLLLLLL ()*)*)*)*)(*)*)*)=======\n\n");
+				
+		}
+		else
+			ft_printf("there's no parent=======[<><><><><><<><>><<<<<<<><><><><<>><><><><><><>]\n");
+		
         if (tree->redirection)
         {
             if (tree->redirection->in_file)
-            {
-                // ft_printf("there is an infile=====================\n");
                 varDumpInFile(tree->redirection->in_file);
-            }
             else
-            {
                 ft_printf(";((((((  there isn't an infile=====================\n");
-            }
-
             if (tree->redirection->out_file)
-            {
-                // ft_printf("there is an outfile=====================\n");
                 varDumpOutFile(tree->redirection->out_file);
-            }
             else
-            {
                 ft_printf(";((((((  there isn't an outfile=====================\n");
-            }
         }
         else
-        {
             ft_printf(";((((((  redirection is NULL=====================\n");
-        }
-
         if (tree->t_left)
         {
             ft_printf("\n|_____________>left");
             var_dump_tree(tree->t_left);	
         }
         else
-        {
             ft_printf("\n|---------->left NULL");
-        }
 
         if (tree->t_right)
         {
@@ -127,9 +125,7 @@ void var_dump_tree(t_tnode *tree)
             var_dump_tree(tree->t_right);
         }
         else
-        {
             ft_printf("\n|----------->right (NULL)\n");
-        }
     }
 }
 

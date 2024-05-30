@@ -6,7 +6,7 @@
 /*   By: aghergho <aghergho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/06 16:01:09 by aghergho          #+#    #+#             */
-/*   Updated: 2024/05/29 19:43:44 by aghergho         ###   ########.fr       */
+/*   Updated: 2024/05/30 16:39:20 by aghergho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,7 +88,7 @@ typedef struct treeNode
     t_cmd            *cmd;
     t_redirection       *redirection;
     struct treeNode     *t_left;
-    // struct treeNode     *t_parent;
+    struct treeNode     *t_parent;
     struct treeNode     *t_right;
 }   t_tnode;
 
