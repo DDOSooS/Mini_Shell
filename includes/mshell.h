@@ -6,7 +6,11 @@
 /*   By: aghergho <aghergho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/06 16:01:09 by aghergho          #+#    #+#             */
+<<<<<<< Updated upstream
 /*   Updated: 2024/05/30 16:39:20 by aghergho         ###   ########.fr       */
+=======
+/*   Updated: 2024/05/29 20:51:27 by mkartit          ###   ########.fr       */
+>>>>>>> Stashed changes
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +22,9 @@
 #include <errno.h>
 #include <readline/readline.h>
 #include <readline/history.h>
+#include <sys/wait.h>
+#include <string.h>
+#include <signal.h>
 #include "./libft/libft.h"
 #include "./printf/ft_printf.h" 
 #include <stdio.h>
@@ -119,6 +126,7 @@ typedef struct mshell
 /*
     minishell_functions
 */
+/*================ Parsing =================*/
 void	varDumpOutFile(t_outfile *redirection);
 
 void	varDumpInFile(t_infile *redirection);
@@ -154,4 +162,8 @@ int is_single_quote(char c);
 int is_double_quote(char c);
 int is_quote(char c);
 // void ft_parse_input(char *cmd);
+
+/*================= execution ===============*/
+void ft_execute_tree(t_tnode *root, char **env);
+void ignore_signals();
 #endif

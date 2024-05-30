@@ -192,13 +192,18 @@ void	ft_free_tree(t_tnode **tree)
 	}
 }
  
-int main()
+int main(int ac, char **av, char **env)
 {
 	char	*cmd_line;
 	t_token *tokens;
 	t_tnode	*cmd_tree;
 	
 	cmd_tree = NULL;
+	/*
+		cntl + c signal handler - new prompt in and new line
+		cntl + \ signal handler - do nothing
+	*/
+	ignore_signals();
 	while (1)
 	{
 			cmd_line = readline("minishell ;)>  ");
@@ -208,6 +213,8 @@ int main()
 			var_dump_token(tokens);
 			ft_parse_ast(&cmd_tree, &tokens);		
 			var_dump_tree(cmd_tree);
+			ft_execute_tree(cmd_tree, env);
+			add_history(cmd_line);
 			if (ft_strcmp(cmd_line, "exit") == 0)
 				return (free(cmd_line),0);
 			free(cmd_line);
