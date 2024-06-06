@@ -12,6 +12,8 @@ SRC = src/main.c\
 		src/parsing/parser.c\
 		src/execution/execute.c\
 		src/execution/signals.c\
+		src/execution/environ.c\
+		src/execution/history.c\
 
 OBJ = $(SRC:.c=.o)
 

@@ -12,8 +12,6 @@
 
 # include "../includes/mshell.h"
 
-
-
 /*
 	@var_dump function is a function that debug double 2d char variable
 */
@@ -191,11 +189,12 @@ void	ft_free_tree(t_tnode **tree)
 		}
 	}
 }
- 
+
 int main(int ac, char **av, char **env)
 {
 	char	*cmd_line;
 	t_env	*env_list;
+	t_history *history;
 	t_token *tokens;
 	t_tnode	*cmd_tree;
 	
@@ -209,29 +208,39 @@ int main(int ac, char **av, char **env)
 		Extract env variables from envp
 	*/
 	env_list = extarct_env(env);
-	while (env_list)
-	{
-		ft_printf("key: %s\n", env_list->key);
-		ft_printf("value: %s\n", env_list->value);
-		env_list = env_list->next;
-	}
+	/*
+		Extract history from history file
+	*/
+	// while(env_list)
+	// {
+	// 	ft_printf("key: %s\n", env_list->key);
+	// 	ft_printf("value: %s\n", env_list->value);
+	// 	env_list = env_list->next;
+	// }
+	history = malloc(sizeof(t_history));
 	while (1)
 	{
+		if (isatty(STDIN_FILENO))
 			cmd_line = readline("minishell ;)>  ");
-			if (cmd_line == NULL)
-				return (0);
-			ft_check_syntax(cmd_line);
-			tokens = ft_tokinizer(cmd_line);
-			ft_printf("==============first token format===============\n\n");
-			var_dump_token(tokens);
-			ft_parse_ast(&cmd_tree, &tokens);		
-			var_dump_tree(cmd_tree);
-			ft_execute_tree(cmd_tree, env);
-			add_history(cmd_line);
-			if (ft_strcmp(cmd_line, "exit") == 0)
-				return (free(cmd_line),0);
-			free(cmd_line);
-			ft_free_tree(&cmd_tree);
+		else
+			cmd_line = readline("");
+		if (cmd_line == NULL)
+			return (0);
+		ft_check_syntax(cmd_line);
+		tokens = ft_tokinizer(cmd_line);
+		// ft_printf("==============first token format===============\n\n");
+		var_dump_token(tokens);
+		ft_parse_ast(&cmd_tree, &tokens);		
+		var_dump_tree(cmd_tree);
+		printf("==============tree====================\n\n");
+		printf("TYPE %d\n", cmd_tree->node_type);
+		ft_execute_tree(cmd_tree, env_list);
+		put_tohistory(cmd_line, history);
+		add_history(cmd_line);
+		if (ft_strcmp(cmd_line, "exit") == 0)
+			return (free(cmd_line), 0);
+		free(cmd_line);
+		ft_free_tree(&cmd_tree);
 	}
     return (EXIT_SUCCESS);
 }

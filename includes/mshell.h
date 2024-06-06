@@ -6,11 +6,7 @@
 /*   By: aghergho <aghergho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/06 16:01:09 by aghergho          #+#    #+#             */
-<<<<<<< Updated upstream
-/*   Updated: 2024/05/30 16:39:20 by aghergho         ###   ########.fr       */
-=======
 /*   Updated: 2024/05/29 20:51:27 by mkartit          ###   ########.fr       */
->>>>>>> Stashed changes
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,7 +102,7 @@ typedef struct treeNode
 
 enum TokenType
 {
-    TOKEN_WORD ,
+    TOKEN_WOR ,
     TOKEN_PIPE,
     TOKEN_IN_REDIRECTION,
     TOKEN_OUT_REDIRECTION,
@@ -114,6 +110,12 @@ enum TokenType
     TOKEN_L_PARENTHISE,
     TOKEN_R_PARENTHISE
 } ;
+
+typedef struct builtin
+{
+    char   *name;
+    int     (*func)(t_cmd *cmd, t_env *env);
+} t_builtins;
 
 
 typedef struct mshell
@@ -164,6 +166,11 @@ int is_quote(char c);
 // void ft_parse_input(char *cmd);
 
 /*================= execution ===============*/
-void ft_execute_tree(t_tnode *root, char **env);
+void ft_execute_tree(t_tnode *root, t_env *env);
 void ignore_signals();
+t_env *extarct_env(char **envp);
+void put_tohistory(char *cmd, t_history *history);
+int find_env_rem(t_env *env, char *key);
+t_env *find_env(t_env *env, char *key);
+
 #endif
