@@ -6,7 +6,7 @@
 /*   By: aghergho <aghergho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/11 20:05:21 by aghergho          #+#    #+#             */
-/*   Updated: 2024/05/30 17:49:37 by aghergho         ###   ########.fr       */
+/*   Updated: 2024/06/07 22:26:08 by aghergho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,45 @@
     flag 3-> is pipe (&&)
 */
 
+
+char *ft_trim_quotes(char **file)
+{
+	char	*tmp;
+	char	*new;
+	
+	tmp  = *file;
+	new = ft_substr(tmp,1, ft_strlen(tmp) - 1);
+	free(*file);
+	*file = new;
+	return  (new);
+}
+
+void	ft_trim_quotes_outfile(t_outfile **root)
+{
+	t_outfile *tmp;
+	
+	tmp = *root;
+	while (tmp)
+	{
+		if (tmp->filename && is_double_quote(tmp->filename[0])  )
+			tmp->filename= ft_trim_quotes(&tmp->filename);
+		tmp = tmp->next;
+	}
+}
+
+void	ft_trim_quotes_infile(t_infile **root)
+{
+	t_infile *tmp;
+	
+	tmp = *root;
+	while (tmp)
+	{
+		if (tmp->filename && is_double_quote(tmp->filename[0]))
+			tmp->filename= ft_trim_quotes(&tmp->filename);
+		tmp = tmp->next;
+	}
+}
+ 
 int ft_check_operator(t_token *token)
 {
 	t_token *tmp;
@@ -163,6 +202,33 @@ int	ftAddCmd(t_cmd **cmd, char *str)
 	
 }
 
+int ft_add_to_cmd (t_cmd **root, char *token)
+{
+	char *cmd;
+	t_cmd	*tmp;
+	t_cmd	*new;
+	char	*tmp_token;
+	// int		start;
+
+	// start = ft_define_start()
+	tmp = *root;
+	cmd = ft_substr(token, 1, ft_strlen(token) - 2);
+	free(token);
+	new = malloc(sizeof(t_cmd));
+	new->arg = cmd;
+	new->check_wildcard = 0;
+	new->next = NULL;
+	if (!*root)
+	{
+		*root = new;
+		return (1);
+	}
+	while (tmp->next)
+		tmp = tmp->next;
+	tmp->next = new;
+	return (1);
+}
+
 t_cmd *ftGenCmd(t_token *tokens)
 {
 	int flag;
@@ -174,7 +240,9 @@ t_cmd *ftGenCmd(t_token *tokens)
 	{
 		if (!tokens->typeId && !flag)
 		{
-			if (!ftAddCmd(&cmd, tokens->value))
+			if (tokens->value[0] && is_double_quote(tokens->value[0]))
+				ft_add_to_cmd(&cmd, tokens->value);
+			else if (!ftAddCmd(&cmd, tokens->value))
 				return NULL;
 		}
 		if (tokens->typeId >=6 && tokens->typeId <=9)
@@ -198,7 +266,6 @@ int ftAddOutFile(t_outfile **root, t_token *token)
 	new->mode =token->typeId;
 	new->filename = ft_strdup( token->next->value);
 	new->next = NULL;
-	// printf("\n===in file=====tmp (%d) -- tmp->next(%s)=====\n", token->typeId, new->filename);
 	if (!*root)
 	{
 		*root = new;
@@ -303,13 +370,571 @@ int is_parenthise_redirection(t_token *tokens)
 	return (0);
 }
 
+int ft_count_non_expanded(char *token)
+{
+	int i;
+	int counter;
+
+	i = 0;
+	counter = 0;
+	ft_printf("===non expanded (%s)=======\n", token);
+	while (token[++i] && !ft_check_quote(token, i))
+		counter++;
+	counter -= 1;
+	return (counter);
+}
+
+
+int ft_check_env_var(char *str)
+{
+	t_env *tmp;
+
+	tmp = g_mshell.env;
+	ft_printf("=== expanded token (%s)====wydad===\n", str);
+	while (tmp)
+	{
+		if (!ft_strcmp(tmp->key, str))
+		{
+			printf("expande tokennn jjj:(%s)len (%d)<<<<<<\n", tmp->value, ft_strlen(tmp->value));
+			return (ft_strlen(tmp->value));
+		}
+		tmp = tmp->next;
+	}
+	return (0);
+}
+// int ft_search_expand_token(char *str, int len)
+// {
+// 	char *tmp;
+// 	int		counter;
+
+// 	ft_printf("===>>> search expanded token (%s)<<=(len)(%d)====\n", str, len);
+// 	counter = 0;
+// 	tmp = ft_substr(str, 0, len);
+// 	ft_printf("===>>> Substring str expanded token (%s)<<=====\n", tmp);
+// 	counter = ft_check_env_var(str);
+// 	free(tmp);
+// 	return (counter);
+// }
+
+int ft_count_number_len(pid_t number)
+{
+	int counter;
+
+	counter = 0;
+	while (number > 9)
+	{	
+		number = number / 10;
+		counter++;
+	}
+	counter++;
+	return (counter);
+}
+
+// /nfs/homes/aghergho
+//  laskjfdas$HOME'adfskl''dsaf'
+// laskjfdas/nfs/homes/agherghoadfskldsaf
+// int ft_count_expand_helper(char *str)
+// {
+// 	int i;
+// 	int counter;
+// 	int start;
+	
+// 	i = 0;
+// 	counter = 0;
+// 	ft_printf("========expander helper (%s)<<<<<<<<<<<<<<<<<\n", str);
+// 	if (str[1] && is_whites_space(str[1]))
+// 		return (1);
+// 	while (str[++i])
+// 	{
+// 		ft_printf("========expander helper[][][][][][][][] (%c)<<<<<<<<<<<<<<<<<\n", str[i]);
+// 		if (str[i] == '$')
+// 			return(ft_count_number_len(g_mshell.pid));
+// 		else
+// 		{
+// 			start = i;
+// 			while (str[i] && !is_whites_space(str[i]))
+// 				i++;
+// 			counter += ft_search_expand_token(&str[start], i - start);
+// 			start = 0;
+// 		}
+// 	}
+// 	return (counter);
+// }
+
+// int ft_count_expanded_token(char *token)
+// {
+// 	int i;
+// 	int counter;
+// 	int tmp;
+	
+// 	i = -1;
+// 	counter = 0;
+// 	while (token[++i])
+// 	{
+// 		if (token[i] != '$')
+// 		{
+// 			counter++;
+// 			continue;
+// 		}
+// 		if (token[i + 1] && !is_whites_space(token[i + 1]))
+// 		{
+		
+// 			tmp = ft_count_expand_helper(&token[i]);
+// 			counter += tmp;
+// 		}
+// 		else
+// 			counter++;		
+// 	}
+// 	return (counter);
+// }
+
+// int ft_count_helper(char *str)
+// {
+// 	int i;
+
+// 	i = -1;
+// 	while (str[++i])
+// 	{
+// 		if (str[i])
+// 	}
+	
+// }
+
+// laskjfdas'/nfs/homes/aghergho'adfskldsaf
+// laskjfdas3419318HOMEadfskldsafaghergho
+int ft_search_expanded_token(char *token, int *counter)
+{
+	int i;
+	int start;
+	char *str;
+	int len;
+	i = 0;
+	start = 1;
+	ft_printf("+++++++++++++++++++++++++++++++ search Counter (%d) +++++++++++++++++++++++++++++=\n", *counter);
+	while (token[++i] && !is_quote(token[i + 1]) && !is_whites_space(token[i + 1]) && !ft_check_quote(token, i + 1));
+	str = ft_substr(token, 1, i);
+	start = ft_check_env_var(str);
+	(*counter) = (*counter) + start;
+	ft_printf("-->>>>>>>>>>>>>>>>---Expanded search Token --------(%d)-(%d)||--(%c)------;)))))))---\n\n", i,*counter, token[i]);
+	free(str);
+	return (i);
+}
+// laskjfdas3419318HOMEadfskldsaf
+int ft_get_unexpanded_token(char *token, int *counter)
+{
+	int i;
+	
+	i = 0 ;
+
+	ft_printf("--------------------unexpanded TOOOOOOOOOOOOOOOOOOOOOKEN--------------------\n\n");
+	ft_printf("-------------------------------(%s)------------------------------\n", token);
+	while (token[++i] && ft_check_quote(token, i + 1))
+		(*counter)++;
+	// ft_printf("--------------------unexpanded --------(%d)-(%d)--(%c)---------\n\n", i, *counter, token[i]);
+	ft_printf("--------------------unexpanded TOOOOOOOOOOOOOOOOOOOOOKEN--;((((((((((((------(%d)-(%d)--(%c)------;)))))))---\n\n", i, *counter, token[i]);
+	return (i)	;
+}
+
+
+int ft_get_expanded_quoted_token(char *token, int *counter)
+{
+	int start;
+	int i;
+
+	i = 0;
+	ft_printf("================================(expanded Quoted ToKen)===(%c)=========COUNTER(%d)=========================\n", token[i], *counter);
+	while (token[++i] && ft_check_quote(token, i + 1))
+	{
+		ft_printf("=========TOKEN[%c]----------------------------\n\n", token[i]);
+		if (!is_dollar_sign(token[i]))
+		{
+			(*counter)++;
+			continue;
+		}
+		if (is_dollar_sign(token[i]) && token[i + 1] && is_dollar_sign(token[i + 1]))
+		{
+			(*counter) += ft_count_number_len(g_mshell.pid);
+			i++;
+		}
+		else if (is_dollar_sign(token[i]) && token[i + 1])
+		{
+			i += ft_search_expanded_token(&token[i], counter);
+		}
+	}
+	ft_printf("\n============================= Current Counter (%d)[%c]=========================================\n\n", *counter, token[i]);
+	return (i);
+}
+
+// laskjfdas"'$HOME'"'adfskl''dsaf'
+
+int ft_get_expanded_unquoted_token(char *token, int *counter)
+{
+	int		i;
+	char	*str;
+	
+	i = 0;
+	if (token[i + 1] && is_dollar_sign(token[i + 1]))
+	{
+		(*counter) += ft_count_number_len(g_mshell.pid);
+		return (1);		
+	}
+	else if ( is_dollar_sign(token[i]) && (!token[i + 1] || is_quote(token[i + 1]) || is_whites_space(token[i + 1])))
+	{
+		(*counter)++;
+		return (0);
+	}
+	while(token[++i] && ft_isalnum(token[i + 1]) && !is_single_quote(token[i + 1]) && !is_whites_space(token[i + 1]) && !is_dollar_sign(token[i+1]));
+	str = ft_substr(token, 1, i);
+	(*counter) += ft_check_env_var(str);
+	ft_printf(">>>>>>> IS $$            (%s)   <<<<<<<<<<(%d)<<<<<<<\n",str, *counter );
+	free(str);
+	return (i);
+}
+
+
+int ft_count_expanded_token(char *token, int *counter)
+{
+	int i;
+
+	i = -1;
+	while (token[++i])
+	{
+		ft_printf("-----token[%c][%d]Counter(%d)------\n\n", token[i], i, *counter);
+		if (is_single_quote(token[i]))
+		{
+			ft_printf("here<<CASE1<<<<<<(%d)(%d)<<<<<<COUNTER>>>(%c)<<<<\n",*counter, i, token[i]);
+			i += ft_get_unexpanded_token(&token[i ], counter);
+			return (i);
+			ft_printf("\n\n UNexpanded  token (CASE 1)(%d)(%c)  \n\n", i, token[i]);
+			if (!token[i + 1])
+				ft_printf("yes w're at the last charactere+++++++++++++++++++++++++++++++++++++++++++==\n");			
+		}
+		else if (is_quote(token[i]))
+		{
+			ft_printf("-----token[%c][%d]Counter(%d)----CASE2222--\n\n", token[i], i, *counter);
+			i += ft_get_expanded_quoted_token(&token[i], counter) ;
+			return (i);
+			ft_printf("\n\n expanded  token Whith Quotes $$ DOLLAR (CASE 2)(%c)<<<<<<<<<<<\n\n", token[i]);
+		}
+		else if (is_dollar_sign(token[i]))
+		{
+			ft_printf("-----token[%c][%d]Counter(%d)----CASE33333--\n\n", token[i], i, *counter);
+			ft_printf("\n\n+++++++++++++++++ expanded  token without Quotes $$ DOLLAR (CASE 3)(%d)(%c)~~~~(%s)++++++++++++++++++++++\n\n",i , token[i], &token[i]);
+			i += ft_get_expanded_unquoted_token(&token[i], counter);
+			return (i);
+			ft_printf("-----token after expand[%c][%d]Counter(%d)------\n\n", token[i], i, *counter);
+			
+		}
+		// else
+		// 	(*counter) += 1;
+	}
+	return (i);
+}
+
+int	ft_expanded_token(char *token)
+{
+	int i;
+	int	counter;
+
+	counter = 0;
+	i = -1;
+	while (token[++i])
+	{
+		if (is_quote(token[i]) || is_dollar_sign(token[i]))
+		{
+			i += ft_count_expanded_token(&token[i], &counter);		
+			ft_printf("*********---------------**(%c)*(%d)********-------------**********\n", token[i], i);	
+		}
+		else
+		{
+			ft_printf("********************(%c)*(%d)************************************\n", token[i], i);
+			counter++;
+		}
+	}
+	return (counter);
+}
+
+
+
+// ============================================================================================================================
+
+int ft_gen_pid_token(char **str, pid_t pid)
+{
+	char *tmp;
+
+	tmp = ft_itoa((int)pid);
+	if (!tmp)
+		return (0);
+	*str = ft_strcat(*str, tmp);
+	free(tmp);
+	return (1);
+}
+
+
+char *ft_get_env_var(char *str)
+{
+	t_env *tmp;
+
+	tmp = g_mshell.env;
+	// ft_printf("=== expanded token (%s)====wydad===\n", str);
+	while (tmp)
+	{
+		if (!ft_strcmp(tmp->key, str))
+		{
+			// printf("expande tokennn jjj:(%s)len (%d)<<<<<<\n", tmp->value, ft_strlen(tmp->value));
+			return (tmp->value);
+		}
+		tmp = tmp->next;
+	}
+	return (NULL);
+}
+
+int ft_gen_expanded_unquoted_token(char **s1, char *token, int *counter)
+{
+	int		i;
+	char	*str;
+	int		env_len;
+	char	*tmp;
+	
+	i = 0;
+	if (token[i + 1] && is_dollar_sign(token[i + 1]))
+	{
+		(*counter) += ft_count_number_len(g_mshell.pid);
+		ft_gen_pid_token(s1, g_mshell.pid);
+		return (1);		
+	}
+	else if ( is_dollar_sign(token[i]) && (!token[i + 1] || is_quote(token[i + 1]) || is_whites_space(token[i + 1])))
+	{
+		(*counter)++;
+		*s1 = ft_strcat_char(*s1, token[i]);
+		return (0);
+	}
+	while(token[++i] && ft_isalnum(token[i + 1]) && !is_single_quote(token[i + 1]) && !is_whites_space(token[i + 1]) && !is_dollar_sign(token[i+1]));
+	str = ft_substr(token, 1, i);
+	env_len = ft_check_env_var(str);
+	(*counter) += env_len;
+	if (env_len)
+	{
+		tmp = ft_get_env_var(str);
+		*s1 = ft_strcat(*s1, tmp);
+	}
+	// ft_printf(">>>>>>> IS $$            (%s)   <<<<<<<<<<(%d)<<<<<<<\n",str, *counter );
+	free(str);
+	return (i);
+}
+
+
+int ft_gen_search_expanded_token(char **s1, char *token, int *counter)
+{
+	int i;
+	char *str;
+	int	env_len;
+	char *tmp;
+		
+	i = 0;
+	// ft_printf("+++++++++++++++++++++++++++++++ search Counter (%d) +++++++++++++++++++++++++++++=\n", *counter);
+	while (token[++i] && !is_quote(token[i + 1]) && !is_whites_space(token[i + 1]) && !ft_check_quote(token, i + 1));
+	str = ft_substr(token, 1, i);
+	env_len = ft_check_env_var(str);
+	(*counter) = (*counter) + env_len;
+	if (env_len)
+	{
+		tmp = ft_get_env_var(str);
+		*s1 = ft_strcat(*s1, tmp);
+	}
+	// ft_printf("-->>>>>>>>>>>>>>>>---Expanded search Token --------(%d)-(%d)||--(%c)------;)))))))---\n\n", i,*counter, token[i]);
+	free(str);
+	return (i);
+}
+
+
+int ft_gen_expanded_quoted_token(char **str, char *token, int *counter)
+{
+	int start;
+	int i;
+
+	i = 0;
+	// ft_printf("================================(expanded Quoted ToKen)===(%c)=========COUNTER(%d)=========================\n", token[i], *counter);
+	while (token[++i] && ft_check_quote(token, i + 1))
+	{
+		// ft_printf("=========TOKEN[%c]----------------------------\n\n", token[i]);
+		if (!is_dollar_sign(token[i]))
+		{
+			(*counter)++;
+			*str = ft_strcat_char(*str, token[i]);
+			continue;
+		}
+		if (is_dollar_sign(token[i]) && token[i + 1] && is_dollar_sign(token[i + 1]))
+		{
+			(*counter) += ft_count_number_len(g_mshell.pid);
+			ft_gen_pid_token(str, g_mshell.pid);
+			i++;
+		}
+		else if (is_dollar_sign(token[i]) && token[i + 1])
+		{
+			i += ft_gen_search_expanded_token(str,&token[i], counter);
+		}
+	}
+	// ft_printf("\n============================= Current Counter (%d)[%c]=========================================\n\n", *counter, token[i]);
+	return (i);
+}
+
+int ft_gen_unexpanded_token(char **str, char *token, int *counter)
+{
+	int i;
+	
+	i = 0 ;
+
+	// ft_printf("--------------------unexpanded TOOOOOOOOOOOOOOOOOOOOOKEN--------------------\n\n");
+	// ft_printf("-------------------------------(%s)------------------------------\n", token);
+	while (token[++i] && ft_check_quote(token, i + 1))
+	{
+		(*counter)++;
+		*str = ft_strcat_char(*str, token[i]);
+	}	
+	// ft_printf("--------------------unexpanded --------(%d)-(%d)--(%c)---------\n\n", i, *counter, token[i]);
+	// ft_printf("--------------------unexpanded TOOOOOOOOOOOOOOOOOOOOOKEN--;((((((((((((------(%d)-(%d)--(%c)------;)))))))---\n\n", i, *counter, token[i]);
+	return (i)	;
+}
+
+
+
+int ft_gen_expanded_token(char **str,char *token, int *counter)
+{
+	int i;
+
+	i = -1;
+	while (token[++i])
+	{
+		// ft_printf("-----token[%c][%d]Counter(%d)------\n\n", token[i], i, *counter);
+		if (is_single_quote(token[i]))
+		{
+			// ft_printf("here<<CASE1<<<<<<(%d)(%d)<<<<<<COUNTER>>>(%c)<<<<\n",*counter, i, token[i]);
+			i += ft_gen_unexpanded_token(str, &token[i ], counter);
+			return (i);
+			// ft_printf("\n\n UNexpanded  token (CASE 1)(%d)(%c)  \n\n", i, token[i]);
+			// if (!token[i + 1])
+			// 	ft_printf("yes w're at the last charactere+++++++++++++++++++++++++++++++++++++++++++==\n");			
+		}
+		else if (is_quote(token[i]))
+		{
+			// ft_printf("-----token[%c][%d]Counter(%d)----CASE2222--\n\n", token[i], i, *counter);
+			i += ft_gen_expanded_quoted_token(str, &token[i], counter) ;
+			return (i);
+			// ft_printf("\n\n expanded  token Whith Quotes $$ DOLLAR (CASE 2)(%c)<<<<<<<<<<<\n\n", token[i]);
+		}
+		else if (is_dollar_sign(token[i]))
+		{
+			// ft_printf("-----token[%c][%d]Counter(%d)----CASE33333--\n\n", token[i], i, *counter);
+			// ft_printf("\n\n+++++++++++++++++ expanded  token without Quotes $$ DOLLAR (CASE 3)(%d)(%c)~~~~(%s)++++++++++++++++++++++\n\n",i , token[i], &token[i]);
+			i += ft_gen_expanded_unquoted_token(str, &token[i], counter);
+			return (i);
+			// ft_printf("-----token after expand[%c][%d]Counter(%d)------\n\n", token[i], i, *counter);
+			
+		}
+		// else
+		// 	(*counter) += 1;
+	}
+	return (i);
+}
+
+
+
+int	ft_gen_expanded_arg(char **str, char *token)
+{
+	int i;
+	int	counter;
+
+	counter = 0;
+	i = -1;
+	while (token[++i])
+	{
+		if (is_quote(token[i]) || is_dollar_sign(token[i]))
+		{
+			i += ft_gen_expanded_token(str, &token[i], &counter);		
+			// ft_printf("*********---------------**(%c)*(%d)********-------------**********\n", token[i], i);	
+		}
+		else
+		{
+			// ft_printf("********************(%c)*(%d)************************************\n", token[i], i);
+			counter++;
+			*str = ft_strcat_char(*str , token[i]);
+		}
+	}
+	return (counter);
+}
+
+
+void ft_expand_arg(char **arg)
+{
+	int len;
+	char *tmp;
+	char *new;
+	ft_printf("cmd (%s)==========\n", *arg);
+	tmp = *arg;
+	len = ft_expanded_token(tmp);
+	ft_printf("lennnnnnnnnnnnnnnnnnnnnnnnn (%d)==========\n", len);
+	new = malloc(sizeof(char) * (len +  1));
+	new[0] = '\0';
+	ft_gen_expanded_arg(&new, tmp);
+	free (tmp);
+	*arg = new;
+}
+
+
+void ft_expand_cmd(t_cmd **root)
+{
+	t_cmd	*tmp;
+
+	tmp = *root;
+	while (tmp)
+	{
+		if (ft_check_expand(tmp->arg))
+		{
+			ft_printf("yes we gonna expand it -------------------------\n");
+			ft_expand_arg(&tmp->arg);
+		}
+		tmp = tmp->next;
+	}
+}
+
+void ft_expand_infile(t_infile **root)
+{
+	t_infile *tmp;
+
+	tmp = *root;
+	while (tmp)
+	{
+		if (tmp->is_herdoc)
+			ft_trim_quotes(&tmp->filename);
+		else
+			ft_expand_arg(&tmp->filename);
+		tmp = tmp->next;
+	}
+}
+
+void ft_expand_outfile(t_outfile **root)
+{
+	t_outfile *tmp;
+
+	tmp = *root;
+	while (tmp)
+	{
+		ft_expand_arg(&tmp->filename);
+		tmp = tmp->next;
+	}
+}
+
+void ft_expand_redirection(t_redirection **redirection)
+{
+	ft_expand_infile(&(*redirection)->in_file);
+	ft_expand_outfile(&(*redirection)->out_file);
+}
+
 t_tnode	*ft_new_tnode(int n_type, t_token *tokens)
 {
 	t_tnode *new;
- 
-	// ft_printf("===============>>>>>>>>>ADDDDDD TOOOOKEN<<<<<<<<<=========================\n");
-	// var_dump_token(tokens);
-	// ft_printf("<><><><><<><><><><><><><><><><><><><><><><>><><><><>><><><><>\n\n\n");
+	
 	new = malloc(sizeof(t_tnode));
 	if (!new)
 		return (NULL);
@@ -322,7 +947,6 @@ t_tnode	*ft_new_tnode(int n_type, t_token *tokens)
 		new->cmd = NULL;
 		if (is_parenthise_redirection(tokens))
 		{
-			ft_printf("yes>>>>>>>>>>>>>>>>>>>>>>there is<<<<<<<\n");
 			while (tokens && tokens->typeId != 5)
 				tokens = tokens->next;
 			new->redirection = ftGetRedirection(tokens->next);
@@ -332,15 +956,20 @@ t_tnode	*ft_new_tnode(int n_type, t_token *tokens)
 	}
 	else
 	{
-		// new->cmd = ft_gen_cmd(tokens);
 		new->cmd = ftGenCmd(tokens);
-		// ft_printf("===============>>>>>>>>>ADDDDDD TOOOOKEN<<<<<<<<<=========================\n");
-		// var_dump_token(tokens);
-		// ft_printf("<><><><><<><><><><><><><><><><><><><><><><>><><><><>><><><><>\n\n\n");
-		// if (! new->cmd)
-		// 	return (free(new), NULL);
-		// ft_printf("------done command -----\n");
+		ft_expand_cmd(&(new->cmd));
 		new->redirection = ftGetRedirection(tokens);
+		ft_expand_redirection(&(new->redirection));
+	}
+	return (new);
+}
+		// new->cmd = ft_gen_cmd(tokens);
+ 
+	// ft_printf("yes>>>>>>>>>>>>>>>>>>>>>>there is<<<<<<<\n");
+	// ft_printf("===============>>>>>>>>>ADDDDDD TOOOOKEN<<<<<<<<<=========================\n");
+	// var_dump_token(tokens);
+	// ft_printf("<><><><><<><><><><><><><><><><><><><><><><>><><><><>><><><><>\n\n\n");
+
 		// ft_printf("------done redirections -----\n");
 		// varDumpOutFile(new->redirection->out_file);
 		// varDumpInFile(new->redirection->in_file);
@@ -348,9 +977,13 @@ t_tnode	*ft_new_tnode(int n_type, t_token *tokens)
 		// new->redirection = NULL;
 		// if (!new->redirection)
 		// 	return(free(new->cmd), free(new), NULL);
-	}
-	return (new);
-}
+		// new->cmd = ft_expand_cmd(&new->cmd);
+		// ft_printf("===============>>>>>>>>>ADDDDDD TOOOOKEN<<<<<<<<<=========================\n");
+		// var_dump_token(tokens);
+		// ft_printf("<><><><><<><><><><><><><><><><><><><><><><>><><><><>><><><><>\n\n\n");
+		// if (! new->cmd)
+		// 	return (free(new), NULL);
+		// ft_printf("------done command -----\n");
 
 void ft_parse_parenthise(t_tnode **root, t_token **tokens) {
     t_token *tmp;

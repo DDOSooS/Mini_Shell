@@ -1,0 +1,6 @@
+#Ignore object files
+*.o 
+
+*.nfs*
+#Ignore PDF'S files
+*.pdf

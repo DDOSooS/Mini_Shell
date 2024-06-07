@@ -6,12 +6,13 @@
 /*   By: aghergho <aghergho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/06 16:02:56 by aghergho          #+#    #+#             */
-/*   Updated: 2024/05/30 18:02:51 by aghergho         ###   ########.fr       */
+/*   Updated: 2024/06/05 16:49:39 by aghergho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 # include "../includes/mshell.h"
 
+t_mshell g_mshell;
 
 
 /*
@@ -192,26 +193,49 @@ void	ft_free_tree(t_tnode **tree)
 	}
 }
  
-int main()
+int main(int ac, char **av, char **env)
 {
 	char	*cmd_line;
+	// t_env	*env_list;
 	t_token *tokens;
 	t_tnode	*cmd_tree;
-	
 	cmd_tree = NULL;
+	/*
+		cntl + c signal handler - new prompt in and new line
+		cntl + \ signal handler - do nothing
+	*/
+	ignore_signals();
+	/*
+		Extract env variables from envp
+	*/
+	g_mshell.env = extarct_env(env);
+	g_mshell.pid= get_pid();
+	// env_list = g_mshell.env;
+	// while (env_list)
+	// {
+	// 	ft_printf("key: %s value:%s\n", env_list->key, env_list->value);
+	// 	env_list = env_list->next;
+	// }
+	ft_printf("====get_pid(%d) === myowne_pid(%d)===\n", getpid(), get_pid());
 	while (1)
 	{
 			cmd_line = readline("minishell ;)>  ");
+			if (cmd_line == NULL)
+				return (0);
 			ft_check_syntax(cmd_line);
 			tokens = ft_tokinizer(cmd_line);
 			ft_printf("==============first token format===============\n\n");
 			var_dump_token(tokens);
+			ft_expand_tokens(tokens);
+			var_dump_token(tokens);
 			ft_parse_ast(&cmd_tree, &tokens);		
 			var_dump_tree(cmd_tree);
+			// ft_execute_tree(cmd_tree, env);
+			// add_history(cmd_line);
 			if (ft_strcmp(cmd_line, "exit") == 0)
 				return (free(cmd_line),0);
 			free(cmd_line);
 			ft_free_tree(&cmd_tree);
 	}
-    return (0);
+    return (EXIT_SUCCESS);
 }

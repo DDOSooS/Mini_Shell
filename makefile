@@ -1,12 +1,20 @@
 NAME = minishell
 
 CC = cc
-CFLAGS = -Wall -Wextra -pedantic
+#CFLAGS = -Wall -Wextra -pedantic
 LIBS = -lreadline
 LIBFT = includes/libft/libft.a
 PRINTF = includes/printf/libftprintf.a
 
-SRC = src/main.c src/parsing/syntax-error.c src/parsing/tokenizer.c src/parsing/parser.c
+SRC = src/main.c\
+		src/parsing/syntax-error.c\
+		src/parsing/tokenizer.c\
+		src/parsing/parser.c\
+		src/parsing/expander.c\
+		src/execution/execute.c\
+		src/execution/signals.c\
+		src/execution/environ.c\
+
 OBJ = $(SRC:.c=.o)
 
 all: $(NAME)

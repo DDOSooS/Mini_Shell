@@ -6,7 +6,11 @@
 /*   By: aghergho <aghergho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/06 16:01:09 by aghergho          #+#    #+#             */
+// <<<<<<< Updated upstream
 /*   Updated: 2024/05/30 16:39:20 by aghergho         ###   ########.fr       */
+// =======
+/*   Updated: 2024/05/29 20:51:27 by mkartit          ###   ########.fr       */
+// >>>>>>> Stashed changes
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +22,9 @@
 #include <errno.h>
 #include <readline/readline.h>
 #include <readline/history.h>
+#include <sys/wait.h>
+#include <string.h>
+#include <signal.h>
 #include "./libft/libft.h"
 #include "./printf/ft_printf.h" 
 #include <stdio.h>
@@ -114,15 +121,25 @@ typedef struct mshell
  t_env      *env;
  t_history  *history;
  int        exit_value;
+ pid_t      pid;
 } t_mshell;
+
+extern t_mshell g_mshell;
+
 
 /*
     minishell_functions
 */
-void	varDumpOutFile(t_outfile *redirection);
 
+/*================ Parsing =================*/
+pid_t get_pid();
+int is_dollar_sign(char c);
+int ft_check_expand(char *token);
+void	varDumpOutFile(t_outfile *redirection);
+void ft_expand_tokens(t_token *tokens);
 void	varDumpInFile(t_infile *redirection);
 int ftGetTokenId(char *token);
+int ft_get_unexpanded_token(char *token, int *counter);
 int ft_check_and_operator(t_token *token);
 int ft_check_or_operator(t_token *token);
 void ft_parse_ast(t_tnode **root, t_token **tokens);
@@ -154,4 +171,10 @@ int is_single_quote(char c);
 int is_double_quote(char c);
 int is_quote(char c);
 // void ft_parse_input(char *cmd);
+
+/*================= execution ===============*/
+void ft_execute_tree(t_tnode *root, char **env);
+t_env *extarct_env(char **envp);
+
+void ignore_signals();
 #endif

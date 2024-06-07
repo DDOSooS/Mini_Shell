@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: aghergho <aghergho@student.1337.ma>        +#+  +:+       +#+         #
+#    By: aghergho <aghergho@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/11/11 19:51:41 by aghergho          #+#    #+#              #
-#    Updated: 2024/05/06 19:16:45 by aghergho         ###   ########.fr        #
+#    Updated: 2024/06/07 16:37:51 by aghergho         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -23,9 +23,9 @@ AR = ar crs
 # Source files for main functions
 SRC = ft_atoi.c ft_bzero.c ft_calloc.c ft_isalnum.c \
       ft_isalpha.c ft_isascii.c ft_isdigit.c ft_isprint.c \
-      ft_memchr.c ft_memcmp.c ft_memcpy.c ft_memmove.c \
+      ft_memchr.c ft_memcmp.c ft_memcpy.c ft_memmove.c ft_strcat_char.c\
       ft_memset.c ft_strchr.c ft_strdup.c ft_strlcat.c  ft_strcmp.c\
-      ft_strlcpy.c ft_strlen.c ft_strncmp.c ft_strnstr.c \
+      ft_strlcpy.c ft_strlen.c ft_strncmp.c ft_strnstr.c ft_strcat.c \
       ft_strrchr.c ft_tolower.c ft_toupper.c ft_substr.c \
       ft_strjoin.c ft_strtrim.c ft_putnbr_fd.c ft_putchar_fd.c \
       ft_putstr_fd.c ft_putendl_fd.c ft_strmapi.c ft_striteri.c \
