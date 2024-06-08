@@ -6,7 +6,7 @@
 /*   By: aghergho <aghergho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/11 20:05:21 by aghergho          #+#    #+#             */
-/*   Updated: 2024/06/07 22:26:08 by aghergho         ###   ########.fr       */
+/*   Updated: 2024/06/08 14:30:54 by aghergho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,44 +39,6 @@
 */
 
 
-char *ft_trim_quotes(char **file)
-{
-	char	*tmp;
-	char	*new;
-	
-	tmp  = *file;
-	new = ft_substr(tmp,1, ft_strlen(tmp) - 1);
-	free(*file);
-	*file = new;
-	return  (new);
-}
-
-void	ft_trim_quotes_outfile(t_outfile **root)
-{
-	t_outfile *tmp;
-	
-	tmp = *root;
-	while (tmp)
-	{
-		if (tmp->filename && is_double_quote(tmp->filename[0])  )
-			tmp->filename= ft_trim_quotes(&tmp->filename);
-		tmp = tmp->next;
-	}
-}
-
-void	ft_trim_quotes_infile(t_infile **root)
-{
-	t_infile *tmp;
-	
-	tmp = *root;
-	while (tmp)
-	{
-		if (tmp->filename && is_double_quote(tmp->filename[0]))
-			tmp->filename= ft_trim_quotes(&tmp->filename);
-		tmp = tmp->next;
-	}
-}
- 
 int ft_check_operator(t_token *token)
 {
 	t_token *tmp;
@@ -238,9 +200,10 @@ t_cmd *ftGenCmd(t_token *tokens)
 	flag = 0;
 	while (tokens && tokens->value)
 	{
+	ft_printf("------------------------------------------cmd(%s)---------------------------------------\n\n", tokens->value);
 		if (!tokens->typeId && !flag)
 		{
-			if (tokens->value[0] && is_double_quote(tokens->value[0]))
+			if (tokens->value[0] && is_double_quote(tokens->value[0]) && is_double_quote(tokens->value[ft_strlen(tokens->value) -1]))
 				ft_add_to_cmd(&cmd, tokens->value);
 			else if (!ftAddCmd(&cmd, tokens->value))
 				return NULL;
@@ -370,20 +333,21 @@ int is_parenthise_redirection(t_token *tokens)
 	return (0);
 }
 
-int ft_count_non_expanded(char *token)
-{
-	int i;
-	int counter;
+// int ft_count_non_expanded(char *token)
+// {
+// 	int i;
+// 	int counter;
 
-	i = 0;
-	counter = 0;
-	ft_printf("===non expanded (%s)=======\n", token);
-	while (token[++i] && !ft_check_quote(token, i))
-		counter++;
-	counter -= 1;
-	return (counter);
-}
+// 	i = 0;
+// 	counter = 0;
+// 	ft_printf("===non expanded (%s)=======\n", token);
+// 	while (token[++i] && !ft_check_quote(token, i))
+// 		counter++;
+// 	counter -= 1;
+// 	return (counter);
+// }
 
+// =========================================================count the expanded args's lesn ==================================================================
 
 int ft_check_env_var(char *str)
 {
@@ -599,7 +563,7 @@ int ft_count_expanded_token(char *token, int *counter)
 	i = -1;
 	while (token[++i])
 	{
-		ft_printf("-----token[%c][%d]Counter(%d)------\n\n", token[i], i, *counter);
+		ft_printf("-----token >>> (%s) <<<<  [%c][%d]Counter(%d)------\n\n",token, token[i], i, *counter);
 		if (is_single_quote(token[i]))
 		{
 			ft_printf("here<<CASE1<<<<<<(%d)(%d)<<<<<<COUNTER>>>(%c)<<<<\n",*counter, i, token[i]);
@@ -656,7 +620,7 @@ int	ft_expanded_token(char *token)
 
 
 
-// ============================================================================================================================
+// =========================================================generate the expanded args ==================================================================
 
 int ft_gen_pid_token(char **str, pid_t pid)
 {
@@ -891,12 +855,197 @@ void ft_expand_cmd(t_cmd **root)
 	{
 		if (ft_check_expand(tmp->arg))
 		{
-			ft_printf("yes we gonna expand it -------------------------\n");
+			ft_printf("yes we gonna expand it --(%s)-----------------------\n", tmp->arg);
 			ft_expand_arg(&tmp->arg);
 		}
 		tmp = tmp->next;
 	}
 }
+
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++expand of out files++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+int ft_get_expanded_quoted_delimiter(char *token, int *counter)
+{
+	int i;
+
+	i = 0;
+	while (token[++i] && ft_check_quote(token, i + 1))
+	{
+		(*counter)++;
+	}
+	return (i);
+}
+
+
+int ft_get_unexpanded_delimiter(char *token, int *counter)
+{
+	int i;
+	
+	i = 0 ;
+
+	// ft_printf("--------------------unexpanded TOOOOOOOOOOOOOOOOOOOOOKEN--------------------\n\n");
+	// ft_printf("-------------------------------(%s)------------------------------\n", token);
+	while (token[++i] && ft_check_quote(token, i + 1))
+	{
+		(*counter)++;
+	}
+	// ft_printf("--------------------unexpanded --------(%d)-(%d)--(%c)---------\n\n", i, *counter, token[i]);
+	// ft_printf("--------------------unexpanded TOOOOOOOOOOOOOOOOOOOOOKEN--;((((((((((((------(%d)-(%d)--(%c)------;)))))))---\n\n", i, *counter, token[i]);
+	return (i)	;
+}
+
+int ft_count_expanded_deliter(char *token, int *counter)
+{
+	int i;
+
+	i = -1;
+	while (token[++i])
+	{
+		// ft_printf("-----token >>> (%s) <<<<  [%c][%d]Counter(%d)------\n\n",token, token[i], i, *counter);
+		if (is_single_quote(token[i]))
+		{
+			// ft_printf("here<<CASE1<<<<<<(%d)(%d)<<<<<<COUNTER>>>(%c)<<<<\n",*counter, i, token[i]);
+			i += ft_get_unexpanded_delimiter(&token[i ], counter);
+			return (i);
+			// ft_printf("\n\n UNexpanded  token (CASE 1)(%d)(%c)  \n\n", i, token[i]);
+			// if (!token[i + 1])
+				// ft_printf("yes w're at the last charactere+++++++++++++++++++++++++++++++++++++++++++==\n");			
+		}
+		else if (is_quote(token[i]))
+		{
+			// ft_printf("-----token[%c][%d]Counter(%d)----CASE2222--\n\n", token[i], i, *counter);
+			i += ft_get_expanded_quoted_delimiter(&token[i], counter) ;
+			return (i);
+			// ft_printf("\n\n expanded  token Whith Quotes $$ DOLLAR (CASE 2)(%c)<<<<<<<<<<<\n\n", token[i]);
+		}
+	}
+	return (i);
+}
+
+
+int	ft_count_delimter_len(char *token)
+{
+	int i;
+	int	counter;
+
+	counter = 0;
+	i = -1;
+	while (token[++i])
+	{
+		if (is_quote(token[i]))
+		{
+			i += ft_count_expanded_deliter(&token[i], &counter);		
+			// ft_printf("*********---------------**(%c)*(%d)********-------------**********\n", token[i], i);	
+		}
+		else
+		{
+			// ft_printf("********************(%c)*(%d)************************************\n", token[i], i);
+			counter++;
+		}
+	}
+	return (counter);
+}
+
+
+//____________________________________________________________________________________Generating the delimiter__________________________________________________
+
+int ft_gen_expanded_quoted_delimiter(char **str ,char *token)
+{
+	int i;
+
+	i = 0;
+	while (token[++i] && ft_check_quote(token, i + 1))
+		*str = ft_strcat_char(*str, token[i]);
+	return (i);
+}
+
+
+int ft_gen_unexpanded_delimiter(char **str,char *token)
+{
+	int i;
+	
+	i = 0 ;
+	// ft_printf("--------------------unexpanded TOOOOOOOOOOOOOOOOOOOOOKEN--------------------\n\n");
+	// ft_printf("-------------------------------(%s)------------------------------\n", token);
+	while (token[++i] && ft_check_quote(token, i + 1))
+		*str = ft_strcat_char(*str, token[i]);
+	// ft_printf("--------------------unexpanded --------(%d)-(%d)--(%c)---------\n\n", i, *counter, token[i]);
+	// ft_printf("--------------------unexpanded TOOOOOOOOOOOOOOOOOOOOOKEN--;((((((((((((------(%d)-(%d)--(%c)------;)))))))---\n\n", i, *counter, token[i]);
+	return (i)	;
+}
+
+int ft_gen_expanded_deliter(char **str, char *token)
+{
+	int i;
+
+	i = -1;
+	while (token[++i])
+	{
+		// ft_printf("-----token >>> (%s) <<<<  [%c][%d]Counter(%d)------\n\n",token, token[i], i, *counter);
+		if (is_single_quote(token[i]))
+		{
+			// ft_printf("here<<CASE1<<<<<<(%d)(%d)<<<<<<COUNTER>>>(%c)<<<<\n",*counter, i, token[i]);
+			i += ft_gen_unexpanded_delimiter(str, &token[i ]);
+			return (i);
+			// ft_printf("\n\n UNexpanded  token (CASE 1)(%d)(%c)  \n\n", i, token[i]);
+			// if (!token[i + 1])
+				// ft_printf("yes w're at the last charactere+++++++++++++++++++++++++++++++++++++++++++==\n");			
+		}
+		else if (is_quote(token[i]))
+		{
+			// ft_printf("-----token[%c][%d]Counter(%d)----CASE2222--\n\n", token[i], i, *counter);
+			i += ft_gen_expanded_quoted_delimiter(str, &token[i]) ;
+			return (i);
+			// ft_printf("\n\n expanded  token Whith Quotes $$ DOLLAR (CASE 2)(%c)<<<<<<<<<<<\n\n", token[i]);
+		}
+	}
+	return (i);
+}
+
+
+int	ft_gen_delimter(char **str,char *token)
+{
+	int i;
+
+	i = -1;
+	while (token[++i])
+	{
+		if (is_quote(token[i]))
+		{
+			i += ft_gen_expanded_deliter(str ,&token[i]);		
+			// ft_printf("*********---------------**(%c)*(%d)********-------------**********\n", token[i], i);	
+		}
+		else
+		{
+			// ft_printf("********************(%c)*(%d)************************************\n", token[i], i);
+			*str = ft_strcat_char(*str, token[i]);
+		}
+	}
+	return (1);
+}
+
+
+
+void ft_expand_delimiter(char **arg)
+{
+	int len;
+	char *tmp;
+	char *new;
+	ft_printf("Delmiter (%s)==========\n", *arg);
+	tmp = *arg;
+	len = ft_count_delimter_len(tmp);
+	ft_printf("lennnnnnnnnnnnnnnnnnnnnnnnn (%d)==========\n", len);
+	new = malloc(sizeof(char) * (len +  1));
+	new[0] = '\0';
+	ft_gen_delimter(&new, tmp);
+	free (tmp);
+	*arg = new;
+}
+
+
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
 
 void ft_expand_infile(t_infile **root)
 {
@@ -906,7 +1055,7 @@ void ft_expand_infile(t_infile **root)
 	while (tmp)
 	{
 		if (tmp->is_herdoc)
-			ft_trim_quotes(&tmp->filename);
+			ft_expand_delimiter(&tmp->filename);
 		else
 			ft_expand_arg(&tmp->filename);
 		tmp = tmp->next;
