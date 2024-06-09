@@ -6,7 +6,7 @@
 /*   By: aghergho <aghergho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/10 18:51:59 by aghergho          #+#    #+#             */
-/*   Updated: 2024/05/26 15:29:43 by aghergho         ###   ########.fr       */
+/*   Updated: 2024/06/09 14:35:46 by aghergho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -335,7 +335,7 @@ int ft_check_file_name(char *cmd_line)
         return (ft_printf("parse error near `|'"), 0);
     else if (in_redirection(cmd_line[i]))
         return (ft_printf("parse error near `<'"), 0);
-    else if (out_redirection(cmd_line[i]) && !is_redirection(cmd_line[i - 1]))
+    else if (out_redirection(cmd_line[i]))
         return (ft_printf("parse error near `>'"), 0);
     else if (is_r_parenthise(cmd_line[i]) || is_r_parenthise(cmd_line[i]))
         return (ft_printf("parse error near `)'"), 0);
@@ -508,8 +508,8 @@ int ft_check_left_parenthise(char *cmd_line, int i)
 
     // flag = 0;
     while (cmd_line[--i] && is_l_parenthise(cmd_line[i]));
-	if (cmd_line[i] && (in_redirection(cmd_line[i]) || out_redirection(cmd_line[i])))
-		i--;
+	// if (cmd_line[i] && (in_redirection(cmd_line[i]) || out_redirection(cmd_line[i])))
+	// 	i--;
 	while (cmd_line[i] && !is_pipe(cmd_line[i]) && !is_operator(cmd_line[i]))
     {
         if (is_l_parenthise(cmd_line[i]))
