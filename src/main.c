@@ -6,7 +6,7 @@
 /*   By: aghergho <aghergho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/06 16:02:56 by aghergho          #+#    #+#             */
-/*   Updated: 2024/06/10 16:51:51 by aghergho         ###   ########.fr       */
+/*   Updated: 2024/06/10 23:41:06 by aghergho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -264,6 +264,7 @@ int main(int ac, char **av, char **env)
 					ft_printf("==============first token format===============\n\n");
 					var_dump_token(tokens);
 					ft_expand_tokens(&tokens);
+					ft_printf("==============EXPAND FORMAT format===============\n\n");
 					var_dump_token(tokens);
 					ft_parse_ast(&cmd_tree, &tokens);		
 					var_dump_tree(cmd_tree);

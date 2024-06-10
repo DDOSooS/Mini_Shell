@@ -91,7 +91,6 @@ typedef struct redirection
 typedef struct treeNode
 {
     int                 node_type;
-    // char             *cmd;
     t_cmd            *cmd;
     t_redirection       *redirection;
     struct treeNode     *t_left;

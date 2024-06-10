@@ -6,7 +6,7 @@
 /*   By: aghergho <aghergho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/01 01:15:21 by aghergho          #+#    #+#             */
-/*   Updated: 2024/06/10 16:21:44 by aghergho         ###   ########.fr       */
+/*   Updated: 2024/06/10 23:59:54 by aghergho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,12 +21,11 @@ int ft_count_token_len(char *token)
     counter = 0;
     while (token[++i])
     {
-        if (is_quote(token[i]) && token[i + 1] && token[i] == token[i + 1] && !ft_check_quote(token, i + 2))
-        {
+        if (is_dollar_sign(token[i])  && is_quote(token[i + 1]) && !is_dollar_sign(token[i - 1]) && !ft_check_quote(token ,i + 1))
             i++;
-            continue;
-        }
-        if (is_quote(token[i]))
+        else if (is_quote(token[i]) && token[i + 1] && token[i] == token[i + 1] && !ft_check_quote(token, i + 2))
+            i++;
+        else if (is_quote(token[i]))
         {
             while (token[i] && ft_check_quote(token, i+1))
             {
@@ -81,12 +80,11 @@ char *ft_gen_token_toexpand(char *str, char *token)
     i = -1;
     while (token[++i])
     {
-        if (is_quote(token[i]) && token[i + 1] && token[i] == token[i + 1] && !ft_check_quote(token, i + 2))
-        {
-            i++;
+        if (is_dollar_sign(token[i]) && token[i + 1] && is_quote(token[i + 1]) && !is_dollar_sign(token[i - 1]) && !ft_check_quote(token, i + 1))
             continue;
-        }
-        if (is_quote(token[i]))
+        else if (is_quote(token[i]) && token[i + 1] && token[i] == token[i + 1] && !ft_check_quote(token, i + 2))
+            i++;
+        else if (is_quote(token[i]))
         {
             while (token[i] && ft_check_quote(token, i+1))
                 str[j++] = token[i++];
