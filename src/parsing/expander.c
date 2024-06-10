@@ -6,7 +6,7 @@
 /*   By: aghergho <aghergho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/01 01:15:21 by aghergho          #+#    #+#             */
-/*   Updated: 2024/06/05 21:05:57 by aghergho         ###   ########.fr       */
+/*   Updated: 2024/06/10 16:21:44 by aghergho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,16 +125,16 @@ pid_t get_pid()
     pid = fork();
     if (!pid)
         exit(0);
-    return (pid -2);
+    return (pid - 2);
 }
 
-void ft_expand_tokens(t_token *tokens)
+void ft_expand_tokens(t_token **tokens)
 {
     t_token *tmp;
     char    *tmp_str;
     char    *tmpfile;
     
-    tmp = tokens;
+    tmp = *tokens;
     // ft_printf("======g_pid(%d)==getpid(%d)<<<<<<<<<<<<<<<<<\n", pid - 1, getpid() );
     while (tmp)
     {
@@ -145,7 +145,7 @@ void ft_expand_tokens(t_token *tokens)
             tmpfile = tmp->value;
             tmp_str = ft_expand(tmp->value);
             // ft_printf("=======  new expanded token (%d)(%s)   =========\n\n", ft_strlen(tmp_str), tmp_str);
-            free(tmpfile);
+            free(tmp->value);
             tmp->value = tmp_str;
             // ft_printf("=======  new expanded token (%d)(%s)   =========\n\n", ft_strlen(tmp->value), tmp->value);
         }

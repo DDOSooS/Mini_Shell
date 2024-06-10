@@ -6,7 +6,7 @@
 /*   By: aghergho <aghergho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/11 20:05:21 by aghergho          #+#    #+#             */
-/*   Updated: 2024/06/09 14:42:04 by aghergho         ###   ########.fr       */
+/*   Updated: 2024/06/10 17:00:07 by aghergho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -148,7 +148,7 @@ int	ftAddCmd(t_cmd **cmd, char *str)
 	t_cmd *tmp;
 
 	new = malloc(sizeof(t_cmd));
-	new->arg = str;
+	new->arg = ft_strdup(str);
 	new->check_wildcard = ftCheckWildCard(new->arg);
 	new->next = NULL;
 	if (!*cmd)
@@ -170,9 +170,7 @@ int ft_add_to_cmd (t_cmd **root, char *token)
 	t_cmd	*tmp;
 	t_cmd	*new;
 	char	*tmp_token;
-	// int		start;
 
-	// start = ft_define_start()
 	tmp = *root;
 	cmd = ft_substr(token, 1, ft_strlen(token) - 2);
 	free(token);
@@ -718,7 +716,7 @@ void ft_expand_arg(char **arg)
 	new = malloc(sizeof(char) * (len +  1));
 	new[0] = '\0';
 	ft_gen_expanded_arg(&new, tmp);
-	free (tmp);
+	free(*arg);
 	*arg = new;
 }
 
