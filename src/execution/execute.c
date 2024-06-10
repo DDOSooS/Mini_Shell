@@ -1,4 +1,4 @@
-#include "../../includes/mshell.h"AZ
+#include "../../includes/mshell.h"
 
 void ft_execute_cmd(t_cmd *cmd, t_env *env)
 {

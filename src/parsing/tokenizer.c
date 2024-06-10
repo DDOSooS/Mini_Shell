@@ -6,7 +6,7 @@
 /*   By: aghergho <aghergho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/13 15:14:32 by aghergho          #+#    #+#             */
-/*   Updated: 2024/05/29 16:45:54 by aghergho         ###   ########.fr       */
+/*   Updated: 2024/06/10 13:49:37 by aghergho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,13 +83,24 @@ int ftGetTokenId(char *token)
 t_token *ft_new_token(char *token)
 {
     t_token *new;
-    
+    int type;
+
+    type = ftGetTokenId(token);
+    // ft_printf("++++++++++++++++++++++++++++++++++(type (%d))(%d)++++++++++++++++++++++++++++++++++++\n", type,g_mshell.n_herdoc);
+    if (type == 7 && g_mshell.n_herdoc == 16)
+    {
+        // free()
+        ft_putstr_fd("maximum here-document count exceeded\n", 2);
+        exit(0);
+    }
+    else if (type == 7)
+        g_mshell.n_herdoc++;   
     new = malloc(sizeof(t_token));
     if (!new) 
         return NULL;
     new->value = token;
     new->type = ft_get_token_type(token);
-    new->typeId = ftGetTokenId(token);
+    new->typeId = type;
     new->next = NULL;
     return new;
 }
@@ -99,7 +110,7 @@ t_token *ft_new_token(char *token)
     @Description this function is responsible for adding  a token 
 */
 
-int ft_add_token(t_token **tokens, char *cmd_line, int start, int end)
+void ft_add_token(t_token **tokens, char *cmd_line, int start, int end)
 {
     t_token *tmp;
     char    *token;
@@ -110,20 +121,19 @@ int ft_add_token(t_token **tokens, char *cmd_line, int start, int end)
     else    
         token =ft_substr(cmd_line, start, end - start +1);    
     if (! token)
-        return (0);
+        return ;
     new = ft_new_token(token);
     if (!new)
-        return (0);
+        return ;
     tmp = *tokens;
     if(!*tokens)
     {
         *tokens = new;
-        return (1);
+        return ;
     }
     while (tmp->next)
         tmp = tmp->next;
     tmp->next = new;
-    return (1);
 }
 
 int is_tokens(char c)
@@ -207,8 +217,7 @@ t_token *ft_tokinizer(char *cmd)
             ft_add_token(&tokens, cmd, i, i);
         else if (start == -1)
             start = i;
-
-         if (((is_whites_space(cmd[i + 1]) && ft_check_opened_token(cmd, i+1))
+        if (((is_whites_space(cmd[i + 1]) && ft_check_opened_token(cmd, i+1))
             || (is_r_parenthise(cmd[i + 1]) && !ft_check_quote(cmd, i + 1)) || !cmd[i + 1]
             || (is_tokens(cmd[i + 1]) && !ft_check_quote(cmd, i + 1) && is_closed_parenthise(cmd, i + 1))) && start != -1)
         {

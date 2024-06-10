@@ -14,6 +14,7 @@ SRC = src/main.c\
 		src/execution/signals.c\
 		src/execution/environ.c\
 		src/execution/history.c\
+		src/parsing/expander.c\
 
 OBJ = $(SRC:.c=.o)
 

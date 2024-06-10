@@ -102,7 +102,7 @@ typedef struct treeNode
 
 enum TokenType
 {
-    TOKEN_WOR ,
+    TOKEN_WORD,
     TOKEN_PIPE,
     TOKEN_IN_REDIRECTION,
     TOKEN_OUT_REDIRECTION,
@@ -123,16 +123,26 @@ typedef struct mshell
  t_env      *env;
  t_history  *history;
  int        exit_value;
+ pid_t      pid;
+ int        n_herdoc;
 } t_mshell;
+
+extern t_mshell g_mshell;
+
 
 /*
     minishell_functions
 */
-/*================ Parsing =================*/
-void	varDumpOutFile(t_outfile *redirection);
 
+/*================ Parsing =================*/
+pid_t get_pid();
+int is_dollar_sign(char c);
+int ft_check_expand(char *token);
+void	varDumpOutFile(t_outfile *redirection);
+void ft_expand_tokens(t_token *tokens);
 void	varDumpInFile(t_infile *redirection);
 int ftGetTokenId(char *token);
+int ft_get_unexpanded_token(char *token, int *counter);
 int ft_check_and_operator(t_token *token);
 int ft_check_or_operator(t_token *token);
 void ft_parse_ast(t_tnode **root, t_token **tokens);
