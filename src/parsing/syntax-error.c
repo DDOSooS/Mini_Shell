@@ -621,7 +621,8 @@ int ft_check_syntax(char *cmd_line)
         return (1);
     if (ft_check_operation_error(cmd_line) || ft_check_quote_error(cmd_line)
         || !ft_check_redirection_error(cmd_line) || !ft_check_parenthise_error(cmd_line))
-        exit(EXIT_FAILURE);
+        return (0);
+        // exit(EXIT_FAILURE);
     return (1);
 }
 	

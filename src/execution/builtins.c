@@ -5,14 +5,14 @@ int ft_env(t_cmd *cmd, t_mshell *shell)
 	printf("env, cmd %s\n", cmd->arg);
 	t_env *tmp;
 	(void)cmd;
-
 	tmp = shell->env;
+	printf("======= env =======\n");
 	while (tmp)
 	{
-		if (tmp->value)
-			ft_printf("%s=%s\n", tmp->key, tmp->value);
+		ft_printf("%s=%s\n", tmp->key, tmp->value);
 		tmp = tmp->next;
 	}
+	printf("======= end env =======\n");
 	return (0);
 }
 
@@ -27,16 +27,13 @@ int ft_exit(t_cmd *cmd, t_mshell *shell)
 
 int ft_history(t_cmd *cmd, t_mshell *shell)
 {
-	//TODO: change params for history t_history *history
-
 	printf("history, cmd %s\n", cmd->arg);
-	(void)cmd;
 	t_history *tmp;
-
+	(void)cmd;
 	tmp = shell->history;
 	while (tmp)
 	{
-		ft_printf("%d  %s\n", tmp->id, tmp->cmd);
+		ft_printf("%d %s\n", tmp->id, tmp->cmd);
 		tmp = tmp->next;
 	}
 	return (0);

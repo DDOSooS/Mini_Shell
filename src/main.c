@@ -226,6 +226,7 @@ int main(int ac, char **av, char **env)
 	g_mshell.history = (t_history *)malloc(sizeof(t_history));
 	g_mshell.history->id = 0;
 	g_mshell.history->cmd = NULL;
+	g_mshell.history->next = NULL;
 	g_mshell.n_herdoc = 0;
 	// env_list = g_mshell.env;
 	// while (env_list)
@@ -242,29 +243,30 @@ int main(int ac, char **av, char **env)
 			cmd_line = readline("");
 		if (cmd_line == NULL)
 			return (0);
-
-			ft_check_syntax(cmd_line);
-			tokens = ft_tokinizer(cmd_line);
-			ft_printf("==============first token format===============\n\n");
-			// var_dump_token(tokens);
-			ft_expand_tokens(tokens);
-			// var_dump_token(tokens);
-			ft_parse_ast(&cmd_tree, &tokens);		
-			// var_dump_tree(cmd_tree);
-			printf("here(1)");
-			put_tohistory(cmd_line, g_mshell.history);
-			printf("here(2)");
-			ft_execute_tree(cmd_tree, &g_mshell);
-			printf("here(3)");
-			add_history(cmd_line);
-			if (ft_strcmp(cmd_line, "exit") == 0)
-			{
-				free(cmd_line);
-				ft_free_tree(&cmd_tree);
-				break;
-			}
+		//FIXME: syntax error must not quit
+		if (ft_check_syntax(cmd_line) == 0)
+		{
+			free(cmd_line);
+			continue;
+		}
+		tokens = ft_tokinizer(cmd_line);
+		ft_printf("============== start ===============");
+		// var_dump_token(tokens);
+		ft_expand_tokens(tokens);
+		// var_dump_token(tokens);
+		ft_parse_ast(&cmd_tree, &tokens);
+		// var_dump_tree(cmd_tree);
+		put_tohistory(cmd_line, g_mshell.history);
+		ft_execute_tree(cmd_tree, &g_mshell);
+		add_history(cmd_line);
+		if (ft_strcmp(cmd_line, "exit") == 0)
+		{
 			free(cmd_line);
 			ft_free_tree(&cmd_tree);
+			break;
+		}
+		free(cmd_line);
+		ft_free_tree(&cmd_tree);
 	}
 	// print env
 	printf("=========================== HISTORY ==========================\n");
