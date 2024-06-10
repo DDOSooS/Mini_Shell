@@ -6,7 +6,7 @@
 /*   By: aghergho <aghergho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/06 16:02:56 by aghergho          #+#    #+#             */
-/*   Updated: 2024/06/10 13:40:06 by aghergho         ###   ########.fr       */
+/*   Updated: 2024/06/10 16:51:51 by aghergho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -130,7 +130,21 @@ void var_dump_tree(t_tnode *tree)
     }
 }
 
-
+void	ft_free_tokens(t_token **tokens)
+{
+	t_token *tmp;
+	
+	while (*tokens)
+	{
+		tmp = (*tokens)->next;
+		free((*tokens)->value);	
+		free(*tokens);
+		*tokens = tmp;
+	}
+	free(*tokens);
+	*tokens = NULL;
+}
+ 
 void	ftFreeInFile(t_infile *infile)
 {
 	t_infile *tmp;
@@ -169,17 +183,33 @@ void	ftFreeRedirection(t_redirection *redirection)
 		ftFreeOutFile(redirection->out_file);
 	free(redirection);
 }
+
+void	ft_free_cmds(t_cmd *cmds)
+{
+	t_cmd *tmp;
+	
+	while (cmds)
+	{
+		tmp = cmds->next;
+		free(cmds->arg);
+		free(cmds);
+		cmds = tmp;
+	}
+	free(cmds);
+}
+
 void	ft_free_tree(t_tnode **tree)
 {
 	if (*tree)
 	{
 		if (!(*tree)->t_left && !(*tree)->t_right )
 		{
-			free((*tree)->cmd);
 			free((*tree)->t_left);
 			free((*tree)->t_right);
+			ft_free_cmds((*tree)->cmd);
 			if ((*tree)->redirection)
 				ftFreeRedirection((*tree)->redirection);
+			free(*tree);
 			*tree = NULL;
 			return ;
 		}
@@ -199,6 +229,7 @@ int main(int ac, char **av, char **env)
 	// t_env	*env_list;
 	t_token *tokens;
 	t_tnode	*cmd_tree;
+	tokens = NULL;
 	cmd_tree = NULL;
 	/*
 		cntl + c signal handler - new prompt in and new line
@@ -221,22 +252,30 @@ int main(int ac, char **av, char **env)
 	while (1)
 	{
 			cmd_line = readline("minishell ;)>  ");
-			if (cmd_line == NULL)
-				return (0);
-			ft_check_syntax(cmd_line);
-			tokens = ft_tokinizer(cmd_line);
-			ft_printf("==============first token format===============\n\n");
-			var_dump_token(tokens);
-			ft_expand_tokens(tokens);
-			var_dump_token(tokens);
-			ft_parse_ast(&cmd_tree, &tokens);		
-			var_dump_tree(cmd_tree);
-			// ft_execute_tree(cmd_tree, env);
-			// add_history(cmd_line);
-			if (ft_strcmp(cmd_line, "exit") == 0)
-				return (free(cmd_line),0);
-			free(cmd_line);
-			ft_free_tree(&cmd_tree);
+			if (cmd_line == NULL || !ft_check_syntax(cmd_line))
+				free(cmd_line);
+			else if ( !ft_strcmp(cmd_line, "exit"))
+				return (free(cmd_line), EXIT_SUCCESS);
+			else
+			{
+				tokens = ft_tokinizer(cmd_line);
+				if (tokens)
+				{
+					ft_printf("==============first token format===============\n\n");
+					var_dump_token(tokens);
+					ft_expand_tokens(&tokens);
+					var_dump_token(tokens);
+					ft_parse_ast(&cmd_tree, &tokens);		
+					var_dump_tree(cmd_tree);
+					// ft_execute_tree(cmd_tree, env);
+					// add_history(cmd_line);
+					ft_free_tokens(&tokens);
+					ft_printf("+++==============second token format===============\n\n");
+					var_dump_token(tokens);
+					ft_free_tree(&cmd_tree);
+				}
+				free(cmd_line);
+			}
 	}
     return (EXIT_SUCCESS);
 }

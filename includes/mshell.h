@@ -134,10 +134,11 @@ extern t_mshell g_mshell;
 
 /*================ Parsing =================*/
 pid_t get_pid();
+void	ft_free_tokens(t_token **tokens);
 int is_dollar_sign(char c);
 int ft_check_expand(char *token);
 void	varDumpOutFile(t_outfile *redirection);
-void ft_expand_tokens(t_token *tokens);
+void ft_expand_tokens(t_token **tokens);
 void	varDumpInFile(t_infile *redirection);
 int ftGetTokenId(char *token);
 int ft_get_unexpanded_token(char *token, int *counter);

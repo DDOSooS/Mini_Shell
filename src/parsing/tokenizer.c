@@ -6,7 +6,7 @@
 /*   By: aghergho <aghergho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/13 15:14:32 by aghergho          #+#    #+#             */
-/*   Updated: 2024/06/10 13:49:37 by aghergho         ###   ########.fr       */
+/*   Updated: 2024/06/10 16:31:09 by aghergho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,7 +91,7 @@ t_token *ft_new_token(char *token)
     {
         // free()
         ft_putstr_fd("maximum here-document count exceeded\n", 2);
-        exit(0);
+        return (NULL);
     }
     else if (type == 7)
         g_mshell.n_herdoc++;   
@@ -110,7 +110,7 @@ t_token *ft_new_token(char *token)
     @Description this function is responsible for adding  a token 
 */
 
-void ft_add_token(t_token **tokens, char *cmd_line, int start, int end)
+int ft_add_token(t_token **tokens, char *cmd_line, int start, int end)
 {
     t_token *tmp;
     char    *token;
@@ -121,19 +121,20 @@ void ft_add_token(t_token **tokens, char *cmd_line, int start, int end)
     else    
         token =ft_substr(cmd_line, start, end - start +1);    
     if (! token)
-        return ;
+        return (0);
     new = ft_new_token(token);
     if (!new)
-        return ;
+        return (0);
     tmp = *tokens;
     if(!*tokens)
     {
         *tokens = new;
-        return ;
+        return (1);
     }
     while (tmp->next)
         tmp = tmp->next;
     tmp->next = new;
+    return (1);
 }
 
 int is_tokens(char c)
@@ -208,20 +209,28 @@ t_token *ft_tokinizer(char *cmd)
             continue;
         if (is_doubled_token(&cmd[i]) && (!ft_check_quote(cmd, i) && is_closed_parenthise(cmd, i)))
         {
-            ft_add_token(&tokens, cmd, i, i + 1);
+            if (!ft_add_token(&tokens, cmd, i, i + 1))
+                return (ft_free_tokens(tokens) , NULL);
             i++;
         }
         else if ((is_pipe(cmd[i]) || is_redirection(cmd[i])) && !ft_check_quote(cmd, i) && is_closed_parenthise(cmd, i))
-            ft_add_token(&tokens, cmd, i, i);
+        {
+            if (!ft_add_token(&tokens, cmd, i, i))
+                return (ft_free_tokens(tokens), NULL);
+        }
         else if ((is_parenthise(cmd[i]) && (!ft_check_quote(cmd, i))))
-            ft_add_token(&tokens, cmd, i, i);
+        {
+            if (!ft_add_token(&tokens, cmd, i, i))
+                return (ft_free_tokens(tokens), NULL);
+        }
         else if (start == -1)
             start = i;
         if (((is_whites_space(cmd[i + 1]) && ft_check_opened_token(cmd, i+1))
             || (is_r_parenthise(cmd[i + 1]) && !ft_check_quote(cmd, i + 1)) || !cmd[i + 1]
             || (is_tokens(cmd[i + 1]) && !ft_check_quote(cmd, i + 1) && is_closed_parenthise(cmd, i + 1))) && start != -1)
         {
-            ft_add_token(&tokens, cmd, start, i);
+            if (!ft_add_token(&tokens, cmd, start, i))
+                return (ft_free_tokens(tokens), NULL);
             start = -1;
         }
     } 
