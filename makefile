@@ -10,6 +10,7 @@ SRC = src/main.c\
 		src/parsing/syntax-error.c\
 		src/parsing/tokenizer.c\
 		src/parsing/parser.c\
+		src/execution/builtins.c\
 		src/execution/execute.c\
 		src/execution/signals.c\
 		src/execution/environ.c\

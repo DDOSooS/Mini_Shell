@@ -111,13 +111,6 @@ enum TokenType
     TOKEN_R_PARENTHISE
 } ;
 
-typedef struct builtin
-{
-    char   *name;
-    int     (*func)(t_cmd *cmd, t_env *env);
-} t_builtins;
-
-
 typedef struct mshell
 {
  t_env      *env;
@@ -128,6 +121,12 @@ typedef struct mshell
 } t_mshell;
 
 extern t_mshell g_mshell;
+
+typedef struct builtin
+{
+    char   *name;
+    int     (*func)(t_cmd *cmd, t_mshell *shell);
+} t_builtins;
 
 
 /*
@@ -176,11 +175,12 @@ int is_quote(char c);
 // void ft_parse_input(char *cmd);
 
 /*================= execution ===============*/
-void ft_execute_tree(t_tnode *root, t_env *env);
+void ft_execute_tree(t_tnode *root, t_mshell *shell);
 void ignore_signals();
 t_env *extarct_env(char **envp);
 void put_tohistory(char *cmd, t_history *history);
 int find_env_rem(t_env *env, char *key);
 t_env *find_env(t_env *env, char *key);
+ int builtins_finder(t_cmd *cmd, t_mshell *shell);
 
 #endif

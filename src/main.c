@@ -192,24 +192,40 @@ void	ft_free_tree(t_tnode **tree)
 		}
 	}
 }
- 
+
+// t_mshell *init_mshell(char **env)
+// {
+// 	t_mshell *mshell;
+
+// 	mshell = (t_mshell *)malloc(sizeof(t_mshell));
+// 	mshell->env = extarct_env(env);
+// 	mshell->history = (t_history *)malloc(sizeof(t_history));
+// 	mshell->history->id = 0;
+// 	mshell->history->cmd = NULL;
+// 	mshell->history->next = NULL;
+// 	return (mshell);
+// }
 int main(int ac, char **av, char **env)
 {
+	//FIXME: edit/work with the t_mshell
+
 	char	*cmd_line;
+	// t_mshell *mshell;
+
 	// t_env	*env_list;
+	// t_history *history;
 	t_token *tokens;
 	t_tnode	*cmd_tree;
 	cmd_tree = NULL;
-	/*
-		cntl + c signal handler - new prompt in and new line
-		cntl + \ signal handler - do nothing
-	*/
 	ignore_signals();
 	/*
 		Extract env variables from envp
 	*/
 	g_mshell.env = extarct_env(env);
 	g_mshell.pid= get_pid();
+	g_mshell.history = (t_history *)malloc(sizeof(t_history));
+	g_mshell.history->id = 0;
+	g_mshell.history->cmd = NULL;
 	g_mshell.n_herdoc = 0;
 	// env_list = g_mshell.env;
 	// while (env_list)
@@ -222,22 +238,40 @@ int main(int ac, char **av, char **env)
 	{
 		if (isatty(STDIN_FILENO))
 			cmd_line = readline("minishell ;)>  ");
-			if (cmd_line == NULL)
-				return (0);
+		else
+			cmd_line = readline("");
+		if (cmd_line == NULL)
+			return (0);
+
 			ft_check_syntax(cmd_line);
 			tokens = ft_tokinizer(cmd_line);
 			ft_printf("==============first token format===============\n\n");
-			var_dump_token(tokens);
+			// var_dump_token(tokens);
 			ft_expand_tokens(tokens);
-			var_dump_token(tokens);
+			// var_dump_token(tokens);
 			ft_parse_ast(&cmd_tree, &tokens);		
-			var_dump_tree(cmd_tree);
-			// ft_execute_tree(cmd_tree, env);
-			// add_history(cmd_line);
+			// var_dump_tree(cmd_tree);
+			printf("here(1)");
+			put_tohistory(cmd_line, g_mshell.history);
+			printf("here(2)");
+			ft_execute_tree(cmd_tree, &g_mshell);
+			printf("here(3)");
+			add_history(cmd_line);
 			if (ft_strcmp(cmd_line, "exit") == 0)
-				return (free(cmd_line),0);
+			{
+				free(cmd_line);
+				ft_free_tree(&cmd_tree);
+				break;
+			}
 			free(cmd_line);
 			ft_free_tree(&cmd_tree);
+	}
+	// print env
+	printf("=========================== HISTORY ==========================\n");
+	while (g_mshell.history)
+	{
+		ft_printf("id: %d cmd: %s\n", g_mshell.history->id, g_mshell.history->cmd);
+		g_mshell.history = g_mshell.history->next;
 	}
     return (EXIT_SUCCESS);
 }

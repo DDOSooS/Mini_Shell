@@ -1,11 +1,12 @@
 #include "../../includes/mshell.h"
 
-int ft_env(t_cmd cmd, t_env *env)
+int ft_env(t_cmd *cmd, t_mshell *shell)
 {
+	printf("env, cmd %s\n", cmd->arg);
 	t_env *tmp;
 	(void)cmd;
 
-	tmp = env;
+	tmp = shell->env;
 	while (tmp)
 	{
 		if (tmp->value)
@@ -15,23 +16,27 @@ int ft_env(t_cmd cmd, t_env *env)
 	return (0);
 }
 
-int ft_exit(t_cmd *cmd, t_env *env)
+int ft_exit(t_cmd *cmd, t_mshell *shell)
 {
+	printf("exit, cmd %s\n", cmd->arg);
 	(void)cmd;
-	(void)env;
+	(void)shell;
 	exit(0);
 	return (0);
 }
 
-int ft_history(t_cmd *cmd, t_env *env)
+int ft_history(t_cmd *cmd, t_mshell *shell)
 {
 	//TODO: change params for history t_history *history
+
+	printf("history, cmd %s\n", cmd->arg);
+	(void)cmd;
 	t_history *tmp;
 
+	tmp = shell->history;
 	while (tmp)
 	{
-		if (tmp->id != 0)
-			ft_printf("%d %s\n", tmp->id, tmp->cmd);
+		ft_printf("%d  %s\n", tmp->id, tmp->cmd);
 		tmp = tmp->next;
 	}
 	return (0);
@@ -41,8 +46,9 @@ int echo_arg(char *arg)
 	int i;
 
 	i = 0;
-	if (arg[0] == '-')
+	if (arg[i] == '-')
 	{
+		i++;
 		while (arg[i] == 'n')
 			i++;
 	}
@@ -51,15 +57,16 @@ int echo_arg(char *arg)
 	return (0);
 }
 
-int ft_echo(t_cmd *cmd, t_env *env)
+int ft_echo(t_cmd *cmd, t_mshell *shell)
 {
+	printf("echo, cmd %s\n", cmd->arg);
 	t_cmd *tmp;
 
 	tmp = cmd;
-	(void)env;
-	if (echo_arg(tmp->arg))
+	(void)shell;
+	if (echo_arg(tmp->next->arg))
 	{
-		tmp = tmp->next;
+		tmp = tmp->next->next;
 		while (tmp)
 		{
 			ft_printf("%s", tmp->arg);
@@ -70,6 +77,7 @@ int ft_echo(t_cmd *cmd, t_env *env)
 	}
 	else
 	{
+		tmp = tmp->next;
 		while (tmp)
 		{
 			ft_printf("%s", tmp->arg);
@@ -83,30 +91,30 @@ int ft_echo(t_cmd *cmd, t_env *env)
 }
 
 
-int ft_unset(t_cmd *cmd, t_env *env)
+int ft_unset(t_cmd *cmd, t_mshell *shell)
 {
 	t_cmd *tmp;
-	t_env *tmp_env;
 
-	tmp = cmd;
+	tmp = cmd->next;
 	while (tmp)
 	{
-		if (find_env_rem(env, tmp->arg))
+		if (!find_env_rem(shell->env, tmp->arg))
 			ft_printf("unset: %s: not found\n", tmp->arg);
 		tmp = tmp->next;
 	}
 	return (0);
 }
 
-
-
-int ft_pwd(t_cmd *cmd, t_env *env)
+int ft_pwd(t_cmd *cmd, t_mshell *shell)
 {
+	printf("pwd, cmd %s\n", cmd->arg);
 	char *cwd;
 	t_env *tmp;
 
 	(void)cmd;
-	tmp = find_env(env, "PWD");
+	printf("here(1)\n");
+	tmp = find_env(shell->env, "PWD");
+	printf("here(22\n");
 	if (tmp)
 		ft_printf("%s\n", tmp->value);
 	else
@@ -174,14 +182,13 @@ t_env *sort_env(t_env *env)
 		tmp = tmp->next;
 	}
 	return (env);
-
 }
 
 void print_export(t_env *env)
 {
 	t_env *tmp;
 
-	tmp = env;
+	tmp = sort_env(env);
 	while (tmp)
 	{
 		ft_printf("declare -x %s=\"%s\"\n", tmp->key, tmp->value);
@@ -189,33 +196,29 @@ void print_export(t_env *env)
 	}
 }
 
-int ft_export(t_cmd *cmd, t_env *env)
+int ft_export(t_cmd *cmd, t_mshell *shell)
 {
-	//TODO: implement export
-	//TDOD: fix errors
 	t_cmd *tmp;
 
-	if (ft_lstsize_bonus(cmd) == 1)
+	if (cmd->next == NULL)
 	{
-		print_export(env);
+		//FIXME: print all env SORTED and not edit the env
+		print_export(shell->env);
 		return (0);
 	}
-	tmp = cmd;
+	tmp = cmd->next;
 	while (tmp)
 	{
+		printf("tmp->arg %s\n", tmp->arg);
 		if (ft_strchr(tmp->arg, '='))
 		{
-			add_env(env, ft_strtok(tmp->arg, "="), ft_strtok(NULL, "="));
+			edit_env(shell->env, ft_substr(tmp->arg, 0, ft_strchr(tmp->arg, '=') - tmp->arg), ft_strdup(ft_strchr(tmp->arg, '=') + 1));
 		}
 		else
-		{
-			if (find_env(env, tmp->arg))
-				ft_printf("export: %s: not a valid identifier\n", tmp->arg);
-			else
-				add_env(env, tmp->arg, "");
-		}
+			edit_env(shell->env, tmp->arg, "");
 		tmp = tmp->next;
 	}
+	return (0);
 }
 
 void cd_cases(char *path, t_env *env)
@@ -231,28 +234,32 @@ void cd_cases(char *path, t_env *env)
 	if (chdir(path) == -1)
 		ft_printf("cd: %s: No such file or directory\n", path);
 }
-int ft_cd(t_cmd *cmd, t_env *env)
+int ft_cd(t_cmd *cmd, t_mshell *shell)
 {
+	printf("cd, cmd %s\n", cmd->arg);
 	//TODO: implement cd
 	char *path;
 
 	path = cmd->next->arg;
 	if (path == NULL || ft_strcmp(path, "~") == 0)
 	{
-		path = find_env(env, "HOME")->value;
+		path = find_env(shell->env, "HOME")->value;
 		if (chdir(path) == -1)
 			ft_printf("cd: %s: No such file or directory\n", path);
 	}
 	else
-		cd_cases(path, env);
-	add_env(env, "OLDPWD", find_env(env, "PWD")->value);
-	edit_env(env, "PWD", getcwd(NULL, 0));
+		cd_cases(path, shell->env);
+	add_env(shell->env, "OLDPWD", find_env(shell->env, "PWD")->value);
+	edit_env(shell->env, "PWD", getcwd(NULL, 0));
+	// add_env(env, "OLDPWD", find_env(env, "PWD")->value);
+	// edit_env(env, "PWD", getcwd(NULL, 0));
 	return (0);
 }
- int builtins_finder(char *cmd, t_cmd *cmd, t_env *env)
+ int builtins_finder(t_cmd *cmd, t_mshell *shell)
 {
 	int flag;
 	int i;
+	printf("builtins_finder, cmd %s\n", cmd->arg);
 	t_builtins builtins[] = {
 		{"cd", &ft_cd},
 		{"echo", &ft_echo},
@@ -266,11 +273,14 @@ int ft_cd(t_cmd *cmd, t_env *env)
 	};
 
 	i = 0;
-	while (builtins[i].cmd)
+	flag = -1;
+	while (builtins[i].name)
 	{
-		if (ft_strcmp(builtins[i].cmd, cmd) == 0)
-			flag = builtins[i].func(cmd);
+		if (ft_strcmp(builtins[i].name, cmd->arg) == 0)
+		{
+			flag = builtins[i].func(cmd, shell);
 			break;
+		}
 		i++;
 	}
 	return (flag);
