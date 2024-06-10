@@ -6,7 +6,7 @@
 /*   By: aghergho <aghergho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/06 16:02:56 by aghergho          #+#    #+#             */
-/*   Updated: 2024/06/05 16:49:39 by aghergho         ###   ########.fr       */
+/*   Updated: 2024/06/10 13:40:06 by aghergho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -210,6 +210,7 @@ int main(int ac, char **av, char **env)
 	*/
 	g_mshell.env = extarct_env(env);
 	g_mshell.pid= get_pid();
+	g_mshell.n_herdoc = 0;
 	// env_list = g_mshell.env;
 	// while (env_list)
 	// {

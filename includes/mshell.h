@@ -122,6 +122,7 @@ typedef struct mshell
  t_history  *history;
  int        exit_value;
  pid_t      pid;
+ int        n_herdoc;
 } t_mshell;
 
 extern t_mshell g_mshell;
