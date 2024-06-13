@@ -6,7 +6,7 @@
 /*   By: aghergho <aghergho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/13 15:14:32 by aghergho          #+#    #+#             */
-/*   Updated: 2024/06/10 16:31:09 by aghergho         ###   ########.fr       */
+/*   Updated: 2024/06/13 15:42:55 by aghergho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,7 +86,6 @@ t_token *ft_new_token(char *token)
     int type;
 
     type = ftGetTokenId(token);
-    // ft_printf("++++++++++++++++++++++++++++++++++(type (%d))(%d)++++++++++++++++++++++++++++++++++++\n", type,g_mshell.n_herdoc);
     if (type == 7 && g_mshell.n_herdoc == 16)
     {
         // free()
@@ -101,7 +100,9 @@ t_token *ft_new_token(char *token)
     new->value = token;
     new->type = ft_get_token_type(token);
     new->typeId = type;
+    new->is_exported = 0;
     new->next = NULL;
+    new->previous = NULL;
     return new;
 }
 
@@ -134,6 +135,7 @@ int ft_add_token(t_token **tokens, char *cmd_line, int start, int end)
     while (tmp->next)
         tmp = tmp->next;
     tmp->next = new;
+    new->previous = tmp;
     return (1);
 }
 
@@ -210,18 +212,18 @@ t_token *ft_tokinizer(char *cmd)
         if (is_doubled_token(&cmd[i]) && (!ft_check_quote(cmd, i) && is_closed_parenthise(cmd, i)))
         {
             if (!ft_add_token(&tokens, cmd, i, i + 1))
-                return (ft_free_tokens(tokens) , NULL);
+                return (ft_free_tokens(&tokens) , NULL);
             i++;
         }
         else if ((is_pipe(cmd[i]) || is_redirection(cmd[i])) && !ft_check_quote(cmd, i) && is_closed_parenthise(cmd, i))
         {
             if (!ft_add_token(&tokens, cmd, i, i))
-                return (ft_free_tokens(tokens), NULL);
+                return (ft_free_tokens(&tokens), NULL);
         }
         else if ((is_parenthise(cmd[i]) && (!ft_check_quote(cmd, i))))
         {
             if (!ft_add_token(&tokens, cmd, i, i))
-                return (ft_free_tokens(tokens), NULL);
+                return (ft_free_tokens(&tokens), NULL);
         }
         else if (start == -1)
             start = i;
@@ -230,7 +232,7 @@ t_token *ft_tokinizer(char *cmd)
             || (is_tokens(cmd[i + 1]) && !ft_check_quote(cmd, i + 1) && is_closed_parenthise(cmd, i + 1))) && start != -1)
         {
             if (!ft_add_token(&tokens, cmd, start, i))
-                return (ft_free_tokens(tokens), NULL);
+                return (ft_free_tokens(&tokens), NULL);
             start = -1;
         }
     } 

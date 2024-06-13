@@ -6,7 +6,7 @@
 /*   By: aghergho <aghergho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/02 19:12:55 by aghergho          #+#    #+#             */
-/*   Updated: 2023/11/12 00:27:28 by aghergho         ###   ########.fr       */
+/*   Updated: 2024/06/12 16:06:57 by aghergho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,6 +95,7 @@ char	**ft_split(char const *s, char c)
 	ft_gen_words(words, s, c);
 	return (words);
 }
+
 /*=======================Testing part==================
 int	main(void)
 {
