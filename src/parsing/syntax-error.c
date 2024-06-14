@@ -6,7 +6,7 @@
 /*   By: aghergho <aghergho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/10 18:51:59 by aghergho          #+#    #+#             */
-/*   Updated: 2024/06/10 16:02:27 by aghergho         ###   ########.fr       */
+/*   Updated: 2024/06/12 16:22:57 by aghergho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,22 @@ int is_logical_operator(char *cmd)
 {
     if (cmd[0] && cmd[1] && (is_operator(cmd[0]) || (is_pipe(cmd[0]) && is_pipe(cmd[1]))))
         return (1);
+    return (0);
+}
+
+int ft_check_white_spaces(char *cmd)
+{
+    int i;
+
+    i = 0;
+    while (cmd[i] && is_whites_space(cmd[i]))
+        i++;
+    while (cmd[i])
+    {
+        if (is_whites_space(cmd[i]) && cmd[i + 1] && !is_whites_space(cmd[i + 1]))
+            return (1);
+        i++;
+    }
     return (0);
 }
 

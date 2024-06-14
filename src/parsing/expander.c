@@ -6,11 +6,80 @@
 /*   By: aghergho <aghergho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/01 01:15:21 by aghergho          #+#    #+#             */
-/*   Updated: 2024/06/10 16:21:44 by aghergho         ###   ########.fr       */
+/*   Updated: 2024/06/13 15:42:42 by aghergho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 # include "../../includes/mshell.h"
+
+
+int is_delimter(char c, char *delimiter)
+{
+    int i;
+
+    i = -1;
+    while (delimiter[++i])
+        if (delimiter[i] == c)
+            return (1);
+    return (0);
+}
+
+int ft_count_word(char *words, char *delimiter)
+{
+    int i;
+    int counter;
+    
+    i = 0;
+    counter = 0;
+    while (words[i])
+    {
+        while (words[i] && is_delimter(words[i], delimiter))
+            i++;
+        if (words[i])
+            counter++;
+        while (words[i] && !is_delimter(words[i], delimiter))
+            i++;
+    }
+    return (counter);
+}
+
+char **ft_split_word(char **args, char *words, char *delimiter)
+{
+    int i;
+    int j;
+    int k;
+    
+    i = 0;
+    k = 0;
+    while (words[i])
+    {
+        j = 0;
+        while (words[i] && is_delimter(words[i], delimiter))
+            i++;
+        if (words[i])
+        {
+            while (words[i + j] && !is_delimter(words[i + j], delimiter))
+				j++;
+			args[k++] = ft_substr(words, i, j);
+			i += j;
+        }     
+    }
+    args[k]= NULL;
+    return (args);
+}
+
+char **ft_split_words(char *words, char *delimiter)
+{
+    int len;
+    char **args;
+
+    len = ft_count_word(words, delimiter);
+    args = malloc (sizeof(char *) *(len + 1));
+    if (!args)
+        return (NULL);
+    ft_split_word(args, words, delimiter);
+    return (args);
+}
 
 int ft_count_token_len(char *token)
 {
@@ -21,12 +90,11 @@ int ft_count_token_len(char *token)
     counter = 0;
     while (token[++i])
     {
-        if (is_quote(token[i]) && token[i + 1] && token[i] == token[i + 1] && !ft_check_quote(token, i + 2))
-        {
+        if (is_dollar_sign(token[i])  && is_quote(token[i + 1]) && !is_dollar_sign(token[i - 1]) && !ft_check_quote(token ,i + 1))
             i++;
-            continue;
-        }
-        if (is_quote(token[i]))
+        else if (is_quote(token[i]) && token[i + 1] && token[i] == token[i + 1] && !ft_check_quote(token, i + 2))
+            i++;
+        else if (is_quote(token[i]))
         {
             while (token[i] && ft_check_quote(token, i+1))
             {
@@ -81,12 +149,11 @@ char *ft_gen_token_toexpand(char *str, char *token)
     i = -1;
     while (token[++i])
     {
-        if (is_quote(token[i]) && token[i + 1] && token[i] == token[i + 1] && !ft_check_quote(token, i + 2))
-        {
-            i++;
+        if (is_dollar_sign(token[i]) && token[i + 1] && is_quote(token[i + 1]) && !is_dollar_sign(token[i - 1]) && !ft_check_quote(token, i + 1))
             continue;
-        }
-        if (is_quote(token[i]))
+        else if (is_quote(token[i]) && token[i + 1] && token[i] == token[i + 1] && !ft_check_quote(token, i + 2))
+            i++;
+        else if (is_quote(token[i]))
         {
             while (token[i] && ft_check_quote(token, i+1))
                 str[j++] = token[i++];
@@ -128,40 +195,96 @@ pid_t get_pid()
     return (pid - 2);
 }
 
-void ft_expand_tokens(t_token **tokens)
+void ft_expand_quotes(t_token **tokens)
 {
     t_token *tmp;
     char    *tmp_str;
     char    *tmpfile;
     
     tmp = *tokens;
-    // ft_printf("======g_pid(%d)==getpid(%d)<<<<<<<<<<<<<<<<<\n", pid - 1, getpid() );
     while (tmp)
     {
-        // ft_printf("===>>> EXPANDER  ?(%d) ||| ?(%d)<<====\n",is_exist_quote(tmp->value), ft_check_quote(tmp->value, ft_strlen(tmp->value)));
         if (is_exist_quote(tmp->value) || ft_check_dollar(tmp->value))
         {
-            // ft_printf("=======  new tok len (%d)   =========\n\n", ft_count_token_len(tmp->value));
             tmpfile = tmp->value;
             tmp_str = ft_expand(tmp->value);
-            // ft_printf("=======  new expanded token (%d)(%s)   =========\n\n", ft_strlen(tmp_str), tmp_str);
             free(tmp->value);
             tmp->value = tmp_str;
-            // ft_printf("=======  new expanded token (%d)(%s)   =========\n\n", ft_strlen(tmp->value), tmp->value);
         }
         tmp = tmp->next;
     }
 }
 
-// t_cmd *ft_expand_cmd(t_cmd **cmds)
-// {
-//     t_cmd *tmp;
+int ft_expand_token(t_token **tokens)
+{
+    t_token *tmp;
+    int     flag;
 
-//     tmp = *cmds;
-//     while (tmp)
-//     {
-//         tmp = tmp->next;
-//     }
+    tmp = *tokens;
+    while (tmp)
+    {
+        flag = 0;
+        if (tmp->previous && (tmp->previous->typeId == 7))
+            ft_expand_delimiter(&tmp->value);
+        else
+        {
+            if (tmp->value && is_dollar_sign(tmp->value[0]))
+            {
+                flag = 1;
+                tmp->is_exported = 1;
+            }
+            ft_expand_arg(&tmp->value);
+        }
+        if (!tmp->value[0] && flag && tmp->previous && (tmp->previous->typeId == 6 || tmp->previous->typeId == 8 || tmp->previous->typeId == 9 ))
+            return (ft_putstr_fd("ambiguous redirect\n", 2), 0);
+        tmp = tmp->next;
+    }
+    return (1);
+}
+
+int ft_handle_export_expand(t_token **tokens)
+{
+    t_token *tmp;
+    t_token *next_tmp;
+    t_token *last_t_tmp;
     
-//     return (*cmds);
-// }
+    tmp = *tokens;
+    while (tmp)
+    {
+        if (tmp->is_exported && ft_check_white_spaces(tmp->value))
+        {
+            t_token *t_tmp = ft_tokinizer(tmp->value);
+            ft_expand_tokens(&t_tmp);
+            if (tmp->previous)
+                tmp->previous->next = t_tmp;
+            else
+                *tokens = t_tmp;
+            next_tmp = tmp->next;
+            free(tmp->value);            
+            free(tmp);            
+            last_t_tmp = t_tmp;
+            while (last_t_tmp->next)
+                last_t_tmp = last_t_tmp->next;
+            last_t_tmp->next = next_tmp;
+            tmp = next_tmp;
+        }
+        else
+            tmp = tmp->next;
+    }
+    return 1;
+}
+
+
+int  ft_expand_tokens(t_token **tokens)
+{
+    t_token *tmp;
+    int flag;
+    
+    ft_expand_quotes(tokens);
+
+    if (!ft_expand_token(tokens))
+        return (0);
+    ft_handle_export_expand(tokens);
+
+    return (1); 
+} 

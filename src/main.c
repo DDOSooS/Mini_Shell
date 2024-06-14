@@ -6,7 +6,7 @@
 /*   By: aghergho <aghergho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/06 16:02:56 by aghergho          #+#    #+#             */
-/*   Updated: 2024/06/10 16:51:51 by aghergho         ###   ########.fr       */
+/*   Updated: 2024/06/13 15:43:21 by aghergho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,8 +32,8 @@ void	var_dump(char **str)
 
 void	var_dump_token(t_token *tokens)
 {
-	if (! tokens)
-		ft_printf("=====tokens are Null====\n");
+	// if (! tokens)
+	// 	ft_printf("=====tokens are Null====\n");
 	while (tokens)
 	{
 		ft_printf("==type===(%s)-----\n",tokens->type);
@@ -44,7 +44,6 @@ void	var_dump_token(t_token *tokens)
 
 void	var_dump_cmd(t_cmd *cmds)
 {
-	// ft_printf("================cmds==(%d)====================\n\n", cmds->arg);
 	if (! cmds)
 		ft_printf("=====cmds are Null====\n");
 		
@@ -240,10 +239,6 @@ int main(int ac, char **av, char **env)
 	//FIXME: edit/work with the t_mshell
 
 	char	*cmd_line;
-	// t_mshell *mshell;
-
-	// t_env	*env_list;
-	// t_history *history;
 	t_token *tokens;
 	t_tnode	*cmd_tree;
 	tokens = NULL;
@@ -259,13 +254,6 @@ int main(int ac, char **av, char **env)
 	g_mshell.history->cmd = NULL;
 	g_mshell.history->next = NULL;
 	g_mshell.n_herdoc = 0;
-	// env_list = g_mshell.env;
-	// while (env_list)
-	// {
-	// 	ft_printf("key: %s value:%s\n", env_list->key, env_list->value);
-	// 	env_list = env_list->next;
-	// }
-	ft_printf("====get_pid(%d) === myowne_pid(%d)===\n", getpid(), get_pid());
 	while (1)
 	{
 		if (isatty(STDIN_FILENO))
@@ -279,18 +267,20 @@ int main(int ac, char **av, char **env)
 				tokens = ft_tokinizer(cmd_line);
 				if (tokens)
 				{
-					ft_printf("==============first token format===============\n\n");
-					var_dump_token(tokens);
-					ft_expand_tokens(&tokens);
-					var_dump_token(tokens);
-					ft_parse_ast(&cmd_tree, &tokens);		
-					var_dump_tree(cmd_tree);
-					// ft_execute_tree(cmd_tree, env);
-					// add_history(cmd_line);
-					ft_free_tokens(&tokens);
-					ft_printf("+++==============second token format===============\n\n");
-					var_dump_token(tokens);
-					ft_free_tree(&cmd_tree);
+					// var_dump_token(tokens);
+					if (!ft_expand_tokens(&tokens))
+						ft_free_tokens(&tokens);
+					else
+					{
+						// ft_printf("==============first token format===============\n\n");
+						// var_dump_token(tokens);
+						ft_parse_ast(&cmd_tree, &tokens);		
+						var_dump_tree(cmd_tree);
+						// ft_execute_tree(cmd_tree, env);
+						// add_history(cmd_line);
+						ft_free_tokens(&tokens);
+						ft_free_tree(&cmd_tree);
+					}
 				}
 				free(cmd_line);
 			}

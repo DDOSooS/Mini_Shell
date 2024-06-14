@@ -39,7 +39,9 @@ typedef struct token
     char            *type;
     int             typeId;
     char            *value;
+    int             is_exported;
     struct token    *next;
+    struct token    *previous;
 }   t_token;
 
 typedef struct  env
@@ -60,6 +62,7 @@ typedef struct cmd
 {
     char            *arg;
     int             check_wildcard;
+    int             is_exporterd;
     struct cmd      *next;
 } t_cmd;
 
@@ -87,7 +90,6 @@ typedef struct redirection
 typedef struct treeNode
 {
     int                 node_type;
-    // char             *cmd;
     t_cmd            *cmd;
     t_redirection       *redirection;
     struct treeNode     *t_left;
@@ -135,11 +137,16 @@ typedef struct builtin
 
 /*================ Parsing =================*/
 pid_t get_pid();
+int ft_check_white_spaces(char *cmd);
+void ft_expand_delimiter(char **arg);
+void	var_dump_cmd(t_cmd *cmds);
+int ft_expand_arg(char **arg);
+char **ft_split_words(char *words, char *delimiter);
 void	ft_free_tokens(t_token **tokens);
 int is_dollar_sign(char c);
 int ft_check_expand(char *token);
 void	varDumpOutFile(t_outfile *redirection);
-void ft_expand_tokens(t_token **tokens);
+int ft_expand_tokens(t_token **tokens);
 void	varDumpInFile(t_infile *redirection);
 int ftGetTokenId(char *token);
 int ft_get_unexpanded_token(char *token, int *counter);
