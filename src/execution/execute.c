@@ -2,8 +2,6 @@
 
 void cmd_runner(t_cmd *cmd, t_mshell *shell)
 {
-	(void)shell;
-	(void)cmd;
 	ft_printf("this is command\n");
 }
 void ft_execute_cmd(t_cmd *cmd, t_mshell *shell)
@@ -18,8 +16,6 @@ void ft_execute_cmd(t_cmd *cmd, t_mshell *shell)
 
 void ft_execute_tree(t_tnode *root, t_mshell *shell)
 {
-	(void)shell;
-	(void)root;
 	if (root)
 	{
 		if (root->node_type == TOKEN_WORD)

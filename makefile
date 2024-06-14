@@ -22,7 +22,7 @@ OBJ = $(SRC:.c=.o)
 all: $(NAME)
 
 $(NAME): $(OBJ) $(LIBFT) $(PRINTF)
-	$(CC) $(CFLAGS)  $^ -o $@ $(LIBS)
+	$(CC) $(CFLAGS) -g3  $^ -o $@ $(LIBS)
 
 %.o: %.c
 	$(CC) $(CFLAGS) -c $< -o $@

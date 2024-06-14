@@ -16,14 +16,14 @@ int ft_env(t_cmd *cmd, t_mshell *shell)
 	return (0);
 }
 
-int ft_exit(t_cmd *cmd, t_mshell *shell)
-{
-	printf("exit, cmd %s\n", cmd->arg);
-	(void)cmd;
-	(void)shell;
-	exit(0);
-	return (0);
-}
+// int ft_exit(t_cmd *cmd, t_mshell *shell)
+// {
+// 	printf("exit, cmd %s\n", cmd->arg);
+// 	(void)cmd;
+// 	(void)shell;
+// 	exit(0);
+// 	return (0);
+// }
 
 int ft_history(t_cmd *cmd, t_mshell *shell)
 {
@@ -256,7 +256,6 @@ int ft_cd(t_cmd *cmd, t_mshell *shell)
 {
 	int flag;
 	int i;
-	printf("builtins_finder, cmd %s\n", cmd->arg);
 	t_builtins builtins[] = {
 		{"cd", &ft_cd},
 		{"echo", &ft_echo},
@@ -264,7 +263,7 @@ int ft_cd(t_cmd *cmd, t_mshell *shell)
 		{"export", &ft_export},
 		{"unset", &ft_unset},
 		{"env", &ft_env},
-		{"exit", &ft_exit},
+		// {"exit", &ft_exit},
 		{"history", &ft_history},
 		{NULL, NULL}
 	};
@@ -275,6 +274,7 @@ int ft_cd(t_cmd *cmd, t_mshell *shell)
 	{
 		if (ft_strcmp(builtins[i].name, cmd->arg) == 0)
 		{
+			printf("builtins_finder, cmd %s\n", cmd->arg);
 			flag = builtins[i].func(cmd, shell);
 			break;
 		}

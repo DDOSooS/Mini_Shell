@@ -222,6 +222,13 @@ void	ft_free_tree(t_tnode **tree)
 	}
 }
 
+int check_tty()
+{
+	if (isatty(STDIN_FILENO))
+		return (1);
+	return (0);
+}
+
 // t_mshell *init_mshell(char **env)
 // {
 // 	t_mshell *mshell;
@@ -237,6 +244,12 @@ void	ft_free_tree(t_tnode **tree)
 int main(int ac, char **av, char **env)
 {
 	//FIXME: edit/work with the t_mshell
+
+	//TODO: Add given file to the programA
+	// if (ac >= 2)
+	// {
+	// 	return (EXIT_FAILURE);
+	// }
 
 	char	*cmd_line;
 	t_token *tokens;
@@ -256,13 +269,23 @@ int main(int ac, char **av, char **env)
 	g_mshell.n_herdoc = 0;
 	while (1)
 	{
-		if (isatty(STDIN_FILENO))
-			cmd_line = readline("minishell ;)>  ");
-			if (cmd_line == NULL || !ft_check_syntax(cmd_line))
-				free(cmd_line);
-			else if ( !ft_strcmp(cmd_line, "exit"))
-				return (free(cmd_line), EXIT_SUCCESS);
+		if (check_tty())
+			cmd_line = readline("minishell-:>");
+		else
+			cmd_line = readline("");
+		if (!cmd_line)
+		{
+			if (check_tty())
+				ft_printf("exit\n");
+			return (EXIT_SUCCESS);
+		}
+		if (!ft_check_syntax(cmd_line))
+		{
+			free(cmd_line);
+			if (check_tty())
+				continue;
 			else
+<<<<<<< Updated upstream
 			{
 				tokens = ft_tokinizer(cmd_line);
 				if (tokens)
@@ -284,6 +307,31 @@ int main(int ac, char **av, char **env)
 				}
 				free(cmd_line);
 			}
+=======
+				return (free(cmd_line), EXIT_FAILURE);
+		}
+		if (!ft_strcmp(cmd_line, "exit"))
+			return (printf("exit\n"), free(cmd_line), EXIT_SUCCESS);
+			tokens = ft_tokinizer(cmd_line);
+		printf("command: %s\n", cmd_line);
+		if (tokens)
+		{
+			// ft_printf("==============first token format===============\n\n");
+			// var_dump_token(tokens);
+			ft_expand_tokens(&tokens);
+			// var_dump_token(tokens);
+			ft_parse_ast(&cmd_tree, &tokens);		
+			// var_dump_tree(cmd_tree);
+			put_tohistory(cmd_line, g_mshell.history);
+			ft_execute_tree(cmd_tree, &g_mshell);
+			add_history(cmd_line);
+			ft_free_tokens(&tokens);
+			// ft_printf("+++==============second token format===============\n\n");
+			// var_dump_token(tokens);
+			ft_free_tree(&cmd_tree);
+		}
+		free(cmd_line);
+>>>>>>> Stashed changes
 	}
     return (EXIT_SUCCESS);
 }
