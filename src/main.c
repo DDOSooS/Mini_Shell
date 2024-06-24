@@ -229,19 +229,47 @@ int check_tty()
 	return (0);
 }
 
-// t_mshell *init_mshell(char **env)
-// {
-// 	t_mshell *mshell;
+t_env *extarct_env(char **envp)
+{
+	int i;
+	t_env *env;
+	t_env *tmp;
 
-// 	mshell = (t_mshell *)malloc(sizeof(t_mshell));
-// 	mshell->env = extarct_env(env);
-// 	mshell->history = (t_history *)malloc(sizeof(t_history));
-// 	mshell->history->id = 0;
-// 	mshell->history->cmd = NULL;
-// 	mshell->history->next = NULL;
-// 	return (mshell);
-// }
-int main(int ac, char **av, char **env)
+	i = 0;
+	env = NULL;
+	while (envp[i])
+	{
+		tmp = (t_env *)malloc(sizeof(t_env));
+		tmp->key = ft_substr(envp[i], 0, ft_strchr(envp[i], '=') - envp[i]);
+		tmp->value = ft_strdup(ft_strchr(envp[i], '=') + 1);
+		tmp->next = env;
+		env = tmp;
+		i++;
+	}
+	//TODO: remove the oldpwd
+	// find_env_rem(env, "OLDPWD");
+	return (env);
+}
+
+
+void m_shell_init(char **envp)
+{
+	g_mshell.env = NULL;
+	g_mshell.history = NULL;
+
+	g_mshell.env = extarct_env(envp);
+	g_mshell.pid = get_pid();
+
+	g_mshell.history = (t_history *)malloc(sizeof(t_history));
+	g_mshell.history->id = 0;
+	g_mshell.history->cmd = NULL;
+	g_mshell.history->next = NULL;
+
+	g_mshell.n_herdoc = 0;
+	g_mshell.exit_value = 0;
+}
+
+int main(int ac, char **av, char **envp)
 {
 	//FIXME: edit/work with the t_mshell
 
@@ -260,13 +288,7 @@ int main(int ac, char **av, char **env)
 	/*
 		Extract env variables from envp
 	*/
-	g_mshell.env = extarct_env(env);
-	g_mshell.pid= get_pid();
-	g_mshell.history = (t_history *)malloc(sizeof(t_history));
-	g_mshell.history->id = 0;
-	g_mshell.history->cmd = NULL;
-	g_mshell.history->next = NULL;
-	g_mshell.n_herdoc = 0;
+	m_shell_init(envp);
 	while (1)
 	{
 		if (check_tty())
@@ -277,6 +299,7 @@ int main(int ac, char **av, char **env)
 		{
 			if (check_tty())
 				ft_printf("exit\n");
+			free_gvar();
 			return (EXIT_SUCCESS);
 		}
 		if (!ft_check_syntax(cmd_line))
@@ -285,35 +308,11 @@ int main(int ac, char **av, char **env)
 			if (check_tty())
 				continue;
 			else
-<<<<<<< Updated upstream
-			{
-				tokens = ft_tokinizer(cmd_line);
-				if (tokens)
-				{
-					// var_dump_token(tokens);
-					if (!ft_expand_tokens(&tokens))
-						ft_free_tokens(&tokens);
-					else
-					{
-						// ft_printf("==============first token format===============\n\n");
-						// var_dump_token(tokens);
-						ft_parse_ast(&cmd_tree, &tokens);		
-						var_dump_tree(cmd_tree);
-						// ft_execute_tree(cmd_tree, env);
-						// add_history(cmd_line);
-						ft_free_tokens(&tokens);
-						ft_free_tree(&cmd_tree);
-					}
-				}
-				free(cmd_line);
-			}
-=======
-				return (free(cmd_line), EXIT_FAILURE);
+				return (free(cmd_line), free_gvar(), EXIT_FAILURE);
 		}
 		if (!ft_strcmp(cmd_line, "exit"))
-			return (printf("exit\n"), free(cmd_line), EXIT_SUCCESS);
-			tokens = ft_tokinizer(cmd_line);
-		printf("command: %s\n", cmd_line);
+			return (ft_printf("exit\n"), free(cmd_line), free_gvar(), EXIT_SUCCESS);
+		tokens = ft_tokinizer(cmd_line);
 		if (tokens)
 		{
 			// ft_printf("==============first token format===============\n\n");
@@ -331,7 +330,6 @@ int main(int ac, char **av, char **env)
 			ft_free_tree(&cmd_tree);
 		}
 		free(cmd_line);
->>>>>>> Stashed changes
 	}
     return (EXIT_SUCCESS);
 }

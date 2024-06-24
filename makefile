@@ -16,13 +16,14 @@ SRC = src/main.c\
 		src/execution/environ.c\
 		src/execution/history.c\
 		src/parsing/expander.c\
+		src/execution/freeier.c\
 
 OBJ = $(SRC:.c=.o)
 
 all: $(NAME)
 
 $(NAME): $(OBJ) $(LIBFT) $(PRINTF)
-	$(CC) $(CFLAGS) -g3  $^ -o $@ $(LIBS)
+	$(CC) $(CFLAGS) -g3 $^ -o $@ $(LIBS)
 
 %.o: %.c
 	$(CC) $(CFLAGS) -c $< -o $@

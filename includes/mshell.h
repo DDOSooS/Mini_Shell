@@ -189,6 +189,12 @@ t_env *extarct_env(char **envp);
 void put_tohistory(char *cmd, t_history *history);
 int find_env_rem(t_env *env, char *key);
 t_env *find_env(t_env *env, char *key);
- int builtins_finder(t_cmd *cmd, t_mshell *shell);
+int builtins_finder(t_cmd *cmd, t_mshell *shell);
+t_env *find_env(t_env *env, char *key);
+
+/*================ Clear Allocted ============*/
+void free_env(t_env *env);
+void free_history(t_history *history);
+void free_gvar(void);
 
 #endif

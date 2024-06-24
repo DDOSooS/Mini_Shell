@@ -61,6 +61,7 @@
     "mshell.h": "c",
     "header.h": "c",
     "ft_printf.h": "c",
-    "libft.h": "c"
+    "libft.h": "c",
+    "env_ext.h": "c"
   }
 }

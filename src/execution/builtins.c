@@ -235,11 +235,18 @@ int ft_cd(t_cmd *cmd, t_mshell *shell)
 {
 	printf("cd, cmd %s\n", cmd->arg);
 	//TODO: implement cd
-	char *path;
+	char *path = NULL;
 
-	path = cmd->next->arg;
+	if (cmd->next)
+		path = cmd->next->arg;
 	if (path == NULL || ft_strcmp(path, "~") == 0)
 	{
+		if (find_env(shell->env, "HOME") == NULL)
+		{
+			ft_printf("minshell: cd: HOME not set\n");
+			g_mshell.exit_value = 1;
+			return (0);
+		}
 		path = find_env(shell->env, "HOME")->value;
 		if (chdir(path) == -1)
 			ft_printf("cd: %s: No such file or directory\n", path);
