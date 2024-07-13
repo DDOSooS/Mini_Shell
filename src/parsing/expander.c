@@ -6,9 +6,12 @@
 /*   By: aghergho <aghergho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/01 01:15:21 by aghergho          #+#    #+#             */
-/*   Updated: 2024/06/13 15:42:42 by aghergho         ###   ########.fr       */
+/*   Updated: 2024/07/04 19:42:01 by aghergho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
+# include "../../includes/mshell.h"
+
 
 # include "../../includes/mshell.h"
 

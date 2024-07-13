@@ -6,7 +6,7 @@
 /*   By: aghergho <aghergho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/06 16:02:56 by aghergho          #+#    #+#             */
-/*   Updated: 2024/06/13 15:43:21 by aghergho         ###   ########.fr       */
+/*   Updated: 2024/07/13 22:21:28 by aghergho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -221,6 +221,27 @@ void	ft_free_tree(t_tnode **tree)
 		}
 	}
 }
+void free_env(t_env *env) {
+    t_env *tmp;
+
+    while (env) {
+        tmp = env;
+        env = env->next;
+        free(tmp->key);
+        free(tmp->value);
+        free(tmp);
+    }
+}
+void	var_dump_env(t_env *env)
+{
+	printf("=================================================env===\n");
+	while (env)
+	{
+		printf("key:%s==value:%s\n", env->key, env->value);
+		env = env->next;	
+	}
+	printf("=================================================env===\n");
+}
  
 int main(int ac, char **av, char **env)
 {
@@ -238,6 +259,7 @@ int main(int ac, char **av, char **env)
 		Extract env variables from envp
 	*/
 	g_mshell.env = extarct_env(env);
+	var_dump_env(g_mshell.env);
 	g_mshell.pid= get_pid();
 	g_mshell.n_herdoc = 0;
 	while (1)
@@ -257,9 +279,9 @@ int main(int ac, char **av, char **env)
 						ft_free_tokens(&tokens);
 					else
 					{
-						// ft_printf("==============first token format===============\n\n");
-						// var_dump_token(tokens);
-						ft_parse_ast(&cmd_tree, &tokens);		
+						ft_printf("==============first token format===============\n\n");
+						var_dump_token(tokens);
+						ft_parse_ast(&cmd_tree, &tokens);
 						var_dump_tree(cmd_tree);
 						// ft_execute_tree(cmd_tree, env);
 						// add_history(cmd_line);
@@ -270,5 +292,6 @@ int main(int ac, char **av, char **env)
 				free(cmd_line);
 			}
 	}
+	free_env(g_mshell.env);
     return (EXIT_SUCCESS);
 }

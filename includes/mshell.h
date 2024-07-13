@@ -44,6 +44,7 @@ typedef struct token
     int             typeId;
     char            *value;
     int             is_exported;
+    int             is_expanded;
     struct token    *next;
     struct token    *previous;
 }   t_token;
@@ -117,6 +118,13 @@ enum TokenType
     TOKEN_R_PARENTHISE
 } ;
 
+
+typedef struct herdocs
+{
+    char            *del;
+    int             is_expanded;
+    struct  herdocs *next;
+} t_herdoc;
 
 typedef struct mshell
 {

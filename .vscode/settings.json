@@ -61,6 +61,7 @@
     "mshell.h": "c",
     "stdio.h": "c",
     "unistd.h": "c",
-    "types.h": "c"
+    "types.h": "c",
+    "history.h": "c"
   }
 }
