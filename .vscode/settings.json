@@ -59,9 +59,16 @@
   "C_Cpp.errorSquiggles": "disabled",
   "files.associations": {
     "mshell.h": "c",
+<<<<<<< HEAD
     "stdio.h": "c",
     "unistd.h": "c",
     "types.h": "c",
     "history.h": "c"
+=======
+    "header.h": "c",
+    "ft_printf.h": "c",
+    "libft.h": "c",
+    "env_ext.h": "c"
+>>>>>>> origin/mkartit
   }
 }

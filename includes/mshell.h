@@ -6,11 +6,7 @@
 /*   By: aghergho <aghergho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/06 16:01:09 by aghergho          #+#    #+#             */
-// <<<<<<< Updated upstream
-/*   Updated: 2024/05/30 16:39:20 by aghergho         ###   ########.fr       */
-// =======
-/*   Updated: 2024/05/29 20:51:27 by mkartit          ###   ########.fr       */
-// >>>>>>> Stashed changes
+/*   Updated: 2024/07/14 00:43:47 by aghergho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +40,6 @@ typedef struct token
     int             typeId;
     char            *value;
     int             is_exported;
-    int             is_expanded;
     struct token    *next;
     struct token    *previous;
 }   t_token;
@@ -109,7 +104,7 @@ typedef struct treeNode
 
 enum TokenType
 {
-    TOKEN_WORD ,
+    TOKEN_WORD,
     TOKEN_PIPE,
     TOKEN_IN_REDIRECTION,
     TOKEN_OUT_REDIRECTION,
@@ -118,13 +113,14 @@ enum TokenType
     TOKEN_R_PARENTHISE
 } ;
 
-
-typedef struct herdocs
+typedef struct herdoc
 {
-    char            *del;
+    int             id;
+    char            *delimiter;
     int             is_expanded;
-    struct  herdocs *next;
-} t_herdoc;
+    struct  herdoc  *next;
+}   t_herdoc;
+
 
 typedef struct mshell
 {
@@ -133,9 +129,17 @@ typedef struct mshell
  int        exit_value;
  pid_t      pid;
  int        n_herdoc;
+ int        n_herdoc_executed;
+ t_herdoc   *herdocs;
 } t_mshell;
 
 extern t_mshell g_mshell;
+
+typedef struct builtin
+{
+    char   *name;
+    int     (*func)(t_cmd *cmd, t_mshell *shell);
+} t_builtins;
 
 
 /*
@@ -190,8 +194,21 @@ int is_quote(char c);
 // void ft_parse_input(char *cmd);
 
 /*================= execution ===============*/
-void ft_execute_tree(t_tnode *root, char **env);
-t_env *extarct_env(char **envp);
-
+void ft_execute_tree(t_tnode *root, t_mshell *shell);
 void ignore_signals();
+t_env *extarct_env(char **envp);
+void put_tohistory(char *cmd, t_history *history);
+int find_env_rem(t_env *env, char *key);
+t_env *find_env(t_env *env, char *key);
+int builtins_finder(t_cmd *cmd, t_mshell *shell);
+t_env *find_env(t_env *env, char *key);
+
+/*================ Clear Allocted ============*/
+void free_env(t_env *env);
+void free_history(t_history *history);
+void free_gvar(void);
+void    ft_free_herdoc(t_herdoc **herdocs);
+
+/*================var dumping data==============*/
+void	var_dump_herdocs(t_herdoc *herdoc);
 #endif

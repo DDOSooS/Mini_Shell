@@ -6,7 +6,7 @@
 /*   By: aghergho <aghergho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/06 16:02:56 by aghergho          #+#    #+#             */
-/*   Updated: 2024/07/13 22:21:28 by aghergho         ###   ########.fr       */
+/*   Updated: 2024/07/14 00:45:30 by aghergho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -221,77 +221,127 @@ void	ft_free_tree(t_tnode **tree)
 		}
 	}
 }
-void free_env(t_env *env) {
-    t_env *tmp;
 
-    while (env) {
-        tmp = env;
-        env = env->next;
-        free(tmp->key);
-        free(tmp->value);
-        free(tmp);
-    }
-}
-void	var_dump_env(t_env *env)
+void	var_dump_herdocs(t_herdoc *herdoc)
 {
-	printf("=================================================env===\n");
-	while (env)
+	printf("herdoooooooooooocs==========START====\n");
+	while (herdoc)
 	{
-		printf("key:%s==value:%s\n", env->key, env->value);
-		env = env->next;	
+		printf("------------------id:(%d)--------------------\n", herdoc->id);
+		printf("-------------------del:(%s)--------------------\n", herdoc->delimiter);
+		herdoc = herdoc->next;
 	}
-	printf("=================================================env===\n");
+	printf("herdoooooooooooocs==========END====\n");
 }
- 
-int main(int ac, char **av, char **env)
+
+int check_tty()
 {
+	if (isatty(STDIN_FILENO))
+		return (1);
+	return (0);
+}
+
+t_env *extarct_env(char **envp)
+{
+	int i;
+	t_env *env;
+	t_env *tmp;
+
+	i = 0;
+	env = NULL;
+	while (envp[i])
+	{
+		tmp = (t_env *)malloc(sizeof(t_env));
+		tmp->key = ft_substr(envp[i], 0, ft_strchr(envp[i], '=') - envp[i]);
+		tmp->value = ft_strdup(ft_strchr(envp[i], '=') + 1);
+		tmp->next = env;
+		env = tmp;
+		i++;
+	}
+	//TODO: remove the oldpwd
+	// find_env_rem(env, "OLDPWD");
+	return (env);
+}
+
+
+void m_shell_init(char **envp)
+{
+	g_mshell.env = NULL;
+	g_mshell.history = NULL;
+	g_mshell.env = extarct_env(envp);
+	g_mshell.pid = get_pid();
+	g_mshell.history = (t_history *)malloc(sizeof(t_history));
+	g_mshell.history->id = 0;
+	g_mshell.history->cmd = NULL;
+	g_mshell.history->next = NULL;
+	g_mshell.n_herdoc = 0;
+	g_mshell.n_herdoc_executed = 0;
+	g_mshell.exit_value = 0;
+}
+
+int main(int ac, char **av, char **envp)
+{
+	//FIXME: edit/work with the t_mshell
+
+	//TODO: Add given file to the programA
+	// if (ac >= 2)
+	// {
+	// 	return (EXIT_FAILURE);
+	// }
+
 	char	*cmd_line;
 	t_token *tokens;
 	t_tnode	*cmd_tree;
 	tokens = NULL;
 	cmd_tree = NULL;
-	/*
-		cntl + c signal handler - new prompt in and new line
-		cntl + \ signal handler - do nothing
-	*/
 	ignore_signals();
 	/*
 		Extract env variables from envp
 	*/
-	g_mshell.env = extarct_env(env);
-	var_dump_env(g_mshell.env);
-	g_mshell.pid= get_pid();
-	g_mshell.n_herdoc = 0;
+	m_shell_init(envp);
 	while (1)
 	{
-			cmd_line = readline("minishell ;)>  ");
-			if (cmd_line == NULL || !ft_check_syntax(cmd_line))
-				free(cmd_line);
-			else if ( !ft_strcmp(cmd_line, "exit"))
-				return (free(cmd_line), EXIT_SUCCESS);
+		if (check_tty())
+			cmd_line = readline("minishell-:>");
+		else
+			cmd_line = readline("");
+		if (!cmd_line)
+		{
+			if (check_tty())
+				ft_printf("exit\n");
+			free_gvar();
+			return (EXIT_SUCCESS);
+		}
+		if (!ft_check_syntax(cmd_line))
+		{
+			free(cmd_line);
+			if (check_tty())
+				continue;
 			else
-			{
-				tokens = ft_tokinizer(cmd_line);
-				if (tokens)
-				{
-					// var_dump_token(tokens);
-					if (!ft_expand_tokens(&tokens))
-						ft_free_tokens(&tokens);
-					else
-					{
-						ft_printf("==============first token format===============\n\n");
-						var_dump_token(tokens);
-						ft_parse_ast(&cmd_tree, &tokens);
-						var_dump_tree(cmd_tree);
-						// ft_execute_tree(cmd_tree, env);
-						// add_history(cmd_line);
-						ft_free_tokens(&tokens);
-						ft_free_tree(&cmd_tree);
-					}
-				}
-				free(cmd_line);
-			}
+				return (free(cmd_line), free_gvar(), EXIT_FAILURE);
+		}
+		if (!ft_strcmp(cmd_line, "exit"))
+			return (ft_printf("exit\n"), free(cmd_line), free_gvar(), EXIT_SUCCESS);
+		tokens = ft_tokinizer(cmd_line);
+		if (tokens)
+		{
+			// ft_printf("==============first token format===============\n\n");
+			// var_dump_token(tokens);
+			ft_expand_tokens(&tokens);
+			// var_dump_token(tokens);
+			var_dump_herdocs(g_mshell.herdocs);
+			ft_parse_ast(&cmd_tree, &tokens);		
+			var_dump_tree(cmd_tree);
+			put_tohistory(cmd_line, g_mshell.history);
+			ft_execute_tree(cmd_tree, &g_mshell);
+			add_history(cmd_line);
+			ft_free_tokens(&tokens);
+			ft_free_herdoc(&g_mshell.herdocs);
+			// ft_printf("+++==============second token format===============\n\n");
+			// var_dump_token(tokens);
+			ft_free_tree(&cmd_tree);
+		}
+		free(cmd_line);
 	}
-	free_env(g_mshell.env);
     return (EXIT_SUCCESS);
 }

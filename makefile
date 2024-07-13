@@ -10,17 +10,20 @@ SRC = src/main.c\
 		src/parsing/syntax-error.c\
 		src/parsing/tokenizer.c\
 		src/parsing/parser.c\
-		src/parsing/expander.c\
+		src/execution/builtins.c\
 		src/execution/execute.c\
 		src/execution/signals.c\
 		src/execution/environ.c\
+		src/execution/history.c\
+		src/parsing/expander.c\
+		src/execution/freeier.c\
 
 OBJ = $(SRC:.c=.o)
 
 all: $(NAME)
 
 $(NAME): $(OBJ) $(LIBFT) $(PRINTF)
-	$(CC) $(CFLAGS)  $^ -o $@ $(LIBS)
+	$(CC) $(CFLAGS) -g3 $^ -o $@ $(LIBS)
 
 %.o: %.c
 	$(CC) $(CFLAGS) -c $< -o $@

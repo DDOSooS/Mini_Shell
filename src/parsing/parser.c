@@ -5,10 +5,11 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: aghergho <aghergho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/05/11 20:05:21 by aghergho          #+#    #+#             */
-/*   Updated: 2024/07/05 23:55:00 by aghergho         ###   ########.fr       */
+/*   Created: Invalid date        by                   #+#    #+#             */
+/*   Updated: 2024/07/14 00:37:41 by aghergho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 
 # include "../../includes/mshell.h"
 
@@ -253,7 +254,6 @@ int ftAddInFile(t_infile **root, t_token *token)
 	tmp->next = new;
 	return (1);
 }
-
 
 int ftAddRedirection(t_redirection **root, t_token *token)
 {
@@ -872,16 +872,16 @@ int	ft_gen_delimter(char **str,char *token)
 
 void ft_expand_delimiter(char **arg)
 {
-	int len;
-	char *tmp;
-	char *new;
-	tmp = *arg;
-	len = ft_count_delimter_len(tmp);
-	new = malloc(sizeof(char) * (len +  1));
-	new[0] = '\0';
-	ft_gen_delimter(&new, tmp);
-	free (tmp);
-	*arg = new;
+	// int len;
+	// char *tmp;
+	// char *new;
+	// tmp = *arg;
+	// len = ft_count_delimter_len(tmp);
+	// new = malloc(sizeof(char) * (len +  1));
+	// new[0] = '\0';
+	// ft_gen_delimter(&new, tmp);
+	// free (tmp);
+	// *arg = new;
 }
 
 
@@ -968,11 +968,6 @@ void ft_parse_parenthise(t_tnode **root, t_token **tokens)
 	tmp->value = NULL;
 	tmp->next->next->value = NULL;
 	tParenthise = ft_tokinizer(tmp->next->value);
-	// if (tParenthise == NULL) 
-	// {
-	// 	ft_printf("Error: Tokenization failed.\n");
-	// 	return;
-	// }
 	tmp1 = tParenthise;
 	while (tmp1->next)
 		tmp1 = tmp1->next;
@@ -995,8 +990,6 @@ void	ft_parse_pipe(t_tnode **root, t_token **tokens)
 		tmp = tmp->next;
 	}
 	new = ft_new_tnode(1, *tokens);
-	// if (!new)
-	// 	ft_free_mshell();
 	if (!*root)
 		*root = new;
 	else

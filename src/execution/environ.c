@@ -1,45 +1,40 @@
 #include "../../includes/mshell.h"
 
-
-t_env	*ft_new_env(char *env)
+t_env *find_env(t_env *env, char *key)
 {
-	t_env	*new;
-
-	new = malloc(sizeof(t_env));
-	new->key = ft_substr(env, 0, ft_strchr(env, '=') - env);
-	new->value = ft_strdup(ft_strchr(env, '=') + 1);
-	new->next = NULL;
-	return (new);
-}
-
-void	ft_add_env(t_env **root, t_env *new)
-{
-	t_env	*tmp;
-
-	tmp = *root;
-	if (!*root)
-	{
-		*root = new;
-		return ;
-	}
-	while (tmp->next)
-		tmp = tmp->next;
-	tmp->next = new;
-}
-
-t_env *extarct_env(char **envp)
-{
-	int i;
-	t_env *env;
 	t_env *tmp;
 
-	i = 0;
-	env = NULL;
-	while (envp[i])
+	tmp = env;
+	while (tmp)
 	{
-		tmp =ft_new_env(envp[i]);
-		ft_add_env(&env, tmp);
-		i++;
+		if (ft_strcmp(tmp->key, key) == 0)
+			return (tmp);
+		tmp = tmp->next;
 	}
-	return (env);
+	return (NULL);
+}
+int find_env_rem(t_env *env, char *key)
+{
+	t_env *prev;
+    t_env *current;
+
+	prev = NULL;
+	current = env;
+    while (current != NULL)
+	{
+        if (ft_strcmp(current->key, key) == 0)
+		{
+            if (prev == NULL) 
+                env = current->next;
+            else
+                prev->next = current->next; 
+            free(current->key);
+            free(current->value);
+            free(current);
+            return 1;
+        }
+        prev = current;
+        current = current->next;
+    }
+    return 0;
 }
