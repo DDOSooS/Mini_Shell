@@ -3,106 +3,125 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ddos <ddos@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: mkartit <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/12/15 11:57:08 by aghergho          #+#    #+#             */
-/*   Updated: 2023/12/18 08:42:27 by aghergho         ###   ########.fr       */
+/*   Created: 2023/11/24 11:52:57 by mkartit           #+#    #+#             */
+/*   Updated: 2023/11/24 11:55:14 by mkartit          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-char	*edit_line(char *str, int len, char **g_line)
-{
-	char	*s;
-
-	s = NULL;
-	s = str_sub(str, len + 1);
-	if (!s)
-		return (NULL);
-	*g_line = str_sub(str + len + 1, ft_strlen(str + len + 1));
-	if (! *g_line)
-	{
-		free(s);
-		free(*g_line);
-		return (NULL);
-	}
-	free (str);
-	return (s);
-}
-
-char	*str_join(char *s1, char *s2)
+char	*ft_new_lines(char *read_lines)
 {
 	int		i;
 	int		j;
-	char	*str;
+	char	*new_lines;
 
-	j = -1;
 	i = 0;
-	if (s1)
-		i += ft_strlen(s1);
-	i += ft_strlen(s2);
-	str = (char *)malloc(sizeof(char) * i + 1);
-	if (! str)
-		return (NULL);
-	i = 0;
-	while (s1 && s1[i])
-	{
-		str[i] = s1[i];
+	while (read_lines[i] && read_lines[i] != '\n')
 		i++;
+	if (!read_lines[i])
+	{
+		free(read_lines);
+		return (NULL);
 	}
-	while (s2 && s2[++j])
-		str[i + j] = s2[j];
-	str[i + j] = '\0';
-	free(s1);
-	return (str);
+	new_lines = (char *)malloc(sizeof(char) * (ft_strlen_gnl(read_lines) - i + 1));
+	if (!new_lines)
+		return (NULL);
+	i++;
+	j = 0;
+	while (read_lines[i])
+		new_lines[j++] = read_lines[i++];
+	new_lines[j] = '\0';
+	free(read_lines);
+	return (new_lines);
 }
 
-char	*get_lin(int fd, char *g_line)
+char	*ft_lines(char *read_lines)
+{
+	char	*lines;
+	int		i;
+
+	i = 0;
+	if (!read_lines[i])
+		return (NULL);
+	while (read_lines[i] && read_lines[i] != '\n')
+		i++;
+	lines = (char *)malloc(sizeof(char) * i + 2);
+	if (!lines)
+		return (NULL);
+	i = 0;
+	while (read_lines[i] && read_lines[i] != '\n')
+	{
+		lines[i] = read_lines[i];
+		i++;
+	}
+	if (read_lines[i] == '\n')
+	{
+		lines[i] = read_lines[i];
+		// i++;
+	}
+	lines[i] = '\0';
+	return (lines);
+}
+
+char	*ft_read_lines(int fd, char *read_lines)
 {
 	char	*buffer;
-	int		b_read;
+	int		r;
 
-	buffer = (char *)malloc(sizeof(char) * BUFFER_SIZE + 1);
+	buffer = (char *)malloc(sizeof(char) * (BUFFER_SIZE + 1));
 	if (!buffer)
 		return (NULL);
-	b_read = read(fd, buffer, BUFFER_SIZE);
-	while (b_read > 0)
+	r = 1;
+	while (!ft_strchr_gnl(read_lines, '\n') && r != 0)
 	{
-		buffer[b_read] = '\0';
-		g_line = str_join(g_line, buffer);
-		if (!g_line || check_end_line(g_line) >= 0)
-			break ;
-		b_read = read(fd, buffer, BUFFER_SIZE);
+		r = read(fd, buffer, BUFFER_SIZE);
+		if (r == -1)
+		{
+			free(buffer);
+			if (read_lines)
+				free(read_lines);
+			return (NULL);
+		}
+		buffer[r] = '\0';
+		read_lines = ft_strjoin_gnl(read_lines, buffer);
 	}
-	free(buffer);
-	if (!g_line && b_read != 0)
-	{
-		free(g_line);
-		g_line = NULL;
-	}
-	return (g_line);
+	free (buffer);
+	return (read_lines);
 }
 
 char	*get_next_line(int fd)
 {
-	static char	*line;
-	char		*str;
-	int			e_line;
+	static char	*read_lines;
+	char		*lines;
 
-	if (fd < 0 || BUFFER_SIZE <= 0 || BUFFER_SIZE > INT_MAX)
+	if (BUFFER_SIZE <= 0 || fd < 0 || BUFFER_SIZE >= 2147483647)
+		return (0);
+	read_lines = ft_read_lines(fd, read_lines);
+	if (!read_lines)
 		return (NULL);
-	str = get_lin(fd, line);
-	if (!str)
-		return (NULL);
-	e_line = check_end_line(str);
-	if (e_line >= 0 && e_line + 1 != ft_strlen(str))
-	{
-		str = edit_line(str, e_line, &line);
-		if (! str)
-			return (NULL);
-	}
-	else if ((e_line < 0 || ft_strlen(str) == e_line + 1) && line)
-		line = NULL;
-	return (str);
+	lines = ft_lines(read_lines);
+	read_lines = ft_new_lines(read_lines);
+	return (lines);
 }
+/*
+#include <stdio.h>
+int main() {
+    int o = open("test.txt", O_RDONLY);
+    if (o < 0)
+        return (-1);
+    char *lines;
+	int x = 0;
+	while (x < 10)
+	{
+		lines = get_next_line(o);
+		printf("%d -> %s", x++, lines);
+		free(lines);
+	}
+	close(o);
+	system("leaks a.out");
+    return 0;
+}
+*/

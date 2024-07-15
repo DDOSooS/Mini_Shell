@@ -2,32 +2,80 @@
 
 int ft_env(t_cmd *cmd, t_mshell *shell)
 {
-	printf("env, cmd %s\n", cmd->arg);
 	t_env *tmp;
 	(void)cmd;
 	tmp = shell->env;
-	printf("======= env =======\n");
 	while (tmp)
 	{
-		ft_printf("%s=%s\n", tmp->key, tmp->value);
+		if (tmp->is_exported)
+		{
+			if (tmp->value)
+				ft_printf("%s=%s\n", tmp->key, tmp->value);
+			else
+				ft_printf("%s=\n", tmp->key);
+		}
 		tmp = tmp->next;
 	}
-	printf("======= end env =======\n");
+	ft_printf("_=/usr/bin/env\n");
 	return (0);
 }
 
-// int ft_exit(t_cmd *cmd, t_mshell *shell)
-// {
-// 	printf("exit, cmd %s\n", cmd->arg);
-// 	(void)cmd;
-// 	(void)shell;
-// 	exit(0);
-// 	return (0);
-// }
+int exit_value_check(char *arg)
+{
+	int i;
+
+	i = 0;
+	if (arg[i] == '-')
+		i++;
+	while (arg[i])
+	{
+		if (!ft_isdigit(arg[i]))
+			return (0);
+		i++;
+	}
+	return (1);
+}
+
+int ft_exit(t_cmd *cmd, t_mshell *shell)
+{
+	t_cmd *tmp = NULL;
+	int exit_value;
+
+	(void)shell;
+	if (cmd->next != NULL)
+		tmp = cmd->next;
+	if (tmp && tmp->next != NULL)
+	{
+		ft_printf("minishell: exit: too many arguments\n");
+		g_mshell.exit_value = 1;
+		return (0);
+	}
+	if (tmp && tmp->arg)
+	{
+		ft_printf("exit\n");
+		if (!exit_value_check(tmp->arg))
+		{
+			ft_printf("minishell: exit: %s: numeric argument required\n", tmp->arg);
+			free_gvar();
+			exit(2);
+		}
+		exit_value = ft_atoi(tmp->arg);
+		if (exit_value < 0)
+			exit_value = 256 + exit_value;
+		free_gvar();
+		exit(exit_value);
+	}
+	else
+	{
+		free_gvar();
+		printf("exit\n");
+		exit(g_mshell.exit_value);
+	}
+	return (0);
+}
 
 int ft_history(t_cmd *cmd, t_mshell *shell)
 {
-	printf("history, cmd %s\n", cmd->arg);
 	t_history *tmp;
 	(void)cmd;
 	tmp = shell->history;
@@ -43,7 +91,7 @@ int echo_arg(char *arg)
 	int i;
 
 	i = 0;
-	if (arg[i] == '-')
+	if (arg[i] == '-' && arg[i + 1] == 'n')
 	{
 		i++;
 		while (arg[i] == 'n')
@@ -56,34 +104,37 @@ int echo_arg(char *arg)
 
 int ft_echo(t_cmd *cmd, t_mshell *shell)
 {
-	printf("echo, cmd %s\n", cmd->arg);
 	t_cmd *tmp;
 
 	tmp = cmd;
 	(void)shell;
-	if (echo_arg(tmp->next->arg))
+	if (tmp->next)
 	{
-		tmp = tmp->next->next;
-		while (tmp)
+		if (echo_arg(tmp->next->arg))
 		{
-			ft_printf("%s", tmp->arg);
-			if (tmp->next)
-				ft_printf(" ");
+			tmp = tmp->next->next;
+			while (tmp)
+			{
+				ft_printf("%s", tmp->arg);
+				if (tmp->next)
+					ft_printf(" ");
+				tmp = tmp->next;
+			}
+			return (0);
+		}
+		else
+		{
 			tmp = tmp->next;
+			while (tmp)
+			{
+				ft_printf("%s", tmp->arg);
+				if (tmp->next)
+					ft_printf(" ");
+				tmp = tmp->next;
+			}
 		}
 	}
-	else
-	{
-		tmp = tmp->next;
-		while (tmp)
-		{
-			ft_printf("%s", tmp->arg);
-			if (tmp->next)
-				ft_printf(" ");
-			tmp = tmp->next;
-		}
-		ft_printf("\n");
-	}
+	ft_printf("\n");
 	return (0);
 }
 
@@ -95,8 +146,10 @@ int ft_unset(t_cmd *cmd, t_mshell *shell)
 	tmp = cmd->next;
 	while (tmp)
 	{
+		if (ft_strcmp(tmp->arg, "_") == 0)
+			return 0;
 		if (!find_env_rem(shell->env, tmp->arg))
-			ft_printf("unset: %s: not found\n", tmp->arg);
+			ft_printf("minishell: unset: %s: not found\n", tmp->arg);
 		tmp = tmp->next;
 	}
 	return (0);
@@ -104,14 +157,11 @@ int ft_unset(t_cmd *cmd, t_mshell *shell)
 
 int ft_pwd(t_cmd *cmd, t_mshell *shell)
 {
-	printf("pwd, cmd %s\n", cmd->arg);
 	char *cwd;
 	t_env *tmp;
 
 	(void)cmd;
-	printf("here(1)\n");
 	tmp = find_env(shell->env, "PWD");
-	printf("here(22\n");
 	if (tmp)
 		ft_printf("%s\n", tmp->value);
 	else
@@ -133,24 +183,16 @@ void add_env(t_env *env, char *key, char *value)
 	new = (t_env *)malloc(sizeof(t_env));
 	new->key = key;
 	new->value = value;
+	if (!value)
+		new->is_exported = 0;
+	else
+		new->is_exported = 1;
 	new->next = NULL;
 	while (tmp->next)
 		tmp = tmp->next;
 	tmp->next = new;
 }
-void edit_env(t_env *env, char *key, char *value)
-{
-	t_env *tmp;
 
-	tmp = find_env(env, key);
-	if (tmp)
-	{
-		free(tmp->value);
-		tmp->value = value;
-	}
-	else
-		add_env(env, key, value);
-}
 
 t_env *sort_env(t_env *env)
 {
@@ -181,111 +223,211 @@ t_env *sort_env(t_env *env)
 	return (env);
 }
 
+t_env *copy_env(t_env *env)
+{
+	t_env *tmp;
+	t_env *new;
+	t_env *head;
+
+	tmp = env;
+	new = (t_env *)malloc(sizeof(t_env));
+	if (tmp->key)
+		new->key = ft_strdup(tmp->key);
+	if (tmp->value)
+		new->value = ft_strdup(tmp->value);
+	else
+		new->value = NULL;
+	new->next = NULL;
+	head = new;
+	tmp = tmp->next;
+	while (tmp)
+	{
+		new->next = (t_env *)malloc(sizeof(t_env));
+		new = new->next;
+		if (tmp->key)
+			new->key = ft_strdup(tmp->key);
+		if (tmp->value)
+			new->value = ft_strdup(tmp->value);
+		else
+			new->value = NULL;
+		new->next = NULL;
+		tmp = tmp->next;
+	}
+	return (head);
+}
+
 void print_export(t_env *env)
 {
 	t_env *tmp;
+	t_env *tmp2;
 
-	tmp = sort_env(env);
+	tmp = copy_env(env);
+	tmp = sort_env(tmp);
+	tmp2 = tmp;
 	while (tmp)
 	{
-		ft_printf("declare -x %s=\"%s\"\n", tmp->key, tmp->value);
+		if (tmp->value)
+			ft_printf("declare -x %s=\"%s\"\n", tmp->key, tmp->value);
+		else
+			ft_printf("declare -x %s\n", tmp->key);
 		tmp = tmp->next;
 	}
+	free_env(tmp2);
+}
+
+int export_checker(char *key)
+{
+	if (key[0] != '_' && !ft_isalpha(key[0]))
+		return (0);
+	return (1);
 }
 
 int ft_export(t_cmd *cmd, t_mshell *shell)
 {
 	t_cmd *tmp;
+	char *key;
+	char *value;
 
 	if (cmd->next == NULL)
 	{
-		//FIXME: print all env SORTED and not edit the env
 		print_export(shell->env);
 		return (0);
 	}
 	tmp = cmd->next;
 	while (tmp)
 	{
-		printf("tmp->arg %s\n", tmp->arg);
 		if (ft_strchr(tmp->arg, '='))
 		{
-			edit_env(shell->env, ft_substr(tmp->arg, 0, ft_strchr(tmp->arg, '=') - tmp->arg), ft_strdup(ft_strchr(tmp->arg, '=') + 1));
+			key = ft_substr(tmp->arg, 0, ft_strchr(tmp->arg, '=') - tmp->arg);
+			if (export_checker(key) == 0)
+			{
+				ft_printf("minishell: export: `%s': not a valid identifier\n", tmp->arg);
+				free(key);
+				tmp = tmp->next;
+				continue;
+			}
+			value = ft_strdup(ft_strchr(tmp->arg, '=') + 1);
+			env_add_back(&shell->env, create_env_node(key, value, 1));
 		}
 		else
-			edit_env(shell->env, tmp->arg, "");
+		{
+			key = ft_strdup(tmp->arg);
+			if (!export_checker(key))
+			{
+				ft_printf("minishell: export: `%s': not a valid identifier\n", tmp->arg);
+				free(key);
+				tmp = tmp->next;
+				continue;
+			}
+			env_add_back(&shell->env, create_env_node(key, NULL, 0));
+		}
 		tmp = tmp->next;
 	}
 	return (0);
 }
 
-void cd_cases(char *path, t_env *env)
-{
-	if (ft_strcmp(path, "-") == 0)
-	{
-		path = find_env(env, "OLDPWD")->value;
-		if (path == NULL)
-			ft_printf("cd: OLDPWD not set\n");
-		if (chdir(path) == -1)
-			ft_printf("cd: %s: No such file or directory\n", path);
-	}
-	if (chdir(path) == -1)
-		ft_printf("cd: %s: No such file or directory\n", path);
-}
-int ft_cd(t_cmd *cmd, t_mshell *shell)
-{
-	printf("cd, cmd %s\n", cmd->arg);
-	//TODO: implement cd
-	char *path = NULL;
 
-	if (cmd->next)
-		path = cmd->next->arg;
-	if (path == NULL || ft_strcmp(path, "~") == 0)
+
+int count_args(t_cmd *cmd)
+{
+	int i;
+	t_cmd *tmp;
+
+	i = 0;
+	tmp = cmd;
+	while (tmp)
 	{
-		if (find_env(shell->env, "HOME") == NULL)
+		i++;
+		tmp = tmp->next;
+	}
+	return (i);
+}
+int cd_cases(char *path, t_env *env)
+{
+	if (path == NULL)
+	{
+		if (find_env(env, "HOME") == NULL)
 		{
-			ft_printf("minshell: cd: HOME not set\n");
+			print_stderr("cd: HOME not set");
 			g_mshell.exit_value = 1;
 			return (0);
 		}
-		path = find_env(shell->env, "HOME")->value;
-		if (chdir(path) == -1)
-			ft_printf("cd: %s: No such file or directory\n", path);
+		path = find_env(env, "HOME")->value;
 	}
-	else
-		cd_cases(path, shell->env);
-	add_env(shell->env, "OLDPWD", find_env(shell->env, "PWD")->value);
-	edit_env(shell->env, "PWD", getcwd(NULL, 0));
-	// add_env(env, "OLDPWD", find_env(env, "PWD")->value);
-	// edit_env(env, "PWD", getcwd(NULL, 0));
+	if (chdir(path) == -1)
+	{
+		print_stderr("cd: no such file or directory");
+		g_mshell.exit_value = 1;
+		return (0);
+	}
+	return (1);
+}
+
+int ft_cd(t_cmd *cmd, t_mshell *shell)
+{
+	char *path;
+	char buff[1024];
+	char *s;
+
+	s = NULL;
+	path = NULL;
+	if (count_args(cmd) > 2)
+	{
+		print_stderr("cd: too many arguments");
+		g_mshell.exit_value = 1;
+		return (0);
+	}
+	s = getcwd(buff, 1024);
+	if (cmd->next)
+		path = cmd->next->arg;
+	if (cd_cases(path, shell->env))
+	{
+		if (find_env(shell->env, "OLDPWD"))
+			edit_env(shell->env, "OLDPWD", ft_strdup(s));
+		if (find_env(shell->env, "PWD"))
+			edit_env(shell->env, "PWD", getcwd(NULL, 0));
+	}
 	return (0);
 }
- int builtins_finder(t_cmd *cmd, t_mshell *shell)
-{
-	int flag;
-	int i;
-	t_builtins builtins[] = {
-		{"cd", &ft_cd},
-		{"echo", &ft_echo},
-		{"pwd", &ft_pwd},
-		{"export", &ft_export},
-		{"unset", &ft_unset},
-		{"env", &ft_env},
-		// {"exit", &ft_exit},
-		{"history", &ft_history},
-		{NULL, NULL}
-	};
 
-	i = 0;
-	flag = -1;
-	while (builtins[i].name)
-	{
-		if (ft_strcmp(builtins[i].name, cmd->arg) == 0)
-		{
-			printf("builtins_finder, cmd %s\n", cmd->arg);
-			flag = builtins[i].func(cmd, shell);
-			break;
-		}
-		i++;
-	}
-	return (flag);
+int builtins_checker(t_cmd *cmd)
+{
+	if (ft_strcmp(cmd->arg, "cd") == 0)
+		return (CD);
+	if (ft_strcmp(cmd->arg, "echo") == 0)
+		return (ECHO);
+	if (ft_strcmp(cmd->arg, "pwd") == 0)
+		return (PWD);
+	if (ft_strcmp(cmd->arg, "export") == 0)
+		return (EXPORT);
+	if (ft_strcmp(cmd->arg, "unset") == 0)
+		return (UNSET);
+	if (ft_strcmp(cmd->arg, "env") == 0)
+		return (ENV);
+	if (ft_strcmp(cmd->arg, "exit") == 0)
+		return (EXIT);
+	if (ft_strcmp(cmd->arg, "history") == 0)
+		return (HISTORY);
+	return (-1);
+}
+
+int builtins_finder(t_cmd *cmd, t_mshell *shell, int type)
+{
+	if (type == CD)
+		return (ft_cd(cmd, shell));
+	if (type == ECHO)
+		return (ft_echo(cmd, shell));
+	if (type == PWD)
+		return (ft_pwd(cmd, shell));
+	if (type == EXPORT)
+		return (ft_export(cmd, shell));
+	if (type == UNSET)
+		return (ft_unset(cmd, shell));
+	if (type == ENV)
+		return (ft_env(cmd, shell));
+	if (type == EXIT)
+		return (ft_exit(cmd, shell));
+	if (type == HISTORY)
+		return (ft_history(cmd, shell));
+	return (-1);
 }

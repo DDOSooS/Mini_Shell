@@ -9,6 +9,7 @@ void cntl_c(int signo)
 		rl_replace_line("", 0);
 		rl_redisplay();
 	}
+	g_mshell.exit_value = 130;
 }
 
 void ignore_signals()

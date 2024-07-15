@@ -80,7 +80,7 @@ void var_dump_tree(t_tnode *tree)
 {
     if (tree)
     {
-        ft_printf("\n|\n|==================>((N_TYPE))(%d)=============>)\n", tree->node_type);
+        ft_printf("|==================>((N_TYPE))(%d)=============>)\n", tree->node_type);
         var_dump_cmd(tree->cmd);
 		if (tree->t_parent)
 		{
@@ -229,91 +229,115 @@ int check_tty()
 	return (0);
 }
 
-t_env *extarct_env(char **envp)
+void update_shlvl(t_env *env)
 {
-	int i;
-	t_env *env;
 	t_env *tmp;
+	char *shlvl;
+	int i;
 
-	i = 0;
-	env = NULL;
-	while (envp[i])
+	tmp = find_env(env, "SHLVL");
+	if (tmp)
 	{
-		tmp = (t_env *)malloc(sizeof(t_env));
-		tmp->key = ft_substr(envp[i], 0, ft_strchr(envp[i], '=') - envp[i]);
-		tmp->value = ft_strdup(ft_strchr(envp[i], '=') + 1);
-		tmp->next = env;
-		env = tmp;
+		i = ft_atoi(tmp->value);
 		i++;
+		shlvl = ft_itoa(i);
+		edit_env(env, "SHLVL", shlvl);
+		// free(shlvl);
 	}
-	//TODO: remove the oldpwd
-	// find_env_rem(env, "OLDPWD");
+}
+
+t_env *create_env(void)
+{
+	t_env *env;
+	char *path = "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin";
+
+	env = NULL;
+	env_add_back(&env, create_env_node(ft_strdup("PATH"), ft_strdup(path), 2));
+	env_add_back(&env, create_env_node(ft_strdup("PWD"), getcwd(NULL, 0), 1));
+	env_add_back(&env, create_env_node(ft_strdup("SHLVL"), ft_strdup("1"), 1));
+	env_add_back(&env, create_env_node(ft_strdup("OLDPWD"), NULL, 2));
 	return (env);
 }
 
+void extarct_env(char **envp, t_env **env)
+{
+	int i;
+	char *sep;
+	char *Key;
+	char *value;
+
+	if (envp == NULL || envp[0] == NULL)
+	{
+		*env = create_env();
+		return ;
+	}
+	i = 0;
+	while (envp[i])
+	{
+		sep = ft_strchr(envp[i], '=');
+		if (sep)
+		{
+			Key = ft_substr(envp[i], 0, sep - envp[i]);
+			value = ft_strdup(sep + 1);
+			env_add_back(env, create_env_node(Key, value, 1));
+		}
+		i++;
+	}
+	find_env_rem(*env, "_");
+	update_shlvl(*env);
+}
 
 void m_shell_init(char **envp)
 {
-	g_mshell.env = NULL;
-	g_mshell.history = NULL;
-
-	g_mshell.env = extarct_env(envp);
 	g_mshell.pid = get_pid();
-
+	extarct_env(envp, &g_mshell.env);
+	g_mshell.history = NULL;
 	g_mshell.history = (t_history *)malloc(sizeof(t_history));
 	g_mshell.history->id = 0;
 	g_mshell.history->cmd = NULL;
 	g_mshell.history->next = NULL;
-
 	g_mshell.n_herdoc = 0;
 	g_mshell.exit_value = 0;
 }
 
+char *costum_readline()
+{
+	char *line;
+
+	if (check_tty())
+		line = readline("minishell:$ ");
+	else
+		line = get_next_line(STDIN_FILENO);
+	if (!line)
+	{
+		if (check_tty())
+			ft_printf("exit\n");
+		free_gvar();
+		exit(0);
+	}
+	return (line);
+}
+
 int main(int ac, char **av, char **envp)
 {
-	//FIXME: edit/work with the t_mshell
-
-	//TODO: Add given file to the programA
-	// if (ac >= 2)
-	// {
-	// 	return (EXIT_FAILURE);
-	// }
-
 	char	*cmd_line;
 	t_token *tokens;
 	t_tnode	*cmd_tree;
 	tokens = NULL;
 	cmd_tree = NULL;
-	ignore_signals();
-	/*
-		Extract env variables from envp
-	*/
 	m_shell_init(envp);
+	ignore_signals();
 	while (1)
 	{
-		if (check_tty())
-			cmd_line = readline("minishell-:>");
-		else
-			cmd_line = readline("");
-		if (!cmd_line)
-		{
-			if (check_tty())
-				ft_printf("exit\n");
-			free_gvar();
-			return (EXIT_SUCCESS);
-		}
+		cmd_line = costum_readline();
 		if (!ft_check_syntax(cmd_line))
 		{
 			free(cmd_line);
 			if (check_tty())
 				continue;
-			else
-				return (free(cmd_line), free_gvar(), EXIT_FAILURE);
+			return (free(cmd_line), free_gvar(), EXIT_FAILURE);
 		}
-		if (!ft_strcmp(cmd_line, "exit"))
-			return (ft_printf("exit\n"), free(cmd_line), free_gvar(), EXIT_SUCCESS);
-		tokens = ft_tokinizer(cmd_line);
-		if (tokens)
+		if ((tokens = ft_tokinizer(cmd_line)) != NULL)
 		{
 			// ft_printf("==============first token format===============\n\n");
 			// var_dump_token(tokens);
@@ -323,11 +347,13 @@ int main(int ac, char **av, char **envp)
 			// var_dump_tree(cmd_tree);
 			put_tohistory(cmd_line, g_mshell.history);
 			ft_execute_tree(cmd_tree, &g_mshell);
-			add_history(cmd_line);
+			if (check_tty())
+				add_history(cmd_line);
 			ft_free_tokens(&tokens);
 			// ft_printf("+++==============second token format===============\n\n");
 			// var_dump_token(tokens);
 			ft_free_tree(&cmd_tree);
+			// printf("exit_value: %d\n", g_mshell.exit_value);
 		}
 		free(cmd_line);
 	}

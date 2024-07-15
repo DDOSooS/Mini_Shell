@@ -17,6 +17,11 @@ SRC = src/main.c\
 		src/execution/history.c\
 		src/parsing/expander.c\
 		src/execution/freeier.c\
+		src/execution/printer.c\
+		src/execution/pipes.c\
+		src/execution/herdoc.c\
+		includes/gnl/get_next_line.c\
+		includes/gnl/get_next_line_utils.c\
 
 OBJ = $(SRC:.c=.o)
 
@@ -24,6 +29,7 @@ all: $(NAME)
 
 $(NAME): $(OBJ) $(LIBFT) $(PRINTF)
 	$(CC) $(CFLAGS) -g3 $^ -o $@ $(LIBS)
+#$(cc) $(cflags) -fsanitize=address $^ -o $@ $(libs)
 
 %.o: %.c
 	$(CC) $(CFLAGS) -c $< -o $@

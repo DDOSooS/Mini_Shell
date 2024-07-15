@@ -3,62 +3,65 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line_utils.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aghergho <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: mkartit <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/12/11 16:31:26 by aghergho          #+#    #+#             */
-/*   Updated: 2023/12/11 16:31:29 by aghergho         ###   ########.fr       */
+/*   Created: 2023/11/24 11:53:02 by mkartit           #+#    #+#             */
+/*   Updated: 2023/11/25 15:54:34 by mkartit          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-char	*str_sub(char *str, int len)
+size_t	ft_strlen_gnl(char *s)
 {
-	char	*s;
-	int		i;
+	size_t	l;
 
-	if (!len)
-		len++;
-	s = (char *) malloc(sizeof(char) * len + 1);
 	if (!s)
+		return (0);
+	l = 0;
+	while (s[l])
+		l++;
+	return (l);
+}
+
+char	*ft_strjoin_gnl(char *s1, char *s2)
+{
+	char	*str;
+	int		i;
+	int		j;
+
+	if (!s1)
+	{
+		s1 = (char *)malloc(sizeof(char));
+		s1[0] = '\0';
+	}
+	if (!s1 || !s2)
 		return (NULL);
-	i = 0;
-	while (i < len && str[i])
-	{
-		s[i] = str[i];
-		i++;
-	}
-	s[i] = '\0';
-	return (s);
+	str = (char *)malloc(sizeof(char) * (ft_strlen_gnl(s1) + ft_strlen_gnl(s2) + 1));
+	if (!str)
+		return (NULL);
+	i = -1;
+	j = 0;
+	while (s1[++i] != '\0' && s1)
+		str[i] = s1[i];
+	while (s2[j] != '\0' && s2)
+		str[i++] = s2[j++];
+	str[ft_strlen_gnl(s1) + ft_strlen_gnl(s2)] = '\0';
+	free(s1);
+	return (str);
 }
 
-int	ft_strlen(char *str)
+char	*ft_strchr_gnl(char *s, char c)
 {
-	int	i;
-
-	if (!str)
+	if (!s)
 		return (0);
-	i = 0;
-	while (str[i])
-		i++;
-	return (i);
-}
-
-//checking the end_of_line
-int	check_end_line(char *str)
-{
-	int	i;
-
-	i = 0;
-	if (!str)
-		return (-1);
-	if (str[0] == '\n')
-		return (0);
-	while (str[i])
+	while (*s)
 	{
-		if (str[i] == '\n')
-			return (i);
-		i++;
+		if (*s == c)
+			return (s);
+		s++;
 	}
-	return (-1);
+	if ((char)c == '\0')
+		return (s);
+	return (NULL);
 }

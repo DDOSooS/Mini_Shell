@@ -9,8 +9,10 @@ void free_env(t_env *env)
 	while (tmp)
 	{
 		tmp2 = tmp->next;
-		free(tmp->key);
-		free(tmp->value);
+		if (tmp->key)
+			free(tmp->key);
+		if (tmp->value)
+			free(tmp->value);
 		free(tmp);
 		tmp = tmp2;
 	}
@@ -25,7 +27,8 @@ void free_history(t_history *history)
 	while (tmp)
 	{
 		tmp2 = tmp->next;
-		free(tmp->cmd);
+		if (tmp->cmd)
+			free(tmp->cmd);
 		free(tmp);
 		tmp = tmp2;
 	}
@@ -35,4 +38,14 @@ void free_gvar(void)
 {
 	free_env(g_mshell.env);
 	free_history(g_mshell.history);
+}
+
+void	free_func(char **strings)
+{
+	int	x;
+	x = -1;
+
+	while (strings[++x])
+		free(strings[x]);
+	free(strings);
 }

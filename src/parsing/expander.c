@@ -190,10 +190,14 @@ pid_t get_pid()
 {
     pid_t pid;
     pid = fork();
+    if (pid < 0)
+        return (ft_putstr_fd("fork failed\n", 2), 0);
     if (!pid)
         exit(0);
+    else
+        waitpid(pid, NULL, 0);
     return (pid - 2);
-}
+} //
 
 void ft_expand_quotes(t_token **tokens)
 {
