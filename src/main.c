@@ -6,7 +6,7 @@
 /*   By: aghergho <aghergho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/06 16:02:56 by aghergho          #+#    #+#             */
-/*   Updated: 2024/06/13 15:43:21 by aghergho         ###   ########.fr       */
+/*   Updated: 2024/07/14 00:45:30 by aghergho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -222,6 +222,18 @@ void	ft_free_tree(t_tnode **tree)
 	}
 }
 
+void	var_dump_herdocs(t_herdoc *herdoc)
+{
+	printf("herdoooooooooooocs==========START====\n");
+	while (herdoc)
+	{
+		printf("------------------id:(%d)--------------------\n", herdoc->id);
+		printf("-------------------del:(%s)--------------------\n", herdoc->delimiter);
+		herdoc = herdoc->next;
+	}
+	printf("herdoooooooooooocs==========END====\n");
+}
+
 int check_tty()
 {
 	if (isatty(STDIN_FILENO))
@@ -297,6 +309,7 @@ void m_shell_init(char **envp)
 	g_mshell.history->cmd = NULL;
 	g_mshell.history->next = NULL;
 	g_mshell.n_herdoc = 0;
+	g_mshell.n_herdoc_executed = 0;
 	g_mshell.exit_value = 0;
 }
 
@@ -343,13 +356,15 @@ int main(int ac, char **av, char **envp)
 			// var_dump_token(tokens);
 			ft_expand_tokens(&tokens);
 			// var_dump_token(tokens);
+			var_dump_herdocs(g_mshell.herdocs);
 			ft_parse_ast(&cmd_tree, &tokens);		
-			// var_dump_tree(cmd_tree);
+			var_dump_tree(cmd_tree);
 			put_tohistory(cmd_line, g_mshell.history);
 			ft_execute_tree(cmd_tree, &g_mshell);
 			if (check_tty())
 				add_history(cmd_line);
 			ft_free_tokens(&tokens);
+			ft_free_herdoc(&g_mshell.herdocs);
 			// ft_printf("+++==============second token format===============\n\n");
 			// var_dump_token(tokens);
 			ft_free_tree(&cmd_tree);

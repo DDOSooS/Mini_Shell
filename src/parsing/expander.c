@@ -6,9 +6,12 @@
 /*   By: aghergho <aghergho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/01 01:15:21 by aghergho          #+#    #+#             */
-/*   Updated: 2024/06/13 15:42:42 by aghergho         ###   ########.fr       */
+/*   Updated: 2024/07/14 00:43:57 by aghergho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
+# include "../../includes/mshell.h"
+
 
 # include "../../includes/mshell.h"
 
@@ -208,7 +211,7 @@ void ft_expand_quotes(t_token **tokens)
     tmp = *tokens;
     while (tmp)
     {
-        if (is_exist_quote(tmp->value) || ft_check_dollar(tmp->value))
+        if ((is_exist_quote(tmp->value) || ft_check_dollar(tmp->value)) && tmp->typeId != 7)
         {
             tmpfile = tmp->value;
             tmp_str = ft_expand(tmp->value);
@@ -278,6 +281,92 @@ int ft_handle_export_expand(t_token **tokens)
     return 1;
 }
 
+int ft_check_expand_delimiter(char *delimiter)
+{
+    if (delimiter && delimiter[0] == '$')
+        return (1);
+    return (0);
+}
+
+t_herdoc *ft_new_herdoc(char *delimiter)
+{
+    t_herdoc *new;
+
+    new = malloc(sizeof(t_herdoc));
+    if (!new)
+        return (NULL);
+    new->delimiter = delimiter;
+    new->is_expanded = ft_check_expand_delimiter(delimiter);
+    // new->id = 0;
+    new->next = NULL;
+    return (new);
+}
+
+void    ft_free_herdoc(t_herdoc **herdocs)
+{
+    t_herdoc *tmp;
+    t_herdoc *tmp2;
+    
+    tmp = *herdocs;
+    while (tmp)
+    {
+        tmp2 = tmp->next;
+        free(tmp);
+        tmp = tmp2;
+    }
+    free(tmp);
+}
+
+int ft_add_herdoc(t_herdoc **root, char *del)
+{
+    t_herdoc    *new;
+    t_herdoc    *tmp;
+    int         herdoc_id;
+
+    herdoc_id = 0;
+    new = ft_new_herdoc(del);
+    if (!new)
+        return (0);
+    if (!*root)
+    {
+        new->id = 0;
+        *root = new;
+        return (1);
+    }
+    tmp = *root;
+    while (tmp->next)
+    {
+        // herdoc_id += 1;
+        tmp = tmp->next;
+    }
+    tmp->next = new;
+    new->id = tmp->id + 1;
+    return (1);
+} 
+
+t_herdoc *ft_gen_herdocs(t_token *tokens)
+{
+    t_herdoc *herdoc;
+    t_herdoc *new;
+
+    herdoc = NULL;
+    // printf("============(herdooooooooooooooooocs)===============\n");
+    while (tokens)
+    {
+        if (tokens->typeId == 7)
+        {
+            if (!ft_add_herdoc(&herdoc, tokens->next->value))
+            {
+                ft_free_herdoc(&herdoc);
+                return (NULL);
+            }
+        }
+        tokens = tokens->next;
+    }
+    // printf("============(herdooooooooooooooooocs)===============\n");
+    return (herdoc);
+}
+
 
 int  ft_expand_tokens(t_token **tokens)
 {
@@ -289,6 +378,7 @@ int  ft_expand_tokens(t_token **tokens)
     if (!ft_expand_token(tokens))
         return (0);
     ft_handle_export_expand(tokens);
-
+    g_mshell.herdocs = ft_gen_herdocs(*tokens);
+    // var_dump_herdocs(g_mshell.herdocs);
     return (1); 
 } 

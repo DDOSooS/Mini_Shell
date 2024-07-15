@@ -6,7 +6,7 @@
 /*   By: aghergho <aghergho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/06 16:01:09 by aghergho          #+#    #+#             */
-/*   Updated: 2024/05/29 20:51:27 by mkartit          ###   ########.fr       */
+/*   Updated: 2024/07/14 00:43:47 by aghergho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,6 +119,14 @@ enum buitins
 	ENV,
 	HISTORY
 };
+typedef struct herdoc
+{
+    int             id;
+    char            *delimiter;
+    int             is_expanded;
+    struct  herdoc  *next;
+}   t_herdoc;
+
 
 typedef struct mshell
 {
@@ -127,6 +135,8 @@ typedef struct mshell
  int        exit_value;
  pid_t      pid;
  int        n_herdoc;
+ int        n_herdoc_executed;
+ t_herdoc   *herdocs;
 } t_mshell;
 
 extern t_mshell g_mshell;
@@ -215,6 +225,7 @@ char **get_envp(t_env *env);
 void free_env(t_env *env);
 void free_history(t_history *history);
 void free_gvar(void);
+<<<<<<< HEAD
 void free_func(char **strings);
 
 /*================= Herdoc, red and pipes ====================*/
@@ -224,5 +235,10 @@ int heredoc_cheker(char*str, char *filename, int fd);
 /*================= Printers =================*/
 void print_stderr(char *str);
 
+=======
+void    ft_free_herdoc(t_herdoc **herdocs);
+>>>>>>> origin/abdessalam
 
+/*================var dumping data==============*/
+void	var_dump_herdocs(t_herdoc *herdoc);
 #endif

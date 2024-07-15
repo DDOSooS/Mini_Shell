@@ -5,10 +5,11 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: aghergho <aghergho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/05/11 20:05:21 by aghergho          #+#    #+#             */
-/*   Updated: 2024/06/13 14:35:13 by aghergho         ###   ########.fr       */
+/*   Created: Invalid date        by                   #+#    #+#             */
+/*   Updated: 2024/07/14 00:37:41 by aghergho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 
 # include "../../includes/mshell.h"
 
@@ -254,7 +255,6 @@ int ftAddInFile(t_infile **root, t_token *token)
 	return (1);
 }
 
-
 int ftAddRedirection(t_redirection **root, t_token *token)
 {
 	if (token->typeId == 7 || token->typeId == 8)
@@ -303,10 +303,23 @@ int is_parenthise_redirection(t_token *tokens)
 	return (0);
 }
 
+int check_unclosed_quote(char *token)
+{
+	int status;
+	int	i;
+
+	i = -1;
+	status = 1;
+	while (token[++i] && ft_check_quote(token, i + 1));
+	printf("token i + 1 (%c)================\n", token[i]);
+	if (token[i] && ft_check_quote(token,i))
+		status = 0;
+	return (status);
+}
 
 // =========================================================count the expanded args's lesn ==================================================================
 
-int ft_check_env_var(char *str)
+int ft_check_env_var(char *str) 
 {
 	t_env *tmp;
 
@@ -356,6 +369,8 @@ int ft_get_unexpanded_token(char *token, int *counter)
 	int i;
 	
 	i = 0 ;
+	if (check_unclosed_quote(token))
+		(*counter)++;
 	while (token[++i] && ft_check_quote(token, i + 1))
 		(*counter)++;
 	return (i)	;
@@ -380,9 +395,12 @@ int ft_get_expanded_quoted_token(char *token, int *counter)
 			(*counter) += ft_count_number_len(g_mshell.pid);
 			i++;
 		}
-		else if (is_dollar_sign(token[i]) && token[i + 1])
-		{
+		else if (is_dollar_sign(token[i]) && token[i + 1] && !is_whites_space(token[i + 1]) && ! is_double_quote(token[i + 1]))
 			i += ft_search_expanded_token(&token[i], counter);
+		else
+		{
+			printf("1111\n");
+			(*counter)++;
 		}
 	}
 	return (i);
@@ -424,6 +442,7 @@ int ft_count_expanded_token(char *token, int *counter)
 	{
 		if (is_single_quote(token[i]))
 		{
+			printf("hello hhhhhhh121212\n");
 			i += ft_get_unexpanded_token(&token[i ], counter);
 			return (i);	
 		}
@@ -450,6 +469,7 @@ int	ft_expanded_token(char *token)
 	i = -1;
 	while (token[++i])
 	{
+		printf("EXPANDED TOKEN [%c]==(%d)=====\n",token[i], i);
 		if (is_quote(token[i]) || is_dollar_sign(token[i]))
 			i += ft_count_expanded_token(&token[i], &counter);		
 		else
@@ -560,8 +580,11 @@ int ft_gen_expanded_quoted_token(char **str, char *token)
 			ft_gen_pid_token(str, g_mshell.pid);
 			i++;
 		}
-		else if (is_dollar_sign(token[i]) && token[i + 1])
+		else if (is_dollar_sign(token[i]) && token[i + 1] && !is_whites_space(token[i + 1]) && ! is_double_quote(token[i + 1]))
 			i += ft_gen_search_expanded_token(str,&token[i]);
+		else
+			*str = ft_strcat_char(*str, token[i]);
+
 	}
 	return (i);
 }
@@ -571,6 +594,8 @@ int ft_gen_unexpanded_token(char **str, char *token)
 	int i;
 	
 	i = 0 ;
+	if (check_unclosed_quote(token))
+		*str = ft_strcat_char(*str, token[i]);
 	while (token[++i] && ft_check_quote(token, i + 1))
 		*str = ft_strcat_char(*str, token[i]);
 	return (i)	;
@@ -633,7 +658,9 @@ int ft_expand_arg(char **arg)
 	char *new;
 
 	tmp = *arg;
+	printf("\n\n ===========expand arg===1111(%s)========\n", *arg);
 	len = ft_expanded_token(tmp);
+	printf("\n\n ===========expand arg===1111(%d)========\n", len);
 	new = malloc(sizeof(char) * (len +  1));
 	if (!new)
 		return (0);
@@ -641,6 +668,8 @@ int ft_expand_arg(char **arg)
 	ft_gen_expanded_arg(&new, tmp);
 	free(*arg);
 	*arg = new;
+	printf("\n ===========expand arg 222(%s)===========\n", *arg);
+	printf("\n\n ===========expand arg===========\n");
 	return (1);
 }
 
@@ -843,16 +872,16 @@ int	ft_gen_delimter(char **str,char *token)
 
 void ft_expand_delimiter(char **arg)
 {
-	int len;
-	char *tmp;
-	char *new;
-	tmp = *arg;
-	len = ft_count_delimter_len(tmp);
-	new = malloc(sizeof(char) * (len +  1));
-	new[0] = '\0';
-	ft_gen_delimter(&new, tmp);
-	free (tmp);
-	*arg = new;
+	// int len;
+	// char *tmp;
+	// char *new;
+	// tmp = *arg;
+	// len = ft_count_delimter_len(tmp);
+	// new = malloc(sizeof(char) * (len +  1));
+	// new[0] = '\0';
+	// ft_gen_delimter(&new, tmp);
+	// free (tmp);
+	// *arg = new;
 }
 
 
@@ -939,11 +968,6 @@ void ft_parse_parenthise(t_tnode **root, t_token **tokens)
 	tmp->value = NULL;
 	tmp->next->next->value = NULL;
 	tParenthise = ft_tokinizer(tmp->next->value);
-	// if (tParenthise == NULL) 
-	// {
-	// 	ft_printf("Error: Tokenization failed.\n");
-	// 	return;
-	// }
 	tmp1 = tParenthise;
 	while (tmp1->next)
 		tmp1 = tmp1->next;
@@ -966,8 +990,6 @@ void	ft_parse_pipe(t_tnode **root, t_token **tokens)
 		tmp = tmp->next;
 	}
 	new = ft_new_tnode(1, *tokens);
-	// if (!new)
-	// 	ft_free_mshell();
 	if (!*root)
 		*root = new;
 	else
