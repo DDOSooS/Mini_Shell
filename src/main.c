@@ -6,7 +6,7 @@
 /*   By: aghergho <aghergho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/06 16:02:56 by aghergho          #+#    #+#             */
-/*   Updated: 2024/07/14 00:45:30 by aghergho         ###   ########.fr       */
+/*   Updated: 2024/07/15 19:13:08 by aghergho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -355,10 +355,11 @@ int main(int ac, char **av, char **envp)
 			// ft_printf("==============first token format===============\n\n");
 			// var_dump_token(tokens);
 			ft_expand_tokens(&tokens);
-			// var_dump_token(tokens);
-			// var_dump_herdocs(g_mshell.herdocs);
 			ft_parse_ast(&cmd_tree, &tokens);		
-			// var_dump_tree(cmd_tree);
+			var_dump_tree(cmd_tree);
+			g_mshell.herdocs = ft_gen_herdocs(tokens);
+			var_dump_token(tokens);
+			var_dump_herdocs(g_mshell.herdocs);
 			put_tohistory(cmd_line, g_mshell.history);
 			if (g_mshell.herdocs)
 				ft_heredoc(cmd_tree, &g_mshell);

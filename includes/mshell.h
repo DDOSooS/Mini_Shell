@@ -6,7 +6,7 @@
 /*   By: aghergho <aghergho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/06 16:01:09 by aghergho          #+#    #+#             */
-/*   Updated: 2024/07/14 00:43:47 by aghergho         ###   ########.fr       */
+/*   Updated: 2024/07/15 19:10:49 by aghergho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -198,6 +198,8 @@ int ft_check_quote(char *cmd_line, int len);
 int is_single_quote(char c);
 int is_double_quote(char c);
 int is_quote(char c);
+int ft_add_herdoc(t_herdoc **root, char *del);
+t_herdoc *ft_gen_herdocs(t_token *tokens);
 // void ft_parse_input(char *cmd);
 
 /*================= execution ===============*/

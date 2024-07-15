@@ -6,7 +6,7 @@
 /*   By: aghergho <aghergho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/13 15:14:32 by aghergho          #+#    #+#             */
-/*   Updated: 2024/06/13 15:42:55 by aghergho         ###   ########.fr       */
+/*   Updated: 2024/07/15 18:16:33 by aghergho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -238,4 +238,3 @@ t_token *ft_tokinizer(char *cmd)
     } 
     return (tokens);
 }
-    
