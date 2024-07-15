@@ -469,7 +469,7 @@ int	ft_expanded_token(char *token)
 	i = -1;
 	while (token[++i])
 	{
-		printf("EXPANDED TOKEN [%c]==(%d)=====\n",token[i], i);
+		// printf("EXPANDED TOKEN [%c]==(%d)=====\n",token[i], i);
 		if (is_quote(token[i]) || is_dollar_sign(token[i]))
 			i += ft_count_expanded_token(&token[i], &counter);		
 		else
@@ -658,9 +658,9 @@ int ft_expand_arg(char **arg)
 	char *new;
 
 	tmp = *arg;
-	printf("\n\n ===========expand arg===1111(%s)========\n", *arg);
+	// printf("\n\n ===========expand arg===1111(%s)========\n", *arg);
 	len = ft_expanded_token(tmp);
-	printf("\n\n ===========expand arg===1111(%d)========\n", len);
+	// printf("\n\n ===========expand arg===1111(%d)========\n", len);
 	new = malloc(sizeof(char) * (len +  1));
 	if (!new)
 		return (0);
@@ -668,8 +668,8 @@ int ft_expand_arg(char **arg)
 	ft_gen_expanded_arg(&new, tmp);
 	free(*arg);
 	*arg = new;
-	printf("\n ===========expand arg 222(%s)===========\n", *arg);
-	printf("\n\n ===========expand arg===========\n");
+	// printf("\n ===========expand arg 222(%s)===========\n", *arg);
+	// printf("\n\n ===========expand arg===========\n");
 	return (1);
 }
 

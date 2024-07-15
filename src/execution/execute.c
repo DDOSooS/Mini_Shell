@@ -282,62 +282,21 @@ int cmd_counter(t_tnode *root)
 // }
 
 // this functions create n file to use for heredoc
-char *create_heredoc_filename(int here_doc_num)
-{
-	char *heredoc_tempfile;
-
-	heredoc_tempfile = (char *)malloc(ft_strlen("/tmp/.heredoc_") + 2);
-	ft_strlcpy(heredoc_tempfile, "/tmp/.heredoc_", ft_strlen("/tmp/.heredoc_") + 2);
-	heredoc_tempfile = ft_strjoin(heredoc_tempfile, ft_itoa(here_doc_num));
-	return heredoc_tempfile;
-}
 
 
-int create_heredoc(char *delimiter, int here_doc_num) 
-{
-    char *heredoc_tempfile;
-	char *line;
-	int fd;
-
-	heredoc_tempfile = create_heredoc_filename(here_doc_num);
-    fd = open(heredoc_tempfile, O_CREAT | O_WRONLY | O_TRUNC, 0644);
-    if (fd == -1) {
-        perror("open");
-        exit(EXIT_FAILURE);
-    }
-    while (1) {
-		line = readline(">");
-		if (heredoc_cheker(line, delimiter, fd))
-			break;
-		write(fd, line, ft_strlen(line));
-		write(fd, "\n", 1);
-		if (line)
-			free(line);
-    }
-	// if (line)
-	// 	free(line);
-    close(fd);
-    fd = open(heredoc_tempfile, O_RDONLY);
-    if (fd == -1) {
-        perror("open");
-        exit(EXIT_FAILURE);
-    }
-    return fd;
-}
-
-
-void handle_input_redirection(t_infile *in_file)
+void handle_input_redirection(t_infile *in_file, t_mshell *shell)
 {
 	int here_doc_num;
 	int fd;
 
 	here_doc_num = 0;
-    while (in_file) {
+    while (in_file)
+	{
         if (in_file->mode == 7)
 		{
-            fd = create_heredoc(in_file->filename, here_doc_num);
+			fd = open(ft_strjoin("/tmp/heredoc_", ft_itoa(here_doc_num)), O_RDONLY);
 			here_doc_num++;
-        }
+		}
 		else if (in_file->mode == 8) 
 		{
             fd = open(in_file->filename, O_RDONLY);
@@ -352,16 +311,15 @@ void handle_input_redirection(t_infile *in_file)
     }
 }
 
-void handle_output_redirection(t_outfile *out_file)
+void handle_output_redirection(t_outfile *out_file, t_mshell *shell)
 {
 	int fd;
 
     while (out_file) {
-		printf("print mode %d\n", out_file->mode);
 		if (out_file->mode == 9)
-			fd = open(out_file->filename, O_CREAT | O_WRONLY | O_APPEND, 0644);
-		else if (out_file->mode == 6)
 			fd = open(out_file->filename, O_CREAT | O_WRONLY | O_TRUNC, 0644);
+		else if (out_file->mode == 6)
+			fd = open(out_file->filename, O_CREAT | O_WRONLY | O_APPEND, 0644);
         if (fd == -1) {
             perror("open");
             exit(EXIT_FAILURE);
@@ -374,13 +332,14 @@ void handle_output_redirection(t_outfile *out_file)
 
 void handle_word(t_tnode *root, t_mshell *shell) {
     if (root->redirection->in_file)
-        handle_input_redirection(root->redirection->in_file);
+        handle_input_redirection(root->redirection->in_file, shell);
     if (root->redirection->out_file)
-        handle_output_redirection(root->redirection->out_file);
+        handle_output_redirection(root->redirection->out_file, shell);
     ft_execute_cmd(root, shell);
 }
 
-void ft_execute_tree(t_tnode *root, t_mshell *shell) {
+void ft_execute_tree(t_tnode *root, t_mshell *shell)
+{
     int (stdout_fd), (stdin_fd);
     stdout_fd = dup(STDOUT_FILENO);
     stdin_fd = dup(STDIN_FILENO);
@@ -388,63 +347,23 @@ void ft_execute_tree(t_tnode *root, t_mshell *shell) {
 		reset_in_out(stdin_fd, stdout_fd);
         return;
 	}
-
     if (root->node_type == TOKEN_PIPE) {
 		run_pipe(root, shell);
-        // int pipefd[2];
-        // if (pipe(pipefd) == -1) {
-        //     perror("pipe");
-        //     exit(EXIT_FAILURE);
-        // }
-
-        // pid_t pid_left, pid_right;
-
-        // pid_left = fork();
-        // if (pid_left == -1) {
-        //     perror("fork");
-        //     exit(EXIT_FAILURE);
-        // } else if (pid_left == 0) { // Child process for left side of pipe
-        //     close(pipefd[0]); // Close unused read end
-        //     dup2(pipefd[1], STDOUT_FILENO);
-        //     close(pipefd[1]);
-        //     ft_execute_tree(root->t_left, shell);
-        //     exit(EXIT_SUCCESS);
-        // }
-
-        // pid_right = fork();
-        // if (pid_right == -1) {
-        //     perror("fork");
-        //     exit(EXIT_FAILURE);
-        // } else if (pid_right == 0) { // Child process for right side of pipe
-        //     close(pipefd[1]); // Close unused write end
-        //     dup2(pipefd[0], STDIN_FILENO);
-        //     close(pipefd[0]);
-        //     ft_execute_tree(root->t_right, shell);
-        //     exit(EXIT_SUCCESS);
-        // }
-
-        // close(pipefd[0]);
-        // close(pipefd[1]);
-        // waitpid(pid_left, NULL, 0);
-        // waitpid(pid_right, NULL, 0);
-
-    } else if (root->node_type == TOKEN_WORD) {
+    }
+	else if (root->node_type == TOKEN_WORD) {
 		handle_word(root, shell);
 	}
-	// else if (root->node_type == TOKEN_LOGICAL_OPERATOR) {
-	// 	if (root->cmd->arg[0] == '&') {
-	// 		if (shell->exit_value != 0) {
-	// 			ft_execute_tree(root->t_right, shell);
-	// 		} else {
-	// 			ft_execute_tree(root->t_left, shell);
-	// 		}
-	// 	} else if (root->cmd->arg[0] == '|') {
-	// 		if (shell->exit_value == 0) {
-	// 			ft_execute_tree(root->t_right, shell);
-	// 		} else {
-	// 			ft_execute_tree(root->t_left, shell);
-	// 		}
-	// 	}
-    // }
+	else if (root->node_type == 3) // 3 means there is an and 
+	{
+		ft_execute_tree(root->t_left, shell);
+		if (shell->exit_value == 0)
+			ft_execute_tree(root->t_right, shell);
+	}
+	else if (root->node_type == 2) // 2 means there is an or
+	{
+		ft_execute_tree(root->t_left, shell);
+		if (shell->exit_value != 0)
+			ft_execute_tree(root->t_right, shell);
+	}
     reset_in_out(stdin_fd, stdout_fd);
 }

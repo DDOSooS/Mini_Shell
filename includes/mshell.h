@@ -122,6 +122,7 @@ enum buitins
 typedef struct herdoc
 {
     int             id;
+	char 			*filename;
     char            *delimiter;
     int             is_expanded;
     struct  herdoc  *next;
@@ -225,19 +226,18 @@ char **get_envp(t_env *env);
 void free_env(t_env *env);
 void free_history(t_history *history);
 void free_gvar(void);
-<<<<<<< HEAD
 void free_func(char **strings);
 
 /*================= Herdoc, red and pipes ====================*/
 void run_pipe(t_tnode *root, t_mshell *shell);
+// int ft_heredoc(t_tnode *root, t_mshell *shell);
+int ft_heredoc(t_tnode *root, t_mshell *shell);
 int heredoc_cheker(char*str, char *filename, int fd);
 
 /*================= Printers =================*/
 void print_stderr(char *str);
 
-=======
 void    ft_free_herdoc(t_herdoc **herdocs);
->>>>>>> origin/abdessalam
 
 /*================var dumping data==============*/
 void	var_dump_herdocs(t_herdoc *herdoc);

@@ -356,10 +356,12 @@ int main(int ac, char **av, char **envp)
 			// var_dump_token(tokens);
 			ft_expand_tokens(&tokens);
 			// var_dump_token(tokens);
-			var_dump_herdocs(g_mshell.herdocs);
+			// var_dump_herdocs(g_mshell.herdocs);
 			ft_parse_ast(&cmd_tree, &tokens);		
-			var_dump_tree(cmd_tree);
+			// var_dump_tree(cmd_tree);
 			put_tohistory(cmd_line, g_mshell.history);
+			if (g_mshell.herdocs)
+				ft_heredoc(cmd_tree, &g_mshell);
 			ft_execute_tree(cmd_tree, &g_mshell);
 			if (check_tty())
 				add_history(cmd_line);
