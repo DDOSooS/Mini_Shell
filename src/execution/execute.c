@@ -132,6 +132,7 @@ void cmd_runner(t_cmd *cmd, t_mshell *shell)
 	envp = NULL;
 	cmd_path = NULL;
 
+	// exec_signal(&shell->sig);
 	pid = fork();
 	if (pid == -1)
 	{
@@ -140,6 +141,7 @@ void cmd_runner(t_cmd *cmd, t_mshell *shell)
 	}
 	if (pid == 0)
 	{
+		// child_sig(&shell->sig);
 		cmd_args = cmd_args_getter(cmd);
 		if (find_env(shell->env, "PATH"))
 			path = get_path(find_env(shell->env, "PATH")->value);
@@ -148,7 +150,9 @@ void cmd_runner(t_cmd *cmd, t_mshell *shell)
 		cmd_path = check_command(cmd_args[0], path);
 		if (cmd_path == NULL)
 		{
-			print_stderr("command not found");
+			ft_putstr_fd("minishell: ", 2);
+			ft_putstr_fd(cmd_args[0], 2);
+			ft_putstr_fd(": command not found\n", 2);
 			free_func(cmd_args);
 			if (path)
 				free_func(path);
@@ -167,45 +171,16 @@ void cmd_runner(t_cmd *cmd, t_mshell *shell)
 	}
 }
 
-// void double_dup(int fd1, int fd2)
-// {
-// 	if (dup2(fd1, STDIN_FILENO) == -1)
-// 		perror("dup2");
-// 	if (dup2(fd2, STDOUT_FILENO) == -1)
-// 		perror("dup2");
-// }
-
 void ft_execute_cmd(t_tnode *root, t_mshell *shell)
 {
 	t_cmd *cmd;
 
 	cmd = root->cmd;
+	if (!cmd)
+		return;
 	if (builtins_finder(cmd, shell, builtins_checker(cmd)) == -1)
 		cmd_runner(cmd, shell);
 }
-
-// void ft_execute_pipe(t_tnode *root, t_mshell *shell, int f)
-// {
-// 	if (f == 1)
-// 		printf("left\n");
-// 	else if (f == 2)
-// 		printf("right\n");
-
-// 	if (root->cmd)
-// 	{
-// 		printf("parent type (%d)\n", root->t_parent->node_type);
-// 		printf("cmd type (%d) -> %s\n", root->node_type, root->cmd->arg);
-// 		if (root->redirection->out_file) {
-// 			printf("out file -> %s\n", root->redirection->out_file->filename);
-// 			printf("mode -> %d\n", root->redirection->out_file->mode);
-// 		}
-// 	}
-// 	else
-// 	{
-// 		ft_execute_pipe(root->t_left, shell, 1);
-// 		ft_execute_pipe(root->t_right, shell, 2);
-// 	}
-// }
 
 void reset_in_out(int stdin, int stdout)
 {
@@ -216,72 +191,6 @@ void reset_in_out(int stdin, int stdout)
 	close(stdin);
 	close(stdout);
 }
-
-// TODO: this functions checks the number of cmds in the tree
-int cmd_counter(t_tnode *root)
-{
-	int count;
-
-	count = 0;
-	if (root)
-	{
-		if (root->node_type == TOKEN_PIPE)
-		{
-			count += cmd_counter(root->t_left);
-			count += cmd_counter(root->t_right);
-		}
-		if (root->node_type == TOKEN_WORD)
-			count++;
-	}
-	return (count);
-}
-
-// void ft_execute_tree(t_tnode *root, t_mshell *shell)
-// {
-// 	int stdout;
-// 	int stdin;
-
-// 	stdout = dup(STDOUT_FILENO);
-// 	stdin = dup(STDIN_FILENO);
-// 	if (root == NULL)
-// 		return;
-// 	//TODO: run herdox first no mater where is it
-// 	//TODO: see if there is pipe(fork and run the pipes)
-// 	//TODO: handel the redirections
-
-// 	// printf("cmd counter %d\n", cmd_counter(root));
-// 	// if (cmd_counter(root) == 1) {
-// 	// 	cmd_runner(root->cmd, shell);
-// 	// 	return;
-// 	// }
-	
-// 	if (root)
-// 	{
-// 		// and -> 3
-// 		// or -> 2
-// 		// pipe -> 1
-// 		// l_parenthise -> 4
-// 		// r_parenthise -> 5
-// 		// append -> 6
-// 		// herdoc -> 7
-// 		// in_redirection -> 8
-// 		// out_redirection -> 9
-// 		if (root->node_type == TOKEN_PIPE) {
-// 			ft_execute_tree(root->t_left, shell);
-// 			ft_execute_tree(root->t_right, shell);
-// 		}
-// 		// if (shell->n_herdoc > 0)
-// 		// 	ft_heredoc(root, shell);
-// 		if (root->node_type == TOKEN_WORD) {
-// 			ft_execute_cmd(root, shell);
-// 			// printf("display command %s\n", root->cmd->arg);
-// 		}
-// 			// ft_execute_cmd(root, shell);
-// 	}
-// 	reset_in_out(stdin, stdout);
-// }
-
-// this functions create n file to use for heredoc
 
 
 void handle_input_redirection(t_infile *in_file, t_mshell *shell)
@@ -330,7 +239,8 @@ void handle_output_redirection(t_outfile *out_file, t_mshell *shell)
     }
 }
 
-void handle_word(t_tnode *root, t_mshell *shell) {
+void handle_word(t_tnode *root, t_mshell *shell)
+{
     if (root->redirection->in_file)
         handle_input_redirection(root->redirection->in_file, shell);
     if (root->redirection->out_file)
@@ -343,27 +253,37 @@ void ft_execute_tree(t_tnode *root, t_mshell *shell)
     int (stdout_fd), (stdin_fd);
     stdout_fd = dup(STDOUT_FILENO);
     stdin_fd = dup(STDIN_FILENO);
-    if (root == NULL) {
+    if (root == NULL) 
+	{
 		reset_in_out(stdin_fd, stdout_fd);
         return;
 	}
-    if (root->node_type == TOKEN_PIPE) {
+    if (root->node_type == TOKEN_PIPE)
 		run_pipe(root, shell);
-    }
-	else if (root->node_type == TOKEN_WORD) {
+	else if (root->node_type == TOKEN_WORD)
 		handle_word(root, shell);
-	}
-	else if (root->node_type == 3) // 3 means there is an and 
+	else if (root->node_type == TOKEN_AND) // 3 means there is an and 
 	{
 		ft_execute_tree(root->t_left, shell);
 		if (shell->exit_value == 0)
 			ft_execute_tree(root->t_right, shell);
 	}
-	else if (root->node_type == 2) // 2 means there is an or
+	else if (root->node_type == TOKEN_OR) // 2 means there is an or
 	{
 		ft_execute_tree(root->t_left, shell);
 		if (shell->exit_value != 0)
 			ft_execute_tree(root->t_right, shell);
 	}
     reset_in_out(stdin_fd, stdout_fd);
+}
+
+
+void execute(t_tnode *root, t_mshell *shell)
+{
+	if (shell->n_herdoc > 0)
+	{
+		ft_heredoc(root, shell);
+		shell->n_herdoc = 0;
+	}
+	ft_execute_tree(root, shell);
 }

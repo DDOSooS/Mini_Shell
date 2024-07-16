@@ -27,6 +27,12 @@
 #include "./gnl/get_next_line.h"
 #include <stdio.h>
 
+typedef struct s_signal
+{
+	struct sigaction	sig_int;
+	struct sigaction	sig_quit;
+}	t_signal;
+
 typedef struct token
 {
 	char            *type;
@@ -101,11 +107,8 @@ enum TokenType
 {
 	TOKEN_WORD,
 	TOKEN_PIPE,
-	TOKEN_IN_REDIRECTION,
-	TOKEN_OUT_REDIRECTION,
-	TOKEN_LOGICAL_OPERATOR,
-	TOKEN_L_PARENTHISE,
-	TOKEN_R_PARENTHISE
+	TOKEN_OR,
+	TOKEN_AND,
 } ;
 
 enum buitins
@@ -122,8 +125,8 @@ enum buitins
 typedef struct herdoc
 {
     int             id;
-	char 			*filename;
     char            *delimiter;
+	char 			*filename;
     int             is_expanded;
     struct  herdoc  *next;
 }   t_herdoc;
@@ -138,6 +141,7 @@ typedef struct mshell
  int        n_herdoc;
  int        n_herdoc_executed;
  t_herdoc   *herdocs;
+ t_signal   sig;
 } t_mshell;
 
 extern t_mshell g_mshell;
@@ -202,45 +206,49 @@ int ft_add_herdoc(t_herdoc **root, char *del);
 t_herdoc *ft_gen_herdocs(t_token *tokens);
 // void ft_parse_input(char *cmd);
 
-/*================= execution ===============*/
-void ft_execute_tree(t_tnode *root, t_mshell *shell);
-void ignore_signals();
-// t_env *extarct_env(char **envp);
-void extarct_env(char **envp, t_env **env);
-void put_tohistory(char *cmd, t_history *history);
-int find_env_rem(t_env *env, char *key);
-t_env *find_env(t_env *env, char *key);
-// int builtins_finder(t_cmd *cmd, t_mshell *shell);
-int builtins_finder(t_cmd *cmd, t_mshell *shell, int type);
-int builtins_checker(t_cmd *cmd);
 
+
+
+/*================= execution ===============*/
+void	execute(t_tnode *root, t_mshell *shell);
+void	ft_execute_tree(t_tnode *root, t_mshell *shell);
+int		get_status(int status);
+// t_env *extarct_env(char **envp);
+void	extarct_env(char **envp, t_env **env);
+void	put_tohistory(char *cmd, t_history *history);
+int		find_env_rem(t_env *env, char *key);
+t_env	*find_env(t_env *env, char *key);
+// int builtins_finder(t_cmd *cmd, t_mshell *shell);
+int		builtins_finder(t_cmd *cmd, t_mshell *shell, int type);
+int		builtins_checker(t_cmd *cmd);
 /*================= ENV ==================*/
-t_env *find_env(t_env *env, char *key);
+t_env	*find_env(t_env *env, char *key);
 void edit_env(t_env *env, char *key, char *value);
 t_env *create_env_node(char *key, char *value, int is_exported);
 void env_add_back(t_env **env, t_env *new);
-
 void add_env(t_env *env, char *key, char *value);
 int count_args(t_cmd *cmd);
 char **get_envp(t_env *env);
-
 /*================ Clear Allocted ============*/
 void free_env(t_env *env);
 void free_history(t_history *history);
 void free_gvar(void);
 void free_func(char **strings);
-
 /*================= Herdoc, red and pipes ====================*/
 void run_pipe(t_tnode *root, t_mshell *shell);
 // int ft_heredoc(t_tnode *root, t_mshell *shell);
 int ft_heredoc(t_tnode *root, t_mshell *shell);
 int heredoc_cheker(char*str, char *filename, int fd);
-
 /*================= Printers =================*/
 void print_stderr(char *str);
-
 void    ft_free_herdoc(t_herdoc **herdocs);
-
 /*================var dumping data==============*/
 void	var_dump_herdocs(t_herdoc *herdoc);
+/*=============== signals =======================*/
+void prompt_sig(t_signal *sig);
+void exec_signal(t_signal *sig);
+void child_sig(t_signal *sig);
+void heredoc_sig_p(t_signal *sig);
+void ignore_signals(struct sigaction *signals, int sig, void (*handler)(int));
+
 #endif

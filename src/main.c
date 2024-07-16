@@ -339,10 +339,12 @@ int main(int ac, char **av, char **envp)
 	tokens = NULL;
 	cmd_tree = NULL;
 	m_shell_init(envp);
-	ignore_signals();
 	while (1)
 	{
 		cmd_line = costum_readline();
+		if (check_tty())
+			add_history(cmd_line);
+		put_tohistory(cmd_line, g_mshell.history);
 		if (!ft_check_syntax(cmd_line))
 		{
 			free(cmd_line);
@@ -356,16 +358,19 @@ int main(int ac, char **av, char **envp)
 			// var_dump_token(tokens);
 			ft_expand_tokens(&tokens);
 			ft_parse_ast(&cmd_tree, &tokens);		
-			var_dump_tree(cmd_tree);
+			// var_dump_tree(cmd_tree);
 			g_mshell.herdocs = ft_gen_herdocs(tokens);
-			var_dump_token(tokens);
-			var_dump_herdocs(g_mshell.herdocs);
-			put_tohistory(cmd_line, g_mshell.history);
-			if (g_mshell.herdocs)
+			// var_dump_token(tokens);
+			// var_dump_herdocs(g_mshell.herdocs);
+			if (g_mshell.n_herdoc)
+			{
+				printf("num of herdoc: %d\n", g_mshell.n_herdoc);
 				ft_heredoc(cmd_tree, &g_mshell);
+				g_mshell.n_herdoc = 0;
+			}
 			ft_execute_tree(cmd_tree, &g_mshell);
-			if (check_tty())
-				add_history(cmd_line);
+			//FIXME: check if the there is no cmd after the herdoc 
+			// << a << b << c
 			ft_free_tokens(&tokens);
 			ft_free_herdoc(&g_mshell.herdocs);
 			// ft_printf("+++==============second token format===============\n\n");
