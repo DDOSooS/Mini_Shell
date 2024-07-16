@@ -6,7 +6,7 @@
 /*   By: aghergho <aghergho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2024/07/14 00:37:41 by aghergho         ###   ########.fr       */
+/*   Updated: 2024/07/16 22:56:12 by aghergho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,9 +94,7 @@ int ft_check_or_operator(t_token *token)
 	while (token && token->value)
 	{
 		if (token->value &&  is_pipe(token->value[0]) && is_pipe(token->value[1]) && isLastOperator(token->next))
-		{
 			return (1);
-		}
 		token = token->next;
 	}
 	return (0);
@@ -126,9 +124,6 @@ int ftCheckWildCard(char *arg)
 	return (0);
 }
 
-/*
-	(ls) (-la) (NULL||) cat (NULL&&) (mkdir) (sd) | (ls) || (wc) (makefile) 	
-*/
 int	ftAddCmd(t_cmd **cmd, char *str)
 {
 	t_cmd *new;
@@ -186,7 +181,6 @@ t_cmd *ftGenCmd(t_token *tokens)
 	flag = 0;
 	while (tokens && tokens->value)
 	{
-	// ft_printf("------------------------------------------cmd(%s)---------------------------------------\n\n", tokens->value);
 		if (!tokens->typeId && !flag)
 		{
 			if (tokens->value[0] && is_double_quote(tokens->value[0]) && is_double_quote(tokens->value[ft_strlen(tokens->value) -1]))
@@ -270,14 +264,9 @@ t_redirection *ftGetRedirection(t_token *token)
     t_redirection   *redirection;
 
     redirection = malloc(sizeof(t_redirection));
-    if (!redirection) {
-        perror("malloc");
-        return NULL;
-    }
     redirection->in_file = NULL;
     redirection->out_file = NULL;
     flag = 0;
-
     while (token)
     {
         if ((token->typeId >= 1 && token->typeId <= 3) || token->typeId == 5)
@@ -311,13 +300,12 @@ int check_unclosed_quote(char *token)
 	i = -1;
 	status = 1;
 	while (token[++i] && ft_check_quote(token, i + 1));
-	printf("token i + 1 (%c)================\n", token[i]);
 	if (token[i] && ft_check_quote(token,i))
 		status = 0;
 	return (status);
 }
 
-// =========================================================count the expanded args's lesn ==================================================================
+// ==============================count the expanded args's lesn ====================================
 
 int ft_check_env_var(char *str) 
 {
@@ -333,10 +321,15 @@ int ft_check_env_var(char *str)
 	return (0);
 }
 
-int ft_count_number_len(pid_t number)
+int ft_count_number_len(char token)
 {
 	int counter;
-
+	int number;
+	
+	if (token == '?')
+		number = g_mshell.exit_value;
+	else
+		number = g_mshell.pid;
 	counter = 0;
 	while (number > 9)
 	{	
@@ -392,20 +385,18 @@ int ft_get_expanded_quoted_token(char *token, int *counter)
 		}
 		if (is_dollar_sign(token[i]) && token[i + 1] && is_dollar_sign(token[i + 1]))
 		{
-			(*counter) += ft_count_number_len(g_mshell.pid);
+			(*counter) += ft_count_number_len(token[i+1]);
 			i++;
 		}
 		else if (is_dollar_sign(token[i]) && token[i + 1] && !is_whites_space(token[i + 1]) && ! is_double_quote(token[i + 1]))
 			i += ft_search_expanded_token(&token[i], counter);
 		else
 		{
-			printf("1111\n");
 			(*counter)++;
 		}
 	}
 	return (i);
 }
-
 
 int ft_get_expanded_unquoted_token(char *token, int *counter)
 {
@@ -413,11 +404,13 @@ int ft_get_expanded_unquoted_token(char *token, int *counter)
 	char	*str;
 	
 	i = 0;
+
+
 	if (token[i + 1] && is_dollar_sign(token[i]) && ft_isdigit(token[i + 1]))
 		return (1);
-	if (token[i + 1] && is_dollar_sign(token[i + 1]))
+	if (token[i + 1] && (is_dollar_sign(token[i + 1]) || token[i + 1] == '?'))
 	{
-		(*counter) += ft_count_number_len(g_mshell.pid);
+		(*counter) += ft_count_number_len(token[i + 1]);
 		return (1);		
 	}
 	else if ( is_dollar_sign(token[i]) && (!token[i + 1] || is_quote(token[i + 1]) || is_whites_space(token[i + 1])))
@@ -442,7 +435,6 @@ int ft_count_expanded_token(char *token, int *counter)
 	{
 		if (is_single_quote(token[i]))
 		{
-			printf("hello hhhhhhh121212\n");
 			i += ft_get_unexpanded_token(&token[i ], counter);
 			return (i);	
 		}
@@ -469,7 +461,6 @@ int	ft_expanded_token(char *token)
 	i = -1;
 	while (token[++i])
 	{
-		printf("EXPANDED TOKEN [%c]==(%d)=====\n",token[i], i);
 		if (is_quote(token[i]) || is_dollar_sign(token[i]))
 			i += ft_count_expanded_token(&token[i], &counter);		
 		else
@@ -478,15 +469,18 @@ int	ft_expanded_token(char *token)
 	return (counter);
 }
 
-
-
 // =========================================================generate the expanded args ==================================================================
 
-int ft_gen_pid_token(char **str, pid_t pid)
+int ft_gen_pid_token(char **str, char token)
 {
 	char *tmp;
-
-	tmp = ft_itoa((int)pid);
+	int number;
+	
+	if (token == '?')
+		number = g_mshell.exit_value;
+	else
+		number = g_mshell.pid;	
+	tmp = ft_itoa(number);
 	if (!tmp)
 		return (0);
 	*str = ft_strcat(*str, tmp);
@@ -519,9 +513,9 @@ int ft_gen_expanded_unquoted_token(char **s1, char *token)
 	i = 0;
 	if (token[i+ 1] && is_dollar_sign(token[i]) && ft_isdigit(token[i + 1]))
 		return (1);
-	if (token[i + 1] && is_dollar_sign(token[i + 1]))
+	if (token[i + 1] && (is_dollar_sign(token[i + 1]) || token[i + 1] == '?'))
 	{
-		ft_gen_pid_token(s1, g_mshell.pid);
+		ft_gen_pid_token(s1, token[i+1]);
 		return (1);		
 	}
 	else if ( is_dollar_sign(token[i]) && (!token[i + 1] || is_quote(token[i + 1]) || is_whites_space(token[i + 1])))
@@ -562,7 +556,6 @@ int ft_gen_search_expanded_token(char **s1, char *token)
 	return (i);
 }
 
-
 int ft_gen_expanded_quoted_token(char **str, char *token)
 {
 	int i;
@@ -577,14 +570,13 @@ int ft_gen_expanded_quoted_token(char **str, char *token)
 		}
 		if (is_dollar_sign(token[i]) && token[i + 1] && is_dollar_sign(token[i + 1]))
 		{
-			ft_gen_pid_token(str, g_mshell.pid);
+			ft_gen_pid_token(str, token[i+1]);
 			i++;
 		}
 		else if (is_dollar_sign(token[i]) && token[i + 1] && !is_whites_space(token[i + 1]) && ! is_double_quote(token[i + 1]))
 			i += ft_gen_search_expanded_token(str,&token[i]);
 		else
 			*str = ft_strcat_char(*str, token[i]);
-
 	}
 	return (i);
 }
@@ -650,6 +642,9 @@ int	ft_gen_expanded_arg(char **str, char *token)
 	return (counter);
 }
 
+/*
+	this function is responsible for expanding any envp Var
+*/
 
 int ft_expand_arg(char **arg)
 {
@@ -658,9 +653,7 @@ int ft_expand_arg(char **arg)
 	char *new;
 
 	tmp = *arg;
-	printf("\n\n ===========expand arg===1111(%s)========\n", *arg);
 	len = ft_expanded_token(tmp);
-	printf("\n\n ===========expand arg===1111(%d)========\n", len);
 	new = malloc(sizeof(char) * (len +  1));
 	if (!new)
 		return (0);
@@ -668,8 +661,6 @@ int ft_expand_arg(char **arg)
 	ft_gen_expanded_arg(&new, tmp);
 	free(*arg);
 	*arg = new;
-	printf("\n ===========expand arg 222(%s)===========\n", *arg);
-	printf("\n\n ===========expand arg===========\n");
 	return (1);
 }
 
@@ -717,34 +708,17 @@ t_cmd  *ft_split_cmd( char *arg)
 void ft_expand_cmd(t_token **root)
 {
 	t_token		*tmp;
-	t_token 	*s_tmp;
-	t_token		*t_tmp;
 	
 	tmp = *root;
-	// t_tmp = *root;
 	while (tmp)
 	{
 		if (ft_check_expand(tmp->value))
-		{
 			ft_expand_arg(&tmp->value);
-			// if (ft_check_white_spaces(tmp->arg))
-			// {
-			// 	s_tmp = tmp->next;
-			// 	tmp = ft_split_cmd(tmp->arg);
-			// 	ft_printf("after cmd splited---------------------------\n");
-			// 	var_dump_cmd(tmp);
-			// 	t_tmp = tmp;
-			// 	while (tmp->next)
-			// 		tmp = tmp->next;
-			// 	tmp->next = s_tmp;
-			// 	// var_dump_cmd(t_tmp);
-			// }
-		}
 		tmp = tmp->next;
 	}
 }
 
-//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++expand of out files++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+//++++++++++++++++++++++++++++++++expand of out files+++++++++++++++++++++++++++++++++++++++++++++++++
 
 
 int ft_get_expanded_quoted_delimiter(char *token, int *counter)
@@ -810,7 +784,7 @@ int	ft_count_delimter_len(char *token)
 }
 
 
-//____________________________________________________________________________________Generating the delimiter__________________________________________________
+//________________________________________Generating the delimiter__________________
 
 int ft_gen_expanded_quoted_delimiter(char **str ,char *token)
 {
@@ -894,10 +868,12 @@ void ft_expand_infile(t_infile **root)
 	tmp = *root;
 	while (tmp)
 	{
-		if (tmp->is_herdoc)
-			ft_expand_delimiter(&tmp->filename);
-		else
+		if (! tmp->is_herdoc)
 			ft_expand_arg(&tmp->filename);
+		// if (tmp->is_herdoc)
+		// 	ft_expand_delimiter(&tmp->filename);
+		// else
+		// 	ft_expand_arg(&tmp->filename);
 		tmp = tmp->next;
 	}
 }
@@ -952,12 +928,11 @@ t_tnode	*ft_new_tnode(int n_type, t_token *tokens)
 	return (new);
 }
 
-
 void ft_parse_parenthise(t_tnode **root, t_token **tokens)
 {
     t_token *tmp;
     t_tnode *new;
-    t_token *tParenthise; // Single pointer
+    t_token *tParenthise;
     t_token *tmp1;
 
     tmp = *tokens;
@@ -1012,17 +987,13 @@ void	ft_parse_or_operator(t_tnode **root, t_token **tokens)
 	t_tnode	*new;
 
 	tmp = *tokens;
-
 	while (tmp)
 	{
 		if (tmp->value && is_pipe(tmp->value[0]) && is_pipe(tmp->value[1]) && isLastOperator(tmp->next))
 			break;
 		tmp = tmp->next;
 	}
-	
 	new = ft_new_tnode(2, *tokens);
-	// if (!new)
-	// 	ft_free_mshell();
 	if (!*root)
 		*root = new;
 	else
@@ -1039,6 +1010,7 @@ void	ft_parse_or_operator(t_tnode **root, t_token **tokens)
 	ft_parse_ast(&new, &(tmp->next));
 }
 
+
 void	ft_parse_and_operator(t_tnode **root, t_token **tokens)
 {
 	t_token *tmp;
@@ -1051,9 +1023,7 @@ void	ft_parse_and_operator(t_tnode **root, t_token **tokens)
 			break;
 		tmp = tmp->next;
 	}
-		new = ft_new_tnode(3, *tokens);
-	// if (!new)
-	// 	ft_free_mshell();
+	new = ft_new_tnode(3, *tokens);
 	if (!*root)
 		*root = new;
 	else
@@ -1075,8 +1045,6 @@ void	ft_parse_cmd(t_tnode **root, t_token **tokens)
 	t_tnode *new;
 	
 	new = ft_new_tnode(0, *tokens);
-	// if (!new)
-	// 	return (ft_free_mshell());
 	if (!*root)
 	{
 		*root = new;
@@ -1112,4 +1080,4 @@ void ft_parse_ast(t_tnode **root, t_token **tokens)
 		return ft_parse_cmd(root, tokens);
 		tmp = tmp->next;
 	}
-}
+} 

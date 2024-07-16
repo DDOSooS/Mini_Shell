@@ -6,7 +6,7 @@
 /*   By: aghergho <aghergho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/06 16:02:56 by aghergho          #+#    #+#             */
-/*   Updated: 2024/07/15 19:13:08 by aghergho         ###   ########.fr       */
+/*   Updated: 2024/07/16 19:48:39 by aghergho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -331,8 +331,8 @@ int main(int ac, char **av, char **envp)
 			ft_parse_ast(&cmd_tree, &tokens);		
 			var_dump_tree(cmd_tree);
 			g_mshell.herdocs = ft_gen_herdocs(tokens);
-			var_dump_token(tokens);
-			var_dump_herdocs(g_mshell.herdocs);
+			// var_dump_token(tokens);
+			// var_dump_herdocs(g_mshell.herdocs);
 			put_tohistory(cmd_line, g_mshell.history);
 			ft_execute_tree(cmd_tree, &g_mshell);
 			add_history(cmd_line);

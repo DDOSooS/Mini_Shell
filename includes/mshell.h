@@ -6,7 +6,7 @@
 /*   By: aghergho <aghergho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/06 16:01:09 by aghergho          #+#    #+#             */
-/*   Updated: 2024/07/15 19:10:49 by aghergho         ###   ########.fr       */
+/*   Updated: 2024/07/16 20:14:28 by aghergho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,11 +96,6 @@ typedef struct treeNode
     struct treeNode     *t_parent;
     struct treeNode     *t_right;
 }   t_tnode;
-
-// typedef struct tree
-// {
-//     t_tnode **root;
-// }   Tree;
 
 enum TokenType
 {

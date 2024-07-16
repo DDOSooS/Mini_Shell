@@ -6,7 +6,7 @@
 /*   By: aghergho <aghergho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/13 15:14:32 by aghergho          #+#    #+#             */
-/*   Updated: 2024/07/15 18:16:33 by aghergho         ###   ########.fr       */
+/*   Updated: 2024/07/16 20:36:22 by aghergho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -206,8 +206,6 @@ t_token *ft_tokinizer(char *cmd)
     while (cmd[++i])
     {
         if (is_whites_space(cmd[i]) && ft_check_opened_token(cmd, i))
-            continue;
-        if ((is_l_parenthise(cmd[i]) && ft_check_l_parenthise(cmd, i + 1)) || (is_r_parenthise(cmd[i]) && ft_check_r_parenthise(cmd, i + 1)))
             continue;
         if (is_doubled_token(&cmd[i]) && (!ft_check_quote(cmd, i) && is_closed_parenthise(cmd, i)))
         {

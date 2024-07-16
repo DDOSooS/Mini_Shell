@@ -6,7 +6,7 @@
 /*   By: aghergho <aghergho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/10 18:51:59 by aghergho          #+#    #+#             */
-/*   Updated: 2024/06/12 16:22:57 by aghergho         ###   ########.fr       */
+/*   Updated: 2024/07/16 22:57:44 by aghergho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -304,7 +304,6 @@ int ft_check_quote_error(char *cmd_line)
 	}
 	if (d_quote || s_quote)
 		return (ft_printf(";( Syntax error please verify your quotes\n"),1);
-    // ft_printf("===> Quote test pass successfully\n");
 	return (0);
 }
 
@@ -411,10 +410,8 @@ int ft_check_redirection_error(char *cmd_line)
     len = ft_strlen(cmd_line);
     if (ft_check_redirection_sequence(cmd_line))
         return (0);
-    // ft_printf("===> redirection sequence test pass successfully\n");
     if (! ft_check_in_redirection(cmd_line, len))
         return ( 0);
-    // ft_printf("===> redirection test pass successfully\n");
     if (! ft_check_out_redirection(cmd_line, len))
         return (0);
     return (1);
@@ -473,7 +470,6 @@ int is_closed_parenthise(char *cmd_line, int len)
 
     closed_parenth = 0;
     i = -1;
-    // ft_printf("cmd_line;(%s) | (%d)\n", cmd_line, len);
     while (++i < len)
     {
         if (is_r_parenthise(cmd_line[i]) && !ft_check_quote(cmd_line, i) && !closed_parenth)
@@ -520,9 +516,7 @@ int is_word_character(char c)
 
 int ft_check_left_parenthise(char *cmd_line, int i)
 {
-    // int flag;
 
-    // flag = 0;
     while (cmd_line[--i] && is_l_parenthise(cmd_line[i]));
 	// if (cmd_line[i] && (in_redirection(cmd_line[i]) || out_redirection(cmd_line[i])))
 	// 	i--;
@@ -533,14 +527,10 @@ int ft_check_left_parenthise(char *cmd_line, int i)
             i--;
             continue;
         }
-	    // ft_printf("=====char (%c)====\n", cmd_line[i]);
 		if (!is_whites_space(cmd_line[i]) && cmd_line[i])
 			return(0);
         i--;
     }
-    // if(!flag)
-    //     return (0);
-	// ft_printf("=====left====\n");
     return (1);
 }
 
@@ -604,7 +594,6 @@ int ft_check_parenthise_sequence(char *cmd_line)
                 return (0);
         } 
     }
-    // ft_printf("====parenthise sequence is done====\n");
     return (1);
 }
 
