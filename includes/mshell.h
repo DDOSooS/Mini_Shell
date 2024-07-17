@@ -6,7 +6,7 @@
 /*   By: aghergho <aghergho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/06 16:01:09 by aghergho          #+#    #+#             */
-/*   Updated: 2024/07/17 18:38:49 by aghergho         ###   ########.fr       */
+/*   Updated: 2024/07/17 18:46:00 by aghergho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -148,7 +148,6 @@ void ft_expand_delimiter(char **arg);
 void	var_dump_cmd(t_cmd *cmds);
 
 //this function is reponsible for expanding envp var
-
 int     ft_expand_arg(char **arg);
 
 char    **ft_split_words(char *words, char *delimiter);
