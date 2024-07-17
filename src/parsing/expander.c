@@ -6,12 +6,9 @@
 /*   By: aghergho <aghergho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/01 01:15:21 by aghergho          #+#    #+#             */
-/*   Updated: 2024/07/15 19:09:40 by aghergho         ###   ########.fr       */
+/*   Updated: 2024/07/16 22:56:57 by aghergho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
-# include "../../includes/mshell.h"
-
 
 # include "../../includes/mshell.h"
 
@@ -293,7 +290,6 @@ t_herdoc *ft_new_herdoc(char *delimiter)
         return (NULL);
     new->delimiter = delimiter;
     new->is_expanded = ft_check_expand_delimiter(delimiter);
-    // new->id = 0;
     new->next = NULL;
     return (new);
 }
@@ -331,10 +327,7 @@ int ft_add_herdoc(t_herdoc **root, char *del)
     }
     tmp = *root;
     while (tmp->next)
-    {
-        // herdoc_id += 1;
         tmp = tmp->next;
-    }
     tmp->next = new;
     new->id = tmp->id + 1;
     return (1);
@@ -346,7 +339,6 @@ t_herdoc *ft_gen_herdocs(t_token *tokens)
     t_herdoc *new;
 
     herdoc = NULL;
-    // printf("============(herdooooooooooooooooocs)===============\n");
     while (tokens)
     {
         if (tokens->typeId == 7)
@@ -359,21 +351,16 @@ t_herdoc *ft_gen_herdocs(t_token *tokens)
         }
         tokens = tokens->next;
     }
-    // printf("============(herdooooooooooooooooocs)===============\n");
     return (herdoc);
 }
-
 
 int  ft_expand_tokens(t_token **tokens)
 {
     t_token *tmp;
-    int flag;
     
     ft_expand_quotes(tokens);
-
     if (!ft_expand_token(tokens))
         return (0);
     ft_handle_export_expand(tokens);
-    // var_dump_herdocs(g_mshell.herdocs);
     return (1); 
-} 
+}

@@ -6,7 +6,7 @@
 /*   By: aghergho <aghergho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/06 16:01:09 by aghergho          #+#    #+#             */
-/*   Updated: 2024/07/15 19:10:49 by aghergho         ###   ########.fr       */
+/*   Updated: 2024/07/17 18:46:00 by aghergho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,11 +98,6 @@ typedef struct treeNode
 	struct treeNode     *t_right;
 }   t_tnode;
 
-// typedef struct tree
-// {
-//     t_tnode **root;
-// }   Tree;
-
 enum TokenType
 {
 	TOKEN_WORD,
@@ -164,8 +159,11 @@ pid_t get_pid();
 int ft_check_white_spaces(char *cmd);
 void ft_expand_delimiter(char **arg);
 void	var_dump_cmd(t_cmd *cmds);
-int ft_expand_arg(char **arg);
-char **ft_split_words(char *words, char *delimiter);
+
+//this function is reponsible for expanding envp var
+int     ft_expand_arg(char **arg);
+
+char    **ft_split_words(char *words, char *delimiter);
 void	ft_free_tokens(t_token **tokens);
 int is_dollar_sign(char c);
 int ft_check_expand(char *token);
@@ -203,6 +201,7 @@ int is_charachter(char c);
 int ft_check_quote(char *cmd_line, int len);
 int is_single_quote(char c);
 int is_double_quote(char c);
+int is_quote(char c);
 int is_quote(char c);
 int ft_add_herdoc(t_herdoc **root, char *del);
 t_herdoc *ft_gen_herdocs(t_token *tokens);
