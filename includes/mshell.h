@@ -109,6 +109,8 @@ enum TokenType
 	TOKEN_PIPE,
 	TOKEN_OR,
 	TOKEN_AND,
+	// TOKEN_L_PARENTHISE,
+	// TOKEN_R_PARENTHISE,
 } ;
 
 enum buitins
@@ -206,8 +208,13 @@ int ft_add_herdoc(t_herdoc **root, char *del);
 t_herdoc *ft_gen_herdocs(t_token *tokens);
 // void ft_parse_input(char *cmd);
 
-
-
+/*================= bultins =================*/
+int		ft_cd(t_cmd *cmd, t_mshell *shell);
+int		ft_echo(t_cmd *cmd, t_mshell *shell);
+int		ft_env(t_cmd *cmd, t_mshell *shell);
+int		ft_pwd(t_cmd *cmd, t_mshell *shell);
+int		ft_exit(t_cmd *cmd, t_mshell *shell);
+int		ft_export(t_cmd *cmd, t_mshell *shell);
 
 /*================= execution ===============*/
 void	execute(t_tnode *root, t_mshell *shell);
@@ -223,32 +230,32 @@ int		builtins_finder(t_cmd *cmd, t_mshell *shell, int type);
 int		builtins_checker(t_cmd *cmd);
 /*================= ENV ==================*/
 t_env	*find_env(t_env *env, char *key);
-void edit_env(t_env *env, char *key, char *value);
-t_env *create_env_node(char *key, char *value, int is_exported);
-void env_add_back(t_env **env, t_env *new);
-void add_env(t_env *env, char *key, char *value);
-int count_args(t_cmd *cmd);
-char **get_envp(t_env *env);
+void	edit_env(t_env *env, char *key, char *value);
+t_env	*create_env_node(char *key, char *value, int is_exported);
+void	env_add_back(t_env **env, t_env *new);
+void	add_env(t_env *env, char *key, char *value);
+int		count_args(t_cmd *cmd);
+char	**get_envp(t_env *env);
 /*================ Clear Allocted ============*/
-void free_env(t_env *env);
-void free_history(t_history *history);
-void free_gvar(void);
-void free_func(char **strings);
+void	free_env(t_env *env);
+void	free_history(t_history *history);
+void	free_gvar(void);
+void	free_func(char **strings);
 /*================= Herdoc, red and pipes ====================*/
-void run_pipe(t_tnode *root, t_mshell *shell);
+void	run_pipe(t_tnode *root, t_mshell *shell);
 // int ft_heredoc(t_tnode *root, t_mshell *shell);
-int ft_heredoc(t_tnode *root, t_mshell *shell);
-int heredoc_cheker(char*str, char *filename, int fd);
+int		ft_heredoc(t_tnode *root, t_mshell *shell);
+int		heredoc_cheker(char*str, char *filename, int fd);
 /*================= Printers =================*/
-void print_stderr(char *str);
-void    ft_free_herdoc(t_herdoc **herdocs);
+void	print_stderr(char *str);
+void	ft_free_herdoc(t_herdoc **herdocs);
 /*================var dumping data==============*/
 void	var_dump_herdocs(t_herdoc *herdoc);
 /*=============== signals =======================*/
-void prompt_sig(t_signal *sig);
-void exec_signal(t_signal *sig);
-void child_sig(t_signal *sig);
-void heredoc_sig_p(t_signal *sig);
-void ignore_signals(struct sigaction *signals, int sig, void (*handler)(int));
+void	prompt_sig(t_signal *sig);
+void	exec_signal(t_signal *sig);
+void	child_sig(t_signal *sig);
+void	heredoc_sig_p(t_signal *sig);
+void	ignore_signals(struct sigaction *signals, int sig, void (*handler)(int));
 
 #endif

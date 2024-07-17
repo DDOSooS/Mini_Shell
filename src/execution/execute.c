@@ -174,12 +174,16 @@ void cmd_runner(t_cmd *cmd, t_mshell *shell)
 void ft_execute_cmd(t_tnode *root, t_mshell *shell)
 {
 	t_cmd *cmd;
+	int status;
 
 	cmd = root->cmd;
 	if (!cmd)
 		return;
-	if (builtins_finder(cmd, shell, builtins_checker(cmd)) == -1)
+	status = builtins_finder(cmd, shell, builtins_checker(cmd));
+	if (status == -1)
 		cmd_runner(cmd, shell);
+	else
+		shell->exit_value = status;
 }
 
 void reset_in_out(int stdin, int stdout)

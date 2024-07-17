@@ -22,14 +22,21 @@ SRC = src/main.c\
 		src/execution/herdoc.c\
 		includes/gnl/get_next_line.c\
 		includes/gnl/get_next_line_utils.c\
+		src/execution/builtins/ft_cd.c\
+		src/execution/builtins/ft_env.c\
+		src/execution/builtins/ft_pwd.c\
+		src/execution/builtins/ft_exit.c\
+		src/execution/builtins/ft_echo.c\
+		src/execution/builtins/ft_export.c\
+		src/execution/builtins/builtins_utils.c\
 
 OBJ = $(SRC:.c=.o)
 
 all: $(NAME)
 
 $(NAME): $(OBJ) $(LIBFT) $(PRINTF)
-	$(CC) $(CFLAGS) -g3 $^ -o $@ $(LIBS)
-#$(cc) $(cflags) -fsanitize=address $^ -o $@ $(libs)
+	$(CC) $(CFLAGS) -fsanitize=address $^ -o $@ $(LIBS)
+#$(CC) $(CFLAGS) -g3 $^ -o $@ $(LIBS)
 
 %.o: %.c
 	$(CC) $(CFLAGS) -c $< -o $@
