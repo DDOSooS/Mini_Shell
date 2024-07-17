@@ -6,7 +6,7 @@
 /*   By: aghergho <aghergho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2024/07/17 20:21:36 by aghergho         ###   ########.fr       */
+/*   Updated: 2024/07/17 20:34:11 by aghergho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,13 @@
     flag 2-> is pipe (||)
     flag 3-> is pipe (&&)
 
+              | 1
+            /   \
+          (||)2   |1
+          /\    / \
+        c10  c20  c10 |
+                  / \ 
+                 0c1  0c2
 */
 /*
 	flag 0-> it's a commamd to be executed 
