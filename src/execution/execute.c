@@ -245,6 +245,7 @@ void handle_output_redirection(t_outfile *out_file, t_mshell *shell)
 
 void handle_word(t_tnode *root, t_mshell *shell)
 {
+	//FIXME: if red of child doesn't exist check the the parent
     if (root->redirection->in_file)
         handle_input_redirection(root->redirection->in_file, shell);
     if (root->redirection->out_file)
