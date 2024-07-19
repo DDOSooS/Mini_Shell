@@ -6,7 +6,7 @@
 /*   By: aghergho <aghergho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2024/07/17 20:34:11 by aghergho         ###   ########.fr       */
+/*   Updated: 2024/07/19 03:25:37 by aghergho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -249,23 +249,26 @@ int ftAddInFile(t_infile **root, t_token *token)
 	return (1);
 }
 
-int ftAddRedirection(t_redirection **root, t_token *token)
+int ftAddRedirection(t_redirection **root, t_token *token, int inredirection , int out_redirection)
 {
-	if (token->typeId == 7 || token->typeId == 8)
+	if ((token->typeId == 7 || token->typeId == 8) && inredirection)
 		ftAddInFile(&(*root)->in_file, token);
-	if (token->typeId ==6 || token->typeId == 9)
+	if ((token->typeId ==6 || token->typeId == 9) && out_redirection)
 		ftAddOutFile(&(*root)->out_file, token);
 	return (1);
 }
 
-t_redirection *ftGetRedirection(t_token *token)
+void ftGetRedirection(t_redirection **redirection, t_token *token, int inflag, int outflag)
 {
+	//TO DO CHECK LEAKS
     int             flag;
-    t_redirection   *redirection;
 
-    redirection = malloc(sizeof(t_redirection));
-    redirection->in_file = NULL;
-    redirection->out_file = NULL;
+	if (!*redirection)
+	{
+    	*redirection = malloc(sizeof(t_redirection));
+    	(*redirection)->in_file = NULL;
+    	(*redirection)->out_file = NULL;
+	}
     flag = 0;
     while (token)
     {
@@ -273,12 +276,12 @@ t_redirection *ftGetRedirection(t_token *token)
             break;
         if (token->typeId >= 6 && token->typeId <= 9)
         {
-            ftAddRedirection(&redirection , token);
+            ftAddRedirection(redirection , token, inflag, outflag);
             token = token->next;
         }
         token = token->next;
     }
-    return (redirection);
+
 }
 
 int is_parenthise_redirection(t_token *tokens)
@@ -593,8 +596,6 @@ int ft_gen_unexpanded_token(char **str, char *token)
 	return (i)	;
 }
 
-
-
 int ft_gen_expanded_token(char **str,char *token)
 {
 	int i;
@@ -783,7 +784,6 @@ int	ft_count_delimter_len(char *token)
 	return (counter);
 }
 
-
 //________________________________________Generating the delimiter__________________
 
 int ft_gen_expanded_quoted_delimiter(char **str ,char *token)
@@ -827,7 +827,6 @@ int ft_gen_expanded_deliter(char **str, char *token)
 	}
 	return (i);
 }
-
 
 int	ft_gen_delimter(char **str,char *token)
 {
@@ -901,6 +900,10 @@ t_tnode	*ft_new_tnode(int n_type, t_token *tokens)
 {
 	t_tnode *new;
 	
+
+	printf("===== parse command ====new node\n");
+	var_dump_token(tokens);
+	printf("===== parse command ====new node\n");
 	new = malloc(sizeof(t_tnode));
 	if (!new)
 		return (NULL);
@@ -911,19 +914,33 @@ t_tnode	*ft_new_tnode(int n_type, t_token *tokens)
 	if (n_type)
 	{
 		new->cmd = NULL;
+		new->redirection = NULL;
 		if (is_parenthise_redirection(tokens))
-		{
+		{	
 			while (tokens && tokens->typeId != 5)
 				tokens = tokens->next;
-			new->redirection = ftGetRedirection(tokens->next);
+			 ftGetRedirection(&new->redirection ,tokens->next, 1 , 1);
 		}
-		else
-			new->redirection = NULL;
 	}
 	else
 	{
 		new->cmd = ftGenCmd(tokens);
-		new->redirection = ftGetRedirection(tokens);
+		new->redirection = NULL;
+		ftGetRedirection(&new->redirection, tokens,1, 1);
+		if ((!new->redirection->in_file || !new->redirection->out_file))
+		{
+			if (is_parenthise_redirection(tokens))
+			{	
+				printf(":( parenthise)========\n");
+				while (tokens && tokens->typeId != 5)
+					tokens = tokens->next;
+				// printf("(%d)==(%s)\n", tokens->typeId, tokens->next->value);
+				if (!new->redirection->in_file)
+					ftGetRedirection( &new->redirection, tokens->next, 1 ,0);
+				if (!new->redirection->out_file)
+				ftGetRedirection(&new->redirection, tokens->next, 0 , 1);
+			}
+		}
 	}
 	return (new);
 }
@@ -1044,6 +1061,7 @@ void	ft_parse_cmd(t_tnode **root, t_token **tokens)
 {
 	t_tnode *new;
 	
+
 	new = ft_new_tnode(0, *tokens);
 	if (!*root)
 	{
