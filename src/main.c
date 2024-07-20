@@ -383,6 +383,7 @@ int main(int ac, char **av, char **envp)
 	m_shell_init(envp);
 	//TODO: add the signals handler for (ctrl + c) and (ctrl + \)
 	//TODO: and for every the child process
+	handle_signals(interactive_sigint, SIG_IGN, SIG_IGN, SIG_IGN);
 	while (1)
 	{
 		cmd_line = costum_readline();
@@ -418,3 +419,6 @@ int main(int ac, char **av, char **envp)
 	}
     return (EXIT_SUCCESS);
 }
+//TODO: compile with flags and see
+//TODO: norminette and check the leaks
+//TODO: wrong file name (ls >> out ) < sdfsdfds

@@ -91,6 +91,7 @@ static void	print_export(t_env *env)
 
 int	ft_export(t_cmd *cmd, t_mshell *shell)
 {
+	//TODO: handle more cases of this kind of export
 	t_cmd *tmp;
 	char *key;
 	char *value;

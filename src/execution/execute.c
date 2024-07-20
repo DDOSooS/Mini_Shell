@@ -126,6 +126,7 @@ void cmd_runner(t_cmd *cmd, t_mshell *shell)
 	char **envp;
 	char *cmd_path;
 	pid_t pid;
+	int status;
 
 	path = NULL;
 	cmd_args = NULL;
@@ -133,6 +134,7 @@ void cmd_runner(t_cmd *cmd, t_mshell *shell)
 	cmd_path = NULL;
 
 	// exec_signal(&shell->sig);
+	handle_signals(SIG_IGN, SIG_IGN, interactive_sigint, SIG_IGN);	
 	pid = fork();
 	if (pid == -1)
 	{
@@ -142,6 +144,7 @@ void cmd_runner(t_cmd *cmd, t_mshell *shell)
 	if (pid == 0)
 	{
 		// child_sig(&shell->sig);
+		handle_signals(active_sigint, active_sigquit, SIG_IGN, SIG_IGN);
 		cmd_args = cmd_args_getter(cmd);
 		if (find_env(shell->env, "PATH"))
 			path = get_path(find_env(shell->env, "PATH")->value);
@@ -165,9 +168,19 @@ void cmd_runner(t_cmd *cmd, t_mshell *shell)
 	}
 	else
 	{
-		waitpid(pid, &shell->exit_value, 0);
-		shell->exit_value = get_status(shell->exit_value);
+		waitpid(pid, &status, 0);
+		if (status == 2 || status == 131)
+		{
+			if (status == 2)
+				shell->exit_value = 130;
+			else
+				printf("Quit (core dumped)");
+			printf("\n");
+		}
+		else
+			shell->exit_value = get_status(status);
 	}
+	handle_signals(interactive_sigint, SIG_IGN, SIG_IGN, SIG_IGN);
 }
 
 void ft_execute_cmd(t_tnode *root, t_mshell *shell)
@@ -196,7 +209,7 @@ void reset_in_out(int stdin, int stdout)
 }
 
 
-void handle_input_redirection(t_infile *in_file, t_mshell *shell)
+int handle_input_redirection(t_infile *in_file, t_mshell *shell)
 {
 	int here_doc_num;
 	int fd;
@@ -213,17 +226,18 @@ void handle_input_redirection(t_infile *in_file, t_mshell *shell)
 		{
             fd = open(in_file->filename, O_RDONLY);
             if (fd == -1) {
-				printf("minishell: %s: %s\n", in_file->filename, strerror(errno));
-                exit(EXIT_FAILURE);
+				printf("minishell (in): %s: %s\n", in_file->filename, strerror(errno));
+				return (-1);
             }
         }
         dup2(fd, STDIN_FILENO);
         close(fd);
         in_file = in_file->next;
     }
+	return (0);
 }
 
-void handle_output_redirection(t_outfile *out_file, t_mshell *shell)
+int handle_output_redirection(t_outfile *out_file, t_mshell *shell)
 {
 	int fd;
 
@@ -232,36 +246,38 @@ void handle_output_redirection(t_outfile *out_file, t_mshell *shell)
 			fd = open(out_file->filename, O_CREAT | O_WRONLY | O_TRUNC, 0644);
 		else if (out_file->mode == 6)
 			fd = open(out_file->filename, O_CREAT | O_WRONLY | O_APPEND, 0644);
-        if (fd == -1) {
+        if (fd == -1)
+		{
 			printf("minishell: %s: %s\n", out_file->filename, strerror(errno));
-            exit(EXIT_FAILURE);
+			return (-1);
         }
         dup2(fd, STDOUT_FILENO);
         close(fd);
         out_file = out_file->next;
     }
+	return (0);
+}
+int apply_redirections(t_tnode *root, t_mshell *shell)
+{
+	if (root == NULL)
+		return (0);
+	if (root->redirection->in_file)
+		return (handle_input_redirection(root->redirection->in_file, shell));
+	if (root->redirection->out_file)
+		return (handle_output_redirection(root->redirection->out_file, shell));
+	return (0);
 }
 
 void handle_word(t_tnode *root, t_mshell *shell)
 {
-    if (root->redirection->in_file)
-        handle_input_redirection(root->redirection->in_file, shell);
-    if (root->redirection->out_file)
-        handle_output_redirection(root->redirection->out_file, shell);
+	if (apply_redirections(root, shell) == -1)
+	{
+		shell->exit_value = 1;
+		return;
+	}
     ft_execute_cmd(root, shell);
 }
 
-void apply_redirections(t_tnode *root, t_mshell *shell)
-{
-	// if (root == NULL)
-	// 	return;
-	// if (root->node_type == TOKEN_WORD)
-	// 	return;
-	if (root->redirection->in_file)
-		handle_input_redirection(root->redirection->in_file, shell);
-	if (root->redirection->out_file)
-		handle_output_redirection(root->redirection->out_file, shell);
-}
 
 void ft_execute_parenthises(t_tnode *root, t_mshell *shell)
 {

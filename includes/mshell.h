@@ -254,10 +254,17 @@ void	ft_free_herdoc(t_herdoc **herdocs);
 /*================var dumping data==============*/
 void	var_dump_herdocs(t_herdoc *herdoc);
 /*=============== signals =======================*/
-void	prompt_sig(t_signal *sig);
-void	exec_signal(t_signal *sig);
-void	child_sig(t_signal *sig);
-void	heredoc_sig_p(t_signal *sig);
-void	ignore_signals(struct sigaction *signals, int sig, void (*handler)(int));
+// void	prompt_sig(t_signal *sig);
+// void	exec_signal(t_signal *sig);
+// void	child_sig(t_signal *sig);
+// void	heredoc_sig_p(t_signal *sig);
+// void	ignore_signals(struct sigaction *signals, int sig, void (*handler)(int));
+
+void	handle_signals(void (*sigint)(int), void (*sigquit)(int), void (*sigint_old)(int), void (*sigquit_old)(int));
+void	active_sigquit(int sig);
+void	active_sigint(int sig);
+void	interactive_sigquit(int sig);
+void	interactive_sigint(int sig);
+
 
 #endif

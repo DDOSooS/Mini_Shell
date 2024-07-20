@@ -67,9 +67,11 @@ int ft_heredoc(t_tnode *root, t_mshell *shell)
 
 	status = 0;
 	herdoc = shell->herdocs;
+	handle_signals(SIG_IGN, SIG_IGN, interactive_sigint, SIG_IGN);
 	pid = fork();
 	if (pid == 0)
 	{
+		handle_signals(active_sigint, SIG_IGN, SIG_IGN, SIG_IGN);
 		while (herdoc)
 		{
 			create_heredoc(herdoc->delimiter, herdoc->id);
@@ -78,5 +80,7 @@ int ft_heredoc(t_tnode *root, t_mshell *shell)
 		exit(EXIT_SUCCESS);
 	}
 	waitpid(pid, &status, 0);
-	return (get_status(status));
+	status = get_status(status);
+	handle_signals(interactive_sigint, SIG_IGN, SIG_IGN, SIG_IGN);
+	return (status);
 }
