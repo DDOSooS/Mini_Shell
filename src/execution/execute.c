@@ -205,6 +205,8 @@ void handle_input_redirection(t_infile *in_file, t_mshell *shell)
 	here_doc_num = 0;
     while (in_file)
 	{
+		printf("filename: %s\n", in_file->filename);
+		printf("in_file->mode: %d\n", in_file->mode);
         if (in_file->mode == 7)
 		{
 			fd = open(ft_strjoin("/tmp/heredoc_", ft_itoa(here_doc_num)), O_RDONLY);
@@ -229,6 +231,8 @@ void handle_output_redirection(t_outfile *out_file, t_mshell *shell)
 	int fd;
 
     while (out_file) {
+		printf("out_file->mode: %d\n", out_file->mode);
+		printf("filename: %s\n", out_file->filename);
 		if (out_file->mode == 9)
 			fd = open(out_file->filename, O_CREAT | O_WRONLY | O_TRUNC, 0644);
 		else if (out_file->mode == 6)
@@ -253,6 +257,43 @@ void handle_word(t_tnode *root, t_mshell *shell)
     ft_execute_cmd(root, shell);
 }
 
+void apply_redirections(t_tnode *root, t_mshell *shell)
+{
+	// if (root == NULL)
+	// 	return;
+	// if (root->node_type == TOKEN_WORD)
+	// 	return;
+	if (root->redirection->in_file)
+		handle_input_redirection(root->redirection->in_file, shell);
+	if (root->redirection->out_file)
+		handle_output_redirection(root->redirection->out_file, shell);
+}
+
+void ft_execute_parenthises(t_tnode *root, t_mshell *shell)
+{
+	int pid;
+
+	apply_redirections(root, shell);
+
+	pid = fork();
+	if (pid == -1)
+	{
+		perror("fork");
+		exit(1);
+	}
+	if (pid == 0)
+	{
+		ft_execute_tree(root->t_left, shell);
+		exit(shell->exit_value);
+	}
+	else
+	{
+		waitpid(pid, &shell->exit_value, 0);
+		if (WIFEXITED(shell->exit_value))
+			shell->exit_value = WEXITSTATUS(shell->exit_value);
+	}
+}
+
 void ft_execute_tree(t_tnode *root, t_mshell *shell)
 {
     int (stdout_fd), (stdin_fd);
@@ -265,6 +306,8 @@ void ft_execute_tree(t_tnode *root, t_mshell *shell)
 	}
     if (root->node_type == TOKEN_PIPE)
 		run_pipe(root, shell);
+	else if (root->node_type == TOKEN_PARENTHISE)
+		ft_execute_parenthises(root, shell);
 	else if (root->node_type == TOKEN_WORD)
 		handle_word(root, shell);
 	else if (root->node_type == TOKEN_AND) // 3 means there is an and 

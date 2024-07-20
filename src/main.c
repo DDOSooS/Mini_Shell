@@ -377,9 +377,9 @@ int main(int ac, char **av, char **envp)
 			// var_dump_token(tokens);
 			ft_expand_tokens(&tokens);
 			ft_parse_ast(&cmd_tree, &tokens);		
-			var_dump_tree(cmd_tree);
+			// var_dump_tree(cmd_tree);
 			g_mshell.herdocs = ft_gen_herdocs(tokens);
-			var_dump_token(tokens);
+			// var_dump_token(tokens);
 			// var_dump_herdocs(g_mshell.herdocs);
 			// if (g_mshell.n_herdoc)
 			// {
@@ -390,7 +390,7 @@ int main(int ac, char **av, char **envp)
 			// ft_execute_tree(cmd_tree, &g_mshell);
 			//FIXME: check if the there is no cmd after the herdoc 
 			// << a << b << c
-			// execute(cmd_tree, &g_mshell);
+			execute(cmd_tree, &g_mshell);
 			ft_free_tokens(&tokens);
 			ft_free_herdoc(&g_mshell.herdocs);
 			// ft_printf("+++==============second token format===============\n\n");
