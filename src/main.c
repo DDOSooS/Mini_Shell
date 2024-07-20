@@ -6,7 +6,7 @@
 /*   By: aghergho <aghergho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/06 16:02:56 by aghergho          #+#    #+#             */
-/*   Updated: 2024/07/18 21:47:03 by aghergho         ###   ########.fr       */
+/*   Updated: 2024/07/20 02:33:33 by aghergho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,17 +57,28 @@ void	var_dump_cmd(t_cmd *cmds)
 
 void	varDumpInFile(t_infile *redirection)
 {
-	ft_printf("===========infile=====================\n\n");
+	if (! redirection)
+	{
+		ft_printf("===========NO InFile Exist=====================\n");
+		return ;
+	}
+	ft_printf("===========infile=====================\n");
 	while (redirection)
 	{
 		ft_printf("===========(mode)(%d)(infile)(%s)=====================\n", redirection->mode, redirection->filename);
 		redirection = redirection->next;
 	}
+	ft_printf("===========end infile=====================\n");
 }
 
 void	varDumpOutFile(t_outfile *redirection)
 {
-	ft_printf("===========outFile=====================\n\n");
+	if (! redirection)
+	{
+		ft_printf("===========NO outFile=====================\n");
+		return ;
+	}
+	ft_printf("===========outFile=====================\n");
 	while (redirection)
 	{
 		ft_printf("===========(mode)(%d)(outfile)(%s)=====================\n", redirection->mode, redirection->filename);
@@ -75,59 +86,67 @@ void	varDumpOutFile(t_outfile *redirection)
 	}		
 }
 
+//(ls < in | cat -e ) >out  | (grep -c)
 
 void var_dump_tree(t_tnode *tree)
 {
     if (tree)
     {
+        // Print node type
         ft_printf("\n|\n|==================>((N_TYPE))(%d)=============>)\n", tree->node_type);
         var_dump_cmd(tree->cmd);
-		if (tree->t_parent)
-		{
-			if (tree->t_parent->redirection)
-			{
-				ft_printf("=================parent redirection ()*)*)*)*)(*)*)*)=======\n\n");
-				varDumpInFile(tree->t_parent->redirection->in_file);
-				varDumpOutFile(tree->t_parent->redirection->out_file);
-				ft_printf("==========END=======parent redirection ()*)*)*)*)(*)*)*)=======\n\n");
-			}
-			else
-				ft_printf("=================parent redirection NUUUUUUUUUULLLLLLLLLLLLLLLLLLL ()*)*)*)*)(*)*)*)=======\n\n");
-				
-		}
-		else
-			ft_printf("there's no parent=======[<><><><><><<><>><<<<<<<><><><><<>><><><><><><>]\n");
-		
+        
+        // Check if parent node exists and print its redirection status
+        if (tree->t_parent)
+        {
+            if (tree->t_parent->redirection)
+            {
+                ft_printf("================= Parent Redirection =================\n");
+                varDumpInFile(tree->t_parent->redirection->in_file);
+                varDumpOutFile(tree->t_parent->redirection->out_file);
+                ft_printf("============= End Parent Redirection =================\n");
+            }
+            else
+                ft_printf("=========== Parent Redirection is NULL ===============\n");
+        }
+        else
+            ft_printf("========== No Parent Node Available ==================\n");
+
+        // Check current node's redirection
         if (tree->redirection)
         {
             if (tree->redirection->in_file)
                 varDumpInFile(tree->redirection->in_file);
             else
-                ft_printf(";((((((  there isn't an infile=====================\n");
+                ft_printf("========== No In-File Redirection Available ==========\n");
             if (tree->redirection->out_file)
                 varDumpOutFile(tree->redirection->out_file);
             else
-                ft_printf(";((((((  there isn't an outfile=====================\n");
+                ft_printf("========== No Out-File Redirection Available =========\n");
         }
         else
-            ft_printf(";((((((  redirection is NULL=====================\n");
+            ft_printf("============ Redirection is NULL =====================\n");
+			
+        // Recursively dump the left subtree
         if (tree->t_left)
         {
-            ft_printf("\n|_____________>left");
-            var_dump_tree(tree->t_left);	
+            ft_printf("\n|_____________> Left Subtree");
+            var_dump_tree(tree->t_left);
         }
         else
-            ft_printf("\n|---------->left NULL");
+            ft_printf("\n|----------> Left Subtree is NULL");
 
+        // Recursively dump the right subtree
         if (tree->t_right)
         {
-            ft_printf("\n|_____________>right");
+            ft_printf("\n|_____________> Right Subtree");
             var_dump_tree(tree->t_right);
         }
         else
-            ft_printf("\n|----------->right (NULL)\n");
+            ft_printf("\n|-----------> Right Subtree is NULL\n");
     }
 }
+
 
 void	ft_free_tokens(t_token **tokens)
 {
@@ -328,19 +347,19 @@ int main(int ac, char **av, char **envp)
 			// ft_printf("==============first token format===============\n\n");
 			// var_dump_token(tokens);
 			ft_expand_tokens(&tokens);
-			ft_parse_ast(&cmd_tree, &tokens);		
-			var_dump_tree(cmd_tree);
-			g_mshell.herdocs = ft_gen_herdocs(tokens);
-			// var_dump_token(tokens);
+			var_dump_token(tokens);
+			// ft_parse_ast(&cmd_tree, &tokens);		
+			// var_dump_tree(cmd_tree);
+			// g_mshell.herdocs = ft_gen_herdocs(tokens);
 			// var_dump_herdocs(g_mshell.herdocs);
-			put_tohistory(cmd_line, g_mshell.history);
-			ft_execute_tree(cmd_tree, &g_mshell);
-			add_history(cmd_line);
-			ft_free_tokens(&tokens);
-			ft_free_herdoc(&g_mshell.herdocs);
+			// put_tohistory(cmd_line, g_mshell.history);
+			// ft_execute_tree(cmd_tree, &g_mshell);
+			// add_history(cmd_line);
+			// ft_free_tokens(&tokens);
+			// ft_free_herdoc(&g_mshell.herdocs);
 			// ft_printf("+++==============second token format===============\n\n");
 			// var_dump_token(tokens);
-			ft_free_tree(&cmd_tree);
+			// ft_free_tree(&cmd_tree);
 		}
 		free(cmd_line);
 	}

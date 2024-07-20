@@ -6,7 +6,7 @@
 /*   By: aghergho <aghergho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/06 16:01:09 by aghergho          #+#    #+#             */
-/*   Updated: 2024/07/17 18:46:00 by aghergho         ###   ########.fr       */
+/*   Updated: 2024/07/19 23:15:02 by aghergho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -141,6 +141,9 @@ typedef struct builtin
     minishell_functions
 */
 
+
+void	varDumpOutFile(t_outfile *redirection);
+void	varDumpInFile(t_infile *redirection);
 /*================ Parsing =================*/
 pid_t get_pid();
 int ft_check_white_spaces(char *cmd);
