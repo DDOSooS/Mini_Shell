@@ -166,8 +166,7 @@ void cmd_runner(t_cmd *cmd, t_mshell *shell)
 	else
 	{
 		waitpid(pid, &shell->exit_value, 0);
-		if (WIFEXITED(shell->exit_value))
-			shell->exit_value = WEXITSTATUS(shell->exit_value);
+		shell->exit_value = get_status(shell->exit_value);
 	}
 }
 
@@ -205,8 +204,6 @@ void handle_input_redirection(t_infile *in_file, t_mshell *shell)
 	here_doc_num = 0;
     while (in_file)
 	{
-		printf("filename: %s\n", in_file->filename);
-		printf("in_file->mode: %d\n", in_file->mode);
         if (in_file->mode == 7)
 		{
 			fd = open(ft_strjoin("/tmp/heredoc_", ft_itoa(here_doc_num)), O_RDONLY);
@@ -216,7 +213,7 @@ void handle_input_redirection(t_infile *in_file, t_mshell *shell)
 		{
             fd = open(in_file->filename, O_RDONLY);
             if (fd == -1) {
-                perror("open");
+				printf("minishell: %s: %s\n", in_file->filename, strerror(errno));
                 exit(EXIT_FAILURE);
             }
         }
@@ -231,14 +228,12 @@ void handle_output_redirection(t_outfile *out_file, t_mshell *shell)
 	int fd;
 
     while (out_file) {
-		printf("out_file->mode: %d\n", out_file->mode);
-		printf("filename: %s\n", out_file->filename);
 		if (out_file->mode == 9)
 			fd = open(out_file->filename, O_CREAT | O_WRONLY | O_TRUNC, 0644);
 		else if (out_file->mode == 6)
 			fd = open(out_file->filename, O_CREAT | O_WRONLY | O_APPEND, 0644);
         if (fd == -1) {
-            perror("open");
+			printf("minishell: %s: %s\n", out_file->filename, strerror(errno));
             exit(EXIT_FAILURE);
         }
         dup2(fd, STDOUT_FILENO);
@@ -249,7 +244,6 @@ void handle_output_redirection(t_outfile *out_file, t_mshell *shell)
 
 void handle_word(t_tnode *root, t_mshell *shell)
 {
-	//FIXME: if red of child doesn't exist check the the parent
     if (root->redirection->in_file)
         handle_input_redirection(root->redirection->in_file, shell);
     if (root->redirection->out_file)
@@ -274,7 +268,6 @@ void ft_execute_parenthises(t_tnode *root, t_mshell *shell)
 	int pid;
 
 	apply_redirections(root, shell);
-
 	pid = fork();
 	if (pid == -1)
 	{
@@ -289,8 +282,7 @@ void ft_execute_parenthises(t_tnode *root, t_mshell *shell)
 	else
 	{
 		waitpid(pid, &shell->exit_value, 0);
-		if (WIFEXITED(shell->exit_value))
-			shell->exit_value = WEXITSTATUS(shell->exit_value);
+		shell->exit_value = get_status(shell->exit_value);
 	}
 }
 

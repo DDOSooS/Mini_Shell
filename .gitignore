@@ -9,3 +9,8 @@
 #Ignore libraries 
 
 *.a
+#Ignore test folder
+tests/
+
+#Ignore the executable file
+minishell

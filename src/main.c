@@ -349,6 +349,29 @@ char *costum_readline()
 	}
 	return (line);
 }
+int is_white_space(char c)
+{
+	return (c == ' ' || c == '\t' || c == '\n' || c == '\v' || c == '\f' || c == '\r');
+}
+
+int check_white_spaces(char *cmd)
+{
+	int i;
+
+	i = 0;
+	while (cmd[i])
+	{
+		if (is_white_space(cmd[i]) != 1)
+			return (1);
+		i++;
+	}
+	return (0);
+}
+
+int	get_status(int status)
+{
+	return (((status) & 0xff00) >> 8);
+}
 
 int main(int ac, char **av, char **envp)
 {
@@ -358,10 +381,12 @@ int main(int ac, char **av, char **envp)
 	tokens = NULL;
 	cmd_tree = NULL;
 	m_shell_init(envp);
+	//TODO: add the signals handler for (ctrl + c) and (ctrl + \)
+	//TODO: and for every the child process
 	while (1)
 	{
 		cmd_line = costum_readline();
-		if (check_tty())
+		if (check_tty() && *cmd_line && check_white_spaces(cmd_line))
 			add_history(cmd_line);
 		put_tohistory(cmd_line, g_mshell.history);
 		if (!ft_check_syntax(cmd_line))
@@ -381,15 +406,6 @@ int main(int ac, char **av, char **envp)
 			g_mshell.herdocs = ft_gen_herdocs(tokens);
 			// var_dump_token(tokens);
 			// var_dump_herdocs(g_mshell.herdocs);
-			// if (g_mshell.n_herdoc)
-			// {
-			// 	printf("num of herdoc: %d\n", g_mshell.n_herdoc);
-			// 	ft_heredoc(cmd_tree, &g_mshell);
-			// 	g_mshell.n_herdoc = 0;
-			// }
-			// ft_execute_tree(cmd_tree, &g_mshell);
-			//FIXME: check if the there is no cmd after the herdoc 
-			// << a << b << c
 			execute(cmd_tree, &g_mshell);
 			ft_free_tokens(&tokens);
 			ft_free_herdoc(&g_mshell.herdocs);
