@@ -6,7 +6,7 @@
 /*   By: aghergho <aghergho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2024/07/19 03:25:37 by aghergho         ###   ########.fr       */
+/*   Updated: 2024/07/20 02:43:19 by aghergho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,7 @@
     flag 1-> is pipe (|)
     flag 2-> is pipe (||)
     flag 3-> is pipe (&&)
+	flag 4-> parenthisis  (())
 */
 
 
@@ -260,7 +261,6 @@ int ftAddRedirection(t_redirection **root, t_token *token, int inredirection , i
 
 void ftGetRedirection(t_redirection **redirection, t_token *token, int inflag, int outflag)
 {
-	//TO DO CHECK LEAKS
     int             flag;
 
 	if (!*redirection)
@@ -394,9 +394,7 @@ int ft_get_expanded_quoted_token(char *token, int *counter)
 		else if (is_dollar_sign(token[i]) && token[i + 1] && !is_whites_space(token[i + 1]) && ! is_double_quote(token[i + 1]))
 			i += ft_search_expanded_token(&token[i], counter);
 		else
-		{
 			(*counter)++;
-		}
 	}
 	return (i);
 }
@@ -537,7 +535,6 @@ int ft_gen_expanded_unquoted_token(char **s1, char *token)
 	free(str);
 	return (i);
 }
-
 
 int ft_gen_search_expanded_token(char **s1, char *token)
 {
@@ -721,7 +718,6 @@ void ft_expand_cmd(t_token **root)
 
 //++++++++++++++++++++++++++++++++expand of out files+++++++++++++++++++++++++++++++++++++++++++++++++
 
-
 int ft_get_expanded_quoted_delimiter(char *token, int *counter)
 {
 	int i;
@@ -896,14 +892,11 @@ void ft_expand_redirection(t_redirection **redirection)
 	ft_expand_outfile(&(*redirection)->out_file);
 }
 
+
 t_tnode	*ft_new_tnode(int n_type, t_token *tokens)
 {
 	t_tnode *new;
-	
 
-	// printf("===== parse command ====new node\n");
-	var_dump_token(tokens);
-	// printf("===== parse command ====new node\n");
 	new = malloc(sizeof(t_tnode));
 	if (!new)
 		return (NULL);
@@ -915,11 +908,11 @@ t_tnode	*ft_new_tnode(int n_type, t_token *tokens)
 	{
 		new->cmd = NULL;
 		new->redirection = NULL;
-		if (is_parenthise_redirection(tokens))
+		if ( n_type == 4 && is_parenthise_redirection(tokens))
 		{	
 			while (tokens && tokens->typeId != 5)
 				tokens = tokens->next;
-			 ftGetRedirection(&new->redirection ,tokens->next, 1 , 1);
+			ftGetRedirection(&new->redirection ,tokens->next, 1 , 1);
 		}
 	}
 	else
@@ -927,20 +920,6 @@ t_tnode	*ft_new_tnode(int n_type, t_token *tokens)
 		new->cmd = ftGenCmd(tokens);
 		new->redirection = NULL;
 		ftGetRedirection(&new->redirection, tokens,1, 1);
-		if ((!new->redirection->in_file || !new->redirection->out_file))
-		{
-			if (is_parenthise_redirection(tokens))
-			{	
-				printf(":( parenthise)========\n");
-				while (tokens && tokens->typeId != 5)
-					tokens = tokens->next;
-				// printf("(%d)==(%s)\n", tokens->typeId, tokens->next->value);
-				if (!new->redirection->in_file)
-					ftGetRedirection( &new->redirection, tokens->next, 1 ,0);
-				if (!new->redirection->out_file)
-				ftGetRedirection(&new->redirection, tokens->next, 0 , 1);
-			}
-		}
 	}
 	return (new);
 }
@@ -959,15 +938,24 @@ void ft_parse_parenthise(t_tnode **root, t_token **tokens)
 	free(tmp->next->next->value);
 	tmp->value = NULL;
 	tmp->next->next->value = NULL;
+	new = ft_new_tnode(4, *tokens);
+	if (!*root)
+		*root = new;
+	else
+	{
+		if ((*root)->t_left)
+			(*root)->t_right = new;
+		else
+			(*root)->t_left = new;
+	}
 	tParenthise = ft_tokinizer(tmp->next->value);
 	tmp1 = tParenthise;
 	while (tmp1->next)
 		tmp1 = tmp1->next;
 	tmp1->next = tmp->next->next;
 	tmp->next = tParenthise;
-	ft_parse_ast(root, &tParenthise);
+	ft_parse_ast(&new, &tParenthise);
 }
-
 
 void	ft_parse_pipe(t_tnode **root, t_token **tokens)
 {
@@ -1027,14 +1015,13 @@ void	ft_parse_or_operator(t_tnode **root, t_token **tokens)
 	ft_parse_ast(&new, &(tmp->next));
 }
 
-
 void	ft_parse_and_operator(t_tnode **root, t_token **tokens)
 {
 	t_token *tmp;
 	t_tnode	*new;
 
 	tmp = *tokens;
-	while (tmp)
+	while (tmp )
 	{
 		if (tmp->value && is_operator(tmp->value[0]) && isLastOperator(tmp->next))
 			break;
@@ -1054,7 +1041,7 @@ void	ft_parse_and_operator(t_tnode **root, t_token **tokens)
 	tmp->value = NULL;
 	new->t_parent = *root;
 	ft_parse_ast(&new, tokens);
-	ft_parse_ast(&new, &tmp->next);
+	ft_parse_ast(&new, &(tmp->next));
 }
 
 void	ft_parse_cmd(t_tnode **root, t_token **tokens)
@@ -1070,11 +1057,11 @@ void	ft_parse_cmd(t_tnode **root, t_token **tokens)
 	}
 	else
 	{
+		new->t_parent = *root;
 		if 	(!(*root)->t_left)
 			(*root)->t_left = new;
 		else
 			(*root)->t_right = new;
-		new->t_parent = *root;
 	}
 }
 
@@ -1086,7 +1073,7 @@ void ft_parse_ast(t_tnode **root, t_token **tokens)
 	i = 0;
 	tmp = *tokens;
 	while (tmp && tmp->value)
-	{
+	{	
 		if (ft_check_and_operator(tmp))
 			return (ft_parse_and_operator(root, tokens));
 		if (ft_check_or_operator(tmp))
