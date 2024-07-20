@@ -131,6 +131,9 @@ void create_heredoc(char *del, int id)
 		line = readline(">");
 		if (heredoc_cheker(line, del, fd))
 			break;
+		//TODO: Expand the line
+		if (ft_strchr(line, '$'))
+			ft_expand_arg(&line);
 		write(fd, line, ft_strlen(line));
 		write(fd, "\n", 1);
 		

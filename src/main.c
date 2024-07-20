@@ -36,8 +36,8 @@ void	var_dump_token(t_token *tokens)
 	// 	ft_printf("=====tokens are Null====\n");
 	while (tokens)
 	{
-		ft_printf("==type===(%s)-----\n",tokens->type);
-		ft_printf("===value==(%s)====\n",tokens->value);
+		// ft_printf("==type===(%s)-----\n",tokens->type);
+		// ft_printf("===value==(%s)====\n",tokens->value);
 		tokens = tokens->next;
 	}
 }

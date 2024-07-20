@@ -901,9 +901,9 @@ t_tnode	*ft_new_tnode(int n_type, t_token *tokens)
 	t_tnode *new;
 	
 
-	printf("===== parse command ====new node\n");
+	// printf("===== parse command ====new node\n");
 	var_dump_token(tokens);
-	printf("===== parse command ====new node\n");
+	// printf("===== parse command ====new node\n");
 	new = malloc(sizeof(t_tnode));
 	if (!new)
 		return (NULL);
