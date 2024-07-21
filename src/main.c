@@ -6,7 +6,7 @@
 /*   By: aghergho <aghergho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/06 16:02:56 by aghergho          #+#    #+#             */
-/*   Updated: 2024/07/21 01:43:22 by aghergho         ###   ########.fr       */
+/*   Updated: 2024/07/21 05:03:50 by aghergho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -345,21 +345,21 @@ int main(int ac, char **av, char **envp)
 		if (tokens)
 		{
 			// ft_printf("==============first token format===============\n\n");
-			// var_dump_token(tokens);
+			var_dump_token(tokens);
 			ft_expand_tokens(&tokens);
 			var_dump_token(tokens);
-			// ft_parse_ast(&cmd_tree, &tokens);		
-			// var_dump_tree(cmd_tree);
+			ft_parse_ast(&cmd_tree, &tokens);		
+			var_dump_tree(cmd_tree);
 			g_mshell.herdocs = ft_gen_herdocs(tokens);
 			// var_dump_herdocs(g_mshell.herdocs);
-			// put_tohistory(cmd_line, g_mshell.history);
-			// ft_execute_tree(cmd_tree, &g_mshell);
-			// add_history(cmd_line);
-			// ft_free_tokens(&tokens);
-			// ft_free_herdoc(&g_mshell.herdocs);
+			put_tohistory(cmd_line, g_mshell.history);
+			ft_execute_tree(cmd_tree, &g_mshell);
+			add_history(cmd_line);
+			ft_free_tokens(&tokens);
+			ft_free_herdoc(&g_mshell.herdocs);
 			// ft_printf("+++==============second token format===============\n\n");
 			// var_dump_token(tokens);
-			// ft_free_tree(&cmd_tree);
+			ft_free_tree(&cmd_tree);
 		}
 		free(cmd_line);
 	}

@@ -6,7 +6,7 @@
 /*   By: aghergho <aghergho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/01 01:15:21 by aghergho          #+#    #+#             */
-/*   Updated: 2024/07/17 20:34:21 by aghergho         ###   ########.fr       */
+/*   Updated: 2024/07/21 05:01:36 by aghergho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -354,10 +354,51 @@ t_herdoc *ft_gen_herdocs(t_token *tokens)
     return (herdoc);
 }
 
+
+
+void ft_expand_parenthisis(t_token **tokens)
+{
+    t_token *temp_token;
+    t_token *temp;
+
+    temp_token = *tokens;
+    while (temp_token)
+    {
+        if (temp_token->typeId == 4 && temp_token->next && temp_token->next->typeId == 4)
+        {
+            temp = temp_token->next;
+            if (temp_token->previous)
+                temp_token->previous->next = temp;
+            temp->previous = temp_token->previous;
+            if (temp_token == *tokens)
+                *tokens = temp;
+            // free(temp_token->value);
+            // free(temp_token);
+            temp_token = temp; 
+        }
+        else if (temp_token->typeId == 5 && temp_token->next && temp_token->next->typeId == 5)
+        {
+            temp = temp_token->next;
+            if (temp_token->previous)
+                temp_token->previous->next = temp;
+            temp->previous = temp_token->previous;
+            if (temp_token == *tokens)
+                *tokens = temp;
+                    // free(temp_token->value);
+            // free(temp_token);
+            temp_token = temp; 
+        }
+        else
+            temp_token = temp_token->next;
+    }
+}
+
+
 int  ft_expand_tokens(t_token **tokens)
 {
     t_token *tmp;
     
+    ft_expand_parenthisis(tokens);
     ft_expand_quotes(tokens);
     if (!ft_expand_token(tokens))
         return (0);

@@ -6,7 +6,7 @@
 /*   By: aghergho <aghergho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/10 18:51:59 by aghergho          #+#    #+#             */
-/*   Updated: 2024/07/20 02:22:40 by aghergho         ###   ########.fr       */
+/*   Updated: 2024/07/21 04:59:15 by aghergho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -303,7 +303,7 @@ int ft_check_quote_error(char *cmd_line)
             s_quote = 0;
 	}
 	if (d_quote || s_quote)
-		return (ft_printf(";( Syntax error please verify your quotes\n"),1);
+		return (ft_printf("Syntax error please verify your quotes\n"),1);
 	return (0);
 }
 
@@ -452,12 +452,12 @@ int ft_check_closed_parenthise(char *cmd_line)
             return (ft_printf("parse error near `)'\n"), 0);
         else if (is_r_parenthise(cmd_line[i]) && !ft_check_quote(cmd_line, i))
             closed_parenth--;
-        if (is_l_parenthise(cmd_line[i]) && !ft_check_quote(cmd_line, i)  )
+        if (is_l_parenthise(cmd_line[i]) && !ft_check_quote(cmd_line, i))
             closed_parenth++;
     }
     if (closed_parenth)
     {
-        ft_printf("parenthisec are not closed correctly\n");
+        ft_putstr_fd("parenthisis are not closed correctly\n", 2);
         return (0);
     }
     return (1);
@@ -516,11 +516,10 @@ int is_word_character(char c)
 
 int ft_check_left_parenthise(char *cmd_line, int i)
 {
-
-    while (cmd_line[--i] && is_l_parenthise(cmd_line[i]));
+    while (--i >= 0 && cmd_line[i] && is_l_parenthise(cmd_line[i]));
 	// if (cmd_line[i] && (in_redirection(cmd_line[i]) || out_redirection(cmd_line[i])))
 	// 	i--;
-	while (cmd_line[i] && !is_pipe(cmd_line[i]) && !is_operator(cmd_line[i]))
+	while (i >= 0 && cmd_line[i] && !is_pipe(cmd_line[i]) && !is_operator(cmd_line[i]))
     {
         if (is_l_parenthise(cmd_line[i]))
         {
@@ -528,11 +527,12 @@ int ft_check_left_parenthise(char *cmd_line, int i)
             continue;
         }
 		if (!is_whites_space(cmd_line[i]) && cmd_line[i])
-			return(0);
+			return 0;
         i--;
     }
-    return (1);
+    return 1;
 }
+
 
 int is_redirection(char c)
 {
@@ -581,7 +581,7 @@ int ft_check_parenthise_sequence(char *cmd_line)
     int i;
 
     i = -1;
-    while (cmd_line[++i])
+    while ( cmd_line && cmd_line[++i])
     {
         if (is_l_parenthise(cmd_line[i]) && !ft_check_quote(cmd_line, i))
         {
@@ -602,7 +602,7 @@ int ft_check_parenthise_error(char *cmd_line)
     if (! ft_check_closed_parenthise(cmd_line) || !ft_check_empty_parenthise(cmd_line) )
         return (0);
     if (! ft_check_parenthise_sequence(cmd_line))
-        return (ft_putstr_fd("SDSyntax error near unexpected token `('\n", 2),0);
+        return (ft_putstr_fd("Syntax error near unexpected token `('\n", 2),0);
     return (1);
 }
 

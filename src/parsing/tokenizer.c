@@ -6,7 +6,7 @@
 /*   By: aghergho <aghergho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/13 15:14:32 by aghergho          #+#    #+#             */
-/*   Updated: 2024/07/17 20:33:22 by aghergho         ###   ########.fr       */
+/*   Updated: 2024/07/21 04:57:23 by aghergho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -153,9 +153,25 @@ int is_parenthise(char c)
     return (0);
 }
 
+
+
+int ft_check_parenthisis_spaces(char *cmd, int index)
+{
+    int i = index;
+
+    while (i >= 0 && is_whites_space(cmd[i]))
+        i--;
+    if (i >= 0 && is_parenthise(cmd[i]))
+        return 0;
+    if (!is_closed_parenthise(cmd, i))
+        return (1);
+    return 0;
+}
+
+
 int ft_check_opened_token(char *cmd, int len)
 {
-    if (!ft_check_quote(cmd, len) && is_closed_parenthise(cmd, len) )
+    if (!ft_check_quote(cmd, len) && !ft_check_parenthisis_spaces(cmd, len))
         return (1);
     return (0);
 }
@@ -209,28 +225,20 @@ t_token *ft_tokinizer(char *cmd)
             continue;
         if (is_doubled_token(&cmd[i]) && (!ft_check_quote(cmd, i) && is_closed_parenthise(cmd, i)))
         {
-            if (!ft_add_token(&tokens, cmd, i, i + 1))
-                return (ft_free_tokens(&tokens) , NULL);
+            ft_add_token(&tokens, cmd, i, i + 1);
             i++;
         }
         else if ((is_pipe(cmd[i]) || is_redirection(cmd[i])) && !ft_check_quote(cmd, i) && is_closed_parenthise(cmd, i))
-        {
-            if (!ft_add_token(&tokens, cmd, i, i))
-                return (ft_free_tokens(&tokens), NULL);
-        }
+            ft_add_token(&tokens, cmd, i, i);
         else if ((is_parenthise(cmd[i]) && (!ft_check_quote(cmd, i))))
-        {
-            if (!ft_add_token(&tokens, cmd, i, i))
-                return (ft_free_tokens(&tokens), NULL);
-        }
+            ft_add_token(&tokens, cmd, i, i);
         else if (start == -1)
             start = i;
-        if (((is_whites_space(cmd[i + 1]) && ft_check_opened_token(cmd, i+1))
+        if (((is_whites_space(cmd[i + 1]) && ft_check_opened_token(cmd, i + 1))
             || (is_r_parenthise(cmd[i + 1]) && !ft_check_quote(cmd, i + 1)) || !cmd[i + 1]
             || (is_tokens(cmd[i + 1]) && !ft_check_quote(cmd, i + 1) && is_closed_parenthise(cmd, i + 1))) && start != -1)
         {
-            if (!ft_add_token(&tokens, cmd, start, i))
-                return (ft_free_tokens(&tokens), NULL);
+           ft_add_token(&tokens, cmd, start, i);
             start = -1;
         }
     } 
