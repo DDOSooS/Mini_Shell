@@ -19,6 +19,8 @@
 #include <readline/readline.h>
 #include <readline/history.h>
 #include <sys/wait.h>
+#include <dirent.h>
+#include <sys/types.h>
 #include <string.h>
 #include <signal.h>
 #include <limits.h>
@@ -26,6 +28,8 @@
 #include "./printf/ft_printf.h" 
 #include "./gnl/get_next_line.h"
 #include <stdio.h>
+#define MAX_ARGS 1024
+#define MAX_MATCHES 1024
 
 typedef struct s_signal
 {
