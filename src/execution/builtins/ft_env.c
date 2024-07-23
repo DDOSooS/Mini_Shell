@@ -8,15 +8,13 @@ int	ft_env(t_cmd *cmd, t_mshell *shell)
 	tmp = shell->env;
 	while (tmp)
 	{
-		if (tmp->is_exported)
+		if (tmp->value)
 		{
-			if (tmp->value)
+			if (ft_strcmp(tmp->key, "_") !=	0)
 				printf("%s=%s\n", tmp->key, tmp->value);
-			else
-				printf("%s=\n", tmp->key);
 		}
 		tmp = tmp->next;
 	}
-	ft_printf("_=/usr/bin/env\n");
+	printf("%s\n", "_=/user/bin/env");
 	return (0);
 }

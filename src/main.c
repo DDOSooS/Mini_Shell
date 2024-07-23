@@ -314,7 +314,6 @@ void extarct_env(char **envp, t_env **env)
 		}
 		i++;
 	}
-	find_env_rem(*env, "_");
 	update_shlvl(*env);
 }
 
@@ -389,6 +388,8 @@ int main(int ac, char **av, char **envp)
 		cmd_line = costum_readline();
 		if (check_tty() && *cmd_line && check_white_spaces(cmd_line))
 			add_history(cmd_line);
+		//TODO: before to add to history check if the command is not empty
+		//TODO and it is not the last one
 		put_tohistory(cmd_line, g_mshell.history);
 		if (!ft_check_syntax(cmd_line))
 		{

@@ -601,6 +601,36 @@ void cmd_runner(t_cmd *cmd, t_mshell *shell) {
 // 	handle_signals(interactive_sigint, SIG_IGN, SIG_IGN, SIG_IGN);
 // }
 
+char *get_last_arg(t_cmd *cmd)
+{
+	t_cmd *tmp;
+
+	tmp = cmd;
+	while (tmp->next)
+		tmp = tmp->next;
+	return (tmp->arg);
+}
+
+void set_under_score(t_env *env, t_cmd *cmd)
+{
+	t_env *env_under_score;
+
+	env_under_score = find_env(env, "_");
+	if (env_under_score)
+	{
+		if (count_args(cmd) > 0)
+		{
+			free(env_under_score->value);
+			env_under_score->value = ft_strdup(get_last_arg(cmd));
+		}
+		else
+		{
+			free(env_under_score->value);
+			env_under_score->value = ft_strdup("");
+		}
+	}
+}
+
 void ft_execute_cmd(t_tnode *root, t_mshell *shell)
 {
 	t_cmd *cmd;
@@ -614,6 +644,7 @@ void ft_execute_cmd(t_tnode *root, t_mshell *shell)
 		cmd_runner(cmd, shell);
 	else
 		shell->exit_value = status;
+	set_under_score(shell->env, root->cmd);
 }
 
 void reset_in_out(int stdin, int stdout)
@@ -691,6 +722,7 @@ void handle_word(t_tnode *root, t_mshell *shell)
 	if (apply_redirections(root, shell) == -1)
 	{
 		shell->exit_value = 1;
+		printf("this should be applied\n");
 		return;
 	}
     ft_execute_cmd(root, shell);
@@ -701,7 +733,11 @@ void ft_execute_parenthises(t_tnode *root, t_mshell *shell)
 {
 	int pid;
 
-	apply_redirections(root, shell);
+	if (apply_redirections(root, shell) == -1)
+	{
+		shell->exit_value = 1;
+		return;
+	}
 	pid = fork();
 	if (pid == -1)
 	{
