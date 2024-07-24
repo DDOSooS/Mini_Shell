@@ -59,6 +59,7 @@ typedef struct  env
 typedef struct history
 {
 	int             id;
+	int				herdoc;
 	char            *cmd;
 	struct history  *next;
 } t_history;
@@ -147,18 +148,6 @@ typedef struct mshell
 
 extern t_mshell g_mshell;
 
-typedef struct builtin
-{
-	char   *name;
-	int     (*func)(t_cmd *cmd, t_mshell *shell);
-} t_builtins;
-
-
-/*
-	minishell_functions
-*/
-
-
 void	varDumpOutFile(t_outfile *redirection);
 void	varDumpInFile(t_infile *redirection);
 /*================ Parsing =================*/
@@ -222,6 +211,7 @@ int		ft_pwd(t_cmd *cmd, t_mshell *shell);
 int		ft_exit(t_cmd *cmd, t_mshell *shell);
 int		ft_export(t_cmd *cmd, t_mshell *shell);
 int		ft_unset(t_cmd *cmd, t_mshell *shell);
+int		ft_history(t_cmd *cmd, t_mshell *shell);
 
 /*================= builtins utils =================*/
 t_env	*extarct_node(char *args);
@@ -232,7 +222,8 @@ void	replacement_export(t_env *env, t_env *new);
 void	execute(t_tnode *root, t_mshell *shell);
 void	ft_execute_tree(t_tnode *root, t_mshell *shell);
 int		get_status(int status);
-void	put_tohistory(char *cmd, t_history *history);
+// void	put_tohistory(char *cmd, t_history *history);
+void	put_tohistory(char *cmd, t_history *history, int herdoc);
 int		find_env_rem(t_env *env, char *key);
 int		builtins_finder(t_cmd *cmd, t_mshell *shell, int type);
 int		builtins_checker(t_cmd *cmd);
@@ -260,6 +251,7 @@ void	run_pipe(t_tnode *root, t_mshell *shell);
 // int ft_heredoc(t_tnode *root, t_mshell *shell);
 int		ft_heredoc(t_tnode *root, t_mshell *shell);
 int		heredoc_cheker(char*str, char *filename, int fd);
+char	*create_heredoc_filename(int here_doc_num);
 /*================= Printers =================*/
 void	print_stderr(char *str);
 int		export_erorr(char *arg, int status);

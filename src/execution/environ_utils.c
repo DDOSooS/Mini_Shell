@@ -1,9 +1,9 @@
 #include "../../includes/mshell.h"
 
-static void swap_envs(t_env *env1, t_env *env2)
+static void	swap_envs(t_env *env1, t_env *env2)
 {
-	char *tmp_key;
-	char *tmp_value;
+	char	*tmp_key;
+	char	*tmp_value;
 
 	tmp_key = env1->key;
 	tmp_value = env1->value;
@@ -35,34 +35,39 @@ t_env	*sort_env(t_env *env)
 	return (env);
 }
 
+static t_env	*copy_env_node(t_env *node)
+{
+	t_env	*new_node;
+
+	new_node = (t_env *)malloc(sizeof(t_env));
+	if (node->key)
+		new_node->key = ft_strdup(node->key);
+	else
+		new_node->key = NULL;
+	if (node->value)
+		new_node->value = ft_strdup(node->value);
+	else
+		new_node->value = NULL;
+	new_node->next = NULL;
+	return (new_node);
+}
+
 t_env	*copy_env(t_env *env)
 {
 	t_env	*tmp;
 	t_env	*new;
 	t_env	*head;
 
+	if (env == NULL)
+		return (NULL);
 	tmp = env;
-	new = (t_env *)malloc(sizeof(t_env));
-	if (tmp->key)
-		new->key = ft_strdup(tmp->key);
-	if (tmp->value)
-		new->value = ft_strdup(tmp->value);
-	else
-		new->value = NULL;
-	new->next = NULL;
-	head = new;
+	head = copy_env_node(tmp);
+	new = head;
 	tmp = tmp->next;
 	while (tmp)
 	{
-		new->next = (t_env *)malloc(sizeof(t_env));
+		new->next = copy_env_node(tmp);
 		new = new->next;
-		if (tmp->key)
-			new->key = ft_strdup(tmp->key);
-		if (tmp->value)
-			new->value = ft_strdup(tmp->value);
-		else
-			new->value = NULL;
-		new->next = NULL;
 		tmp = tmp->next;
 	}
 	return (head);

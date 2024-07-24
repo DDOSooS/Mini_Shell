@@ -273,7 +273,6 @@ void update_shlvl(t_env *env)
 		i++;
 		shlvl = ft_itoa(i);
 		edit_env(env, "SHLVL", shlvl);
-		// free(shlvl);
 	}
 }
 
@@ -292,10 +291,10 @@ t_env *create_env(void)
 
 void extarct_env(char **envp, t_env **env)
 {
-	int i;
-	char *sep;
-	char *Key;
-	char *value;
+	int		i;
+	char	*sep;
+	char	*Key;
+	char	*value;
 
 	if (envp == NULL || envp[0] == NULL)
 	{
@@ -380,17 +379,17 @@ int main(int ac, char **av, char **envp)
 	tokens = NULL;
 	cmd_tree = NULL;
 	m_shell_init(envp);
-	//TODO: add the signals handler for (ctrl + c) and (ctrl + \)
-	//TODO: and for every the child process
 	handle_signals(interactive_sigint, SIG_IGN, SIG_IGN, SIG_IGN);
 	while (1)
 	{
 		cmd_line = costum_readline();
 		if (check_tty() && *cmd_line && check_white_spaces(cmd_line))
+		{
 			add_history(cmd_line);
-		//TODO: before to add to history check if the command is not empty
-		//TODO and it is not the last one
-		put_tohistory(cmd_line, g_mshell.history);
+			//TODO: before to add to history check if the command is not empty
+			//TODO and it is not the last one
+			put_tohistory(cmd_line, g_mshell.history, 0);
+		}
 		if (!ft_check_syntax(cmd_line))
 		{
 			free(cmd_line);

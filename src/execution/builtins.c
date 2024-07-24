@@ -1,18 +1,5 @@
 #include "../../includes/mshell.h"
 
-int ft_history(t_cmd *cmd, t_mshell *shell)
-{
-	t_history *tmp;
-	(void)cmd;
-	tmp = shell->history;
-	while (tmp)
-	{
-		ft_printf("%d %s\n", tmp->id, tmp->cmd);
-		tmp = tmp->next;
-	}
-	return (0);
-}
-
 void add_env(t_env *env, char *key, char *value)
 {
 	t_env *tmp;
