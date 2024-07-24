@@ -1,8 +1,5 @@
 #include "../../includes/mshell.h"
 
-
-
-
 int ft_history(t_cmd *cmd, t_mshell *shell)
 {
 	t_history *tmp;
@@ -11,21 +8,6 @@ int ft_history(t_cmd *cmd, t_mshell *shell)
 	while (tmp)
 	{
 		ft_printf("%d %s\n", tmp->id, tmp->cmd);
-		tmp = tmp->next;
-	}
-	return (0);
-}
-int ft_unset(t_cmd *cmd, t_mshell *shell)
-{
-	t_cmd *tmp;
-
-	tmp = cmd->next;
-	while (tmp)
-	{
-		if (ft_strcmp(tmp->arg, "_") == 0)
-			return 0;
-		if (!find_env_rem(shell->env, tmp->arg))
-			ft_printf("minishell: unset: %s: not found\n", tmp->arg);
 		tmp = tmp->next;
 	}
 	return (0);

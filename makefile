@@ -14,6 +14,7 @@ SRC = src/main.c\
 		src/execution/execute.c\
 		src/execution/signals.c\
 		src/execution/environ.c\
+		src/execution/environ_utils.c\
 		src/execution/history.c\
 		src/parsing/expander.c\
 		src/execution/freeier.c\
@@ -27,8 +28,10 @@ SRC = src/main.c\
 		src/execution/builtins/ft_pwd.c\
 		src/execution/builtins/ft_exit.c\
 		src/execution/builtins/ft_echo.c\
+		src/execution/builtins/ft_export_utils.c\
 		src/execution/builtins/ft_export.c\
-		src/execution/builtins/builtins_utils.c\
+		src/execution/builtins/ft_unset.c\
+		src/execution/builtins_utils.c\
 
 OBJ = $(SRC:.c=.o)
 

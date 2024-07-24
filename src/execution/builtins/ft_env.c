@@ -10,7 +10,7 @@ int	ft_env(t_cmd *cmd, t_mshell *shell)
 	{
 		if (tmp->value)
 		{
-			if (ft_strcmp(tmp->key, "_") !=	0)
+			if (ft_strcmp(tmp->key, "_") != 0)
 				printf("%s=%s\n", tmp->key, tmp->value);
 		}
 		tmp = tmp->next;

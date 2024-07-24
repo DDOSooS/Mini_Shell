@@ -1,4 +1,4 @@
-#include "../../../includes/mshell.h"
+#include "../../includes/mshell.h"
 
 int	count_args(t_cmd *cmd)
 {
