@@ -217,16 +217,25 @@ int		ft_history(t_cmd *cmd, t_mshell *shell);
 t_env	*extarct_node(char *args);
 void	appned_export(t_env *env, t_env *new);
 void	replacement_export(t_env *env, t_env *new);
+int		builtins_finder(t_cmd *cmd, t_mshell *shell, int type);
+int		builtins_checker(t_cmd *cmd);
+void	put_tohistory(char *cmd, t_history *history, int herdoc);
 
 /*================= execution ===============*/
 void	execute(t_tnode *root, t_mshell *shell);
+void	cmd_runner(t_cmd *cmd, t_mshell *shell);
 void	ft_execute_tree(t_tnode *root, t_mshell *shell);
 int		get_status(int status);
-// void	put_tohistory(char *cmd, t_history *history);
-void	put_tohistory(char *cmd, t_history *history, int herdoc);
-int		find_env_rem(t_env *env, char *key);
-int		builtins_finder(t_cmd *cmd, t_mshell *shell, int type);
-int		builtins_checker(t_cmd *cmd);
+
+/*=============== execution utils ===================*/
+char	*check_command(char *cmd, char **paths);
+void	run_curr(char **cmd_args, char **paths, char **envp);
+char	**cmd_args_getter(t_cmd *cmd);
+char	**get_path(char *path);
+char	**get_envp(t_env *env);
+
+/*================= redirections ==================*/
+int		apply_redirections(t_tnode *root, t_mshell *shell);
 
 /*================= ENV ==================*/
 char	**get_envp(t_env *env);
@@ -235,6 +244,7 @@ void	edit_env(t_env *env, char *key, char *value);
 void	env_add_back(t_env **env, t_env *new);
 void	add_env(t_env *env, char *key, char *value);
 int		count_args(t_cmd *cmd);
+int		find_env_rem(t_env *env, char *key);
 t_env	*find_env(t_env *env, char *key);
 t_env	*sort_env(t_env *env);
 t_env	*copy_env(t_env *env);
@@ -248,10 +258,12 @@ void	free_gvar(void);
 void	free_func(char **strings);
 /*================= Herdoc, red and pipes ====================*/
 void	run_pipe(t_tnode *root, t_mshell *shell);
+
 // int ft_heredoc(t_tnode *root, t_mshell *shell);
 int		ft_heredoc(t_tnode *root, t_mshell *shell);
 int		heredoc_cheker(char*str, char *filename, int fd);
 char	*create_heredoc_filename(int here_doc_num);
+
 /*================= Printers =================*/
 void	print_stderr(char *str);
 int		export_erorr(char *arg, int status);
@@ -259,18 +271,12 @@ int		export_erorr(char *arg, int status);
 /*================var dumping data==============*/
 void	ft_free_herdoc(t_herdoc **herdocs);
 void	var_dump_herdocs(t_herdoc *herdoc);
-/*=============== signals =======================*/
-// void	prompt_sig(t_signal *sig);
-// void	exec_signal(t_signal *sig);
-// void	child_sig(t_signal *sig);
-// void	heredoc_sig_p(t_signal *sig);
-// void	ignore_signals(struct sigaction *signals, int sig, void (*handler)(int));
 
+/*=============== signals =======================*/
 void	handle_signals(void (*sigint)(int), void (*sigquit)(int), void (*sigint_old)(int), void (*sigquit_old)(int));
 void	active_sigquit(int sig);
 void	active_sigint(int sig);
 void	interactive_sigquit(int sig);
 void	interactive_sigint(int sig);
-
 
 #endif

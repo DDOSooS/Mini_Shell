@@ -1,5 +1,5 @@
 #include "../../includes/mshell.h"
 
-char **expend_wildcards()
+void star_expansion(t_tnode *root)
 {
 }

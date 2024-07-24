@@ -12,6 +12,10 @@ SRC = src/main.c\
 		src/parsing/parser.c\
 		src/execution/builtins.c\
 		src/execution/execute.c\
+		src/execution/cmd_runner.c\
+		src/execution/cmd_runner_utils1.c\
+		src/execution/cmd_runner_utils2.c\
+		src/execution/redirections.c\
 		src/execution/signals.c\
 		src/execution/environ.c\
 		src/execution/environ_utils.c\
