@@ -1,3 +1,7 @@
+here(1)
+cmd_args[0]: cat
+here(1)
+cmd_args[0]: cat
 NAME = minishell
 
 CC = cc
@@ -62,10 +66,6 @@ fclean: clean
 	$(MAKE) -C includes/libft fclean
 
 re: fclean all	
-
-sup: all
-	@echo "Running valgrind"
-	valgrind -s --leak-check=full  --show-leak-kinds=all  --suppressions=readline.supp ./minishell
 
 .PHONY: all clean fclean re
 .SECONDARY: $(OBJ)

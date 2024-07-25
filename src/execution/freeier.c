@@ -34,10 +34,27 @@ void free_history(t_history *history)
 	}
 }
 
+// void free_herdoc(t_herdoc *herdoc)
+// {
+// 	t_herdoc *tmp;
+// 	t_herdoc *tmp2;
+
+// 	tmp = herdoc;
+// 	while (tmp)
+// 	{
+// 		tmp2 = tmp->next;
+// 		if (tmp->delimiter)
+// 			free(tmp->delimiter);
+// 		free(tmp);
+// 		tmp = tmp2;
+// 	}
+// }
+
 void free_gvar(void)
 {
 	free_env(g_mshell.env);
 	free_history(g_mshell.history);
+	// free_herdoc(g_mshell.herdocs);
 }
 
 void	free_func(char **strings)

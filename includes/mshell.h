@@ -28,14 +28,12 @@
 #include "./printf/ft_printf.h" 
 #include "./gnl/get_next_line.h"
 #include <stdio.h>
-#define MAX_ARGS 1024
-#define MAX_MATCHES 1024
 
-typedef struct s_signal
-{
-	struct sigaction	sig_int;
-	struct sigaction	sig_quit;
-}	t_signal;
+// typedef struct s_signal
+// {
+// 	struct sigaction	sig_int;
+// 	struct sigaction	sig_quit;
+// }	t_signal;
 
 typedef struct token
 {
@@ -128,7 +126,6 @@ typedef struct herdoc
 {
     int             id;
     char            *delimiter;
-	char 			*filename;
     int             is_expanded;
     struct  herdoc  *next;
 }   t_herdoc;
@@ -143,7 +140,7 @@ typedef struct mshell
  int        n_herdoc;
  int        n_herdoc_executed;
  t_herdoc   *herdocs;
- t_signal   sig;
+//  t_signal   sig;
 } t_mshell;
 
 extern t_mshell g_mshell;
@@ -278,5 +275,13 @@ void	active_sigquit(int sig);
 void	active_sigint(int sig);
 void	interactive_sigquit(int sig);
 void	interactive_sigint(int sig);
+
+/*============= expansion ======================*/
+// void star_expansion(char ***cmd_args);
+// void	star_expansion(char ***cmd_args, int i);
+// void star_expansion(t_cmd *cmd);
+void	star_expansion(t_cmd *cmd, char ***args);
+int		find_char(char *str, char c);
+// void star_expansion(char **cmd_args);
 
 #endif
