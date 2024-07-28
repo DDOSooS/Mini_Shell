@@ -62,6 +62,7 @@ static int	add_export(t_cmd *cmd, t_mshell *shell)
 	t_env	*new;
 	int		i;
 	int		status;
+	int		returned_status;
 
 	i = 1;
 	status = 0;
@@ -73,12 +74,13 @@ static int	add_export(t_cmd *cmd, t_mshell *shell)
 		{
 			free_env(new);
 			cmd = cmd->next;
+			returned_status = 1;
 			continue ;
 		}
 		add_append_env(shell->env, new);
 		cmd = cmd->next;
 	}
-	return (status);
+	return (returned_status);
 }
 
 int	ft_export(t_cmd *cmd, t_mshell *shell)

@@ -58,8 +58,64 @@ void	run_curr(char **cmd_args, char **paths, char **envp)
 		}
 	}
 }
+int is_directory(char *path)
+{
+	struct stat sb;
 
-char	*check_command(char *cmd, char **paths)
+	if (stat(path, &sb) == 0 && S_ISDIR(sb.st_mode))
+		return (1);
+	return (0);
+}
+
+int other_cases(char *cmd)
+{
+	if (!cmd)
+		return (0);
+	if (ft_strcmp(cmd, "") == 0 || (ft_strlen(cmd) == 2 && cmd[0] == '"'
+			&& cmd[1] == '"'))
+	{
+		write(2, "minishell: '' : command not found\n", 34);
+		return (127);
+	}
+	if (ft_strcmp(cmd, ".") == 0)
+	{
+		write(2, "minishell: .: filename argument required\n", 41);
+		write(2, ".: usage: . filename [arguments]\n", 33);
+		return (2);
+	}
+	if (ft_strcmp(cmd, "..") == 0)
+	{
+		write(2, "minishell: ..: command not found\n", 33);
+		return (127);
+	}
+	return (0);
+}
+
+int check_cmd(char *cmd)
+{
+	if (cmd && ft_strchr(cmd, '/'))
+	{
+		if (is_directory(cmd))
+		{
+			write(2, "minishell: ", 11);
+			write(2, cmd, ft_strlen(cmd));
+			write(2, ": is a directory\n", 17);
+			return (126);
+		}
+		if (access(cmd, F_OK) == 0)
+			return (1);
+		else
+		{
+			write(2, "minishell: ", 11);
+			write(2, cmd, ft_strlen(cmd));
+			write(2, ": No such file or directory\n", 29);
+			return (127);
+		}
+	}
+	return (other_cases(cmd));
+}
+
+char	*check_command(char *cmd, char **paths, int *status)
 {
 	char	*path_part;
 	char	*command;
@@ -68,12 +124,17 @@ char	*check_command(char *cmd, char **paths)
 	path_part = NULL;
 	if (!paths || !cmd)
 		return (NULL);
+	*status = check_cmd(cmd);
+	if (*status == 1)
+		return (ft_strdup(cmd));
+	else if (*status != 0)
+		return (NULL);
 	while (*paths)
 	{
 		path_part = ft_strjoin(*paths, "/");
 		command = ft_strjoin(path_part, cmd);
 		free(path_part);
-		if (access(command, F_OK | X_OK) == 0)
+		if (access(command, F_OK) == 0 && access(command, X_OK) == 0)
 			return (command);
 		free(command);
 		paths++;

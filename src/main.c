@@ -379,9 +379,9 @@ int main(int ac, char **av, char **envp)
 	tokens = NULL;
 	cmd_tree = NULL;
 	m_shell_init(envp);
-	handle_signals(interactive_sigint, SIG_IGN, SIG_IGN, SIG_IGN);
 	while (1)
 	{
+		handle_signals(interactive_sigint, SIG_IGN, SIG_IGN, SIG_IGN);
 		cmd_line = costum_readline();
 		if (check_tty() && *cmd_line && check_white_spaces(cmd_line))
 		{

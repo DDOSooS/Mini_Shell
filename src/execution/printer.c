@@ -9,7 +9,7 @@ void print_stderr(char *str)
 
 int export_erorr(char *arg, int status)
 {
-	write(2, "msh: export: `", 14);
+	write(2, "minishell: export: `", ft_strlen("minishell: export: `"));
 	write(2, arg, ft_strlen(arg));
 	write(2, "': not a valid identifier\n", 27);
 	return (status);

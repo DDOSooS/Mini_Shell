@@ -24,6 +24,7 @@
 #include <string.h>
 #include <signal.h>
 #include <limits.h>
+#include <sys/stat.h>
 #include "./libft/libft.h"
 #include "./printf/ft_printf.h" 
 #include "./gnl/get_next_line.h"
@@ -225,7 +226,7 @@ void	ft_execute_tree(t_tnode *root, t_mshell *shell);
 int		get_status(int status);
 
 /*=============== execution utils ===================*/
-char	*check_command(char *cmd, char **paths);
+char	*check_command(char *cmd, char **paths, int *status);
 void	run_curr(char **cmd_args, char **paths, char **envp);
 char	**cmd_args_getter(t_cmd *cmd);
 char	**get_path(char *path);

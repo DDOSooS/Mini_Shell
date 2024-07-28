@@ -1,16 +1,17 @@
 #include "../../includes/mshell.h"
 
-static char	*find_command_path(char **cmd_args, char **path)
+static char	*find_command_path(char **cmd_args, char **path, int *status)
 {
 	char	*cmd_path;
 
 	cmd_path = NULL;
-	cmd_path = check_command(cmd_args[0], path);
-	if (cmd_path == NULL)
+	cmd_path = check_command(cmd_args[0], path, status);
+	if (cmd_path == NULL && *status == 0)
 	{
 		ft_putstr_fd("minishell: ", 2);
 		ft_putstr_fd(cmd_args[0], 2);
 		ft_putstr_fd(": command not found\n", 2);
+		*status = 127;
 	}
 	return (cmd_path);
 }
@@ -18,27 +19,27 @@ static char	*find_command_path(char **cmd_args, char **path)
 static void	execute_command(char **cmd_args, char **path, char **envp)
 {
 	char	*cmd_path;
+	int		status;
 
-	cmd_path = find_command_path(cmd_args, path);
+	cmd_path = find_command_path(cmd_args, path, &status);
 	if (cmd_path == NULL)
 	{
-		printf("I am here\(1) this command %s\n", cmd_args[0]);
-		for (int i = 0; cmd_args[i]; i++)
-			printf("cmd_args[%d] = %s\n", i, cmd_args[i]);
 		free_func(cmd_args);
 		if (path)
 			free_func(path);
 		if (envp)
 			free_func(envp);
 		free_gvar();
-		exit(127);
+		exit(status);
 	}
-	if (execve(cmd_path, cmd_args, envp) == -1)
-	{
-		printf("I am here\(2) this command %s\n", cmd_args[0]);
-		perror("");
-		exit(1);
-	}
+	execve(cmd_path, cmd_args, envp);
+	perror("execve");
+	free_func(cmd_args);
+	if (path)
+		free_func(path);
+	if (envp)
+		free_func(envp);
+	free_gvar();
 }
 
 static void	handle_child_process(t_cmd *cmd, t_mshell *shell)
@@ -57,7 +58,6 @@ static void	handle_child_process(t_cmd *cmd, t_mshell *shell)
 		path = get_path(find_env(shell->env, "PATH")->value);
 	envp = get_envp(shell->env);
 	execute_command(cmd_args, path, envp);
-	printf("here(2)\n");
 }
 
 static void	handle_parent_process(int pid, t_mshell *shell)
