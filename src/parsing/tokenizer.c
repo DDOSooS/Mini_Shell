@@ -111,31 +111,37 @@ t_token *ft_new_token(char *token)
     @Description this function is responsible for adding  a token 
 */
 
-int ft_add_token(t_token **tokens, char *cmd_line, int start, int end)
+void ft_add_token_back(t_token **root, t_token *new)
 {
     t_token *tmp;
+
+    tmp = *root;
+    while (tmp->next)
+        tmp = tmp->next;
+    tmp->next = new;
+    new->previous = tmp;
+}
+
+int ft_add_token(t_token **tokens, char *cmd_line, int start, int end)
+{
     char    *token;
     t_token *new;
     
     if (start == end)
-        token =ft_substr(cmd_line, start, 1);
+        token = ft_substr(cmd_line, start, 1);
     else    
-        token =ft_substr(cmd_line, start, end - start +1);    
+        token = ft_substr(cmd_line, start, end - start + 1);    
     if (! token)
         return (0);
     new = ft_new_token(token);
     if (!new)
         return (0);
-    tmp = *tokens;
     if(!*tokens)
     {
         *tokens = new;
         return (1);
     }
-    while (tmp->next)
-        tmp = tmp->next;
-    tmp->next = new;
-    new->previous = tmp;
+    ft_add_token_back(tokens, new);
     return (1);
 }
 
@@ -153,10 +159,23 @@ int is_parenthise(char c)
     return (0);
 }
 
+int ft_check_parenthisis_spaces(char *cmd, int index)
+{
+    int i = index;
+
+    while (i >= 0 && is_whites_space(cmd[i]))
+        i--;
+    if (i >= 0 && is_parenthise(cmd[i]))
+        return 0;
+    if (!is_closed_parenthise(cmd, i))
+        return (1);
+    return 0;
+}
+
 int ft_check_opened_token(char *cmd, int len)
 {
-    if (!ft_check_quote(cmd, len) && is_closed_parenthise(cmd, len) )
-        return (1);
+    if (!ft_check_quote(cmd, len) && !ft_check_parenthisis_spaces(cmd, len))
+            return (1);
     return (0);
 }
 
@@ -194,6 +213,8 @@ int ft_check_r_parenthise(char *cmd, int i)
     return (0);
 }
 
+//to be resized
+
 t_token *ft_tokinizer(char *cmd)
 {
     t_token *tokens;
@@ -209,28 +230,20 @@ t_token *ft_tokinizer(char *cmd)
             continue;
         if (is_doubled_token(&cmd[i]) && (!ft_check_quote(cmd, i) && is_closed_parenthise(cmd, i)))
         {
-            if (!ft_add_token(&tokens, cmd, i, i + 1))
-                return (ft_free_tokens(&tokens) , NULL);
+            ft_add_token(&tokens, cmd, i, i + 1);
             i++;
         }
         else if ((is_pipe(cmd[i]) || is_redirection(cmd[i])) && !ft_check_quote(cmd, i) && is_closed_parenthise(cmd, i))
-        {
-            if (!ft_add_token(&tokens, cmd, i, i))
-                return (ft_free_tokens(&tokens), NULL);
-        }
+            ft_add_token(&tokens, cmd, i, i);
         else if ((is_parenthise(cmd[i]) && (!ft_check_quote(cmd, i))))
-        {
-            if (!ft_add_token(&tokens, cmd, i, i))
-                return (ft_free_tokens(&tokens), NULL);
-        }
+            ft_add_token(&tokens, cmd, i, i);
         else if (start == -1)
             start = i;
         if (((is_whites_space(cmd[i + 1]) && ft_check_opened_token(cmd, i+1))
             || (is_r_parenthise(cmd[i + 1]) && !ft_check_quote(cmd, i + 1)) || !cmd[i + 1]
             || (is_tokens(cmd[i + 1]) && !ft_check_quote(cmd, i + 1) && is_closed_parenthise(cmd, i + 1))) && start != -1)
         {
-            if (!ft_add_token(&tokens, cmd, start, i))
-                return (ft_free_tokens(&tokens), NULL);
+            ft_add_token(&tokens, cmd, start, i);
             start = -1;
         }
     } 

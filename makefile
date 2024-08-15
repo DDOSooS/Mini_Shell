@@ -1,7 +1,7 @@
 NAME = minishell
 
 CC = cc
-#CFLAGS = -Wall -Wextra -pedantic
+CFLAGS = -Wall -Wextra -pedantic -fsanitize=address
 LIBS = -lreadline
 LIBFT = includes/libft/libft.a
 PRINTF = includes/printf/libftprintf.a

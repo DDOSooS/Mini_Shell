@@ -275,10 +275,9 @@ int ft_check_operation_error(char *cmd)
     if (cmd[i] && (cmd[i] == '&' || cmd[len-1] == '&'))
         return (ft_putstr_fd("parse error near `&'\n", 2), 1);
     if (! ft_operatore_sequence_error(cmd))
-        return (ft_putstr_fd("parse error near `&'\n", 2), 1);
+            return (ft_putstr_fd("parse error near `&'\n", 2), 1);
 	return (0);
 }
-
 
 int ft_check_quote_error(char *cmd_line)
 {
@@ -516,11 +515,12 @@ int is_word_character(char c)
 
 int ft_check_left_parenthise(char *cmd_line, int i)
 {
-
-    while (cmd_line[--i] && is_l_parenthise(cmd_line[i]));
+    
+    while (--i >= 0 && cmd_line[i] && is_l_parenthise(cmd_line[i]))
+    ;
 	// if (cmd_line[i] && (in_redirection(cmd_line[i]) || out_redirection(cmd_line[i])))
 	// 	i--;
-	while (cmd_line[i] && !is_pipe(cmd_line[i]) && !is_operator(cmd_line[i]))
+	while (--i >= 0 && cmd_line[i] && !is_pipe(cmd_line[i]) && !is_operator(cmd_line[i]))
     {
         if (is_l_parenthise(cmd_line[i]))
         {
@@ -542,32 +542,44 @@ int is_redirection(char c)
 }
 
 
+void ft_check_redirection(char c, int *redirection_found)
+{
+    if (is_redirection(c))
+        *redirection_found = 1;
+}
+
+int ft_count_file_name(char *cmd, int index)
+{
+    int counter;
+
+    counter = 0;
+    while (cmd[index] && !is_whites_space(cmd[index]) && !is_pipe(cmd[index]) && !is_operator(cmd[index]))
+    {
+        counter++;
+        index++;    
+    }
+    return counter;
+}
 
 int ft_check_right_parenthise(char *cmd)
 {
     int i;
-    int redirection_found ;
+    int redirection_found;
 
     redirection_found= 0;
     i = -1;
     while (cmd[++i] && is_r_parenthise(cmd[i]));
     while (cmd[i] && !is_pipe(cmd[i]) && !is_operator(cmd[i]))
     {
-        if (is_whites_space(cmd[i]) || is_r_parenthise(cmd[i]))
+        if (is_whites_space(cmd[i]) || is_r_parenthise(cmd[i]) || is_redirection(cmd[i])) 
         {
-            i++;
-            continue;
-        }
-        if (is_redirection(cmd[i]))
-        {
-            redirection_found = 1;
+            ft_check_redirection(cmd[i], &redirection_found);
             i++;
             continue;
         }
         if (redirection_found)
         {
-            while (cmd[i] && !is_whites_space(cmd[i]) && !is_pipe(cmd[i]) && !is_operator(cmd[i]))
-                i++;
+            i += ft_count_file_name(cmd, i);
             redirection_found = 0;
         } 
         else
@@ -602,7 +614,7 @@ int ft_check_parenthise_error(char *cmd_line)
     if (! ft_check_closed_parenthise(cmd_line) || !ft_check_empty_parenthise(cmd_line) )
         return (0);
     if (! ft_check_parenthise_sequence(cmd_line))
-        return (ft_putstr_fd("SDSyntax error near unexpected token `('\n", 2),0);
+        return (ft_putstr_fd("Syntax error near unexpected token `('\n", 2),0);
     return (1);
 }
 
@@ -629,4 +641,5 @@ int ft_check_syntax(char *cmd_line)
         return (0);
     return (1);
 }
+
 	

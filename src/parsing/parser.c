@@ -153,7 +153,6 @@ int ft_add_to_cmd (t_cmd **root, char *token)
 	char *cmd;
 	t_cmd	*tmp;
 	t_cmd	*new;
-	char	*tmp_token;
 
 	tmp = *root;
 	cmd = ft_substr(token, 1, ft_strlen(token) - 2);
@@ -200,7 +199,6 @@ t_cmd *ftGenCmd(t_token *tokens)
 
 int ftAddOutFile(t_outfile **root, t_token *token)
 {
-	int			mode;
 	t_outfile	*new;
 	t_outfile	*tmp;
 
@@ -224,7 +222,6 @@ int ftAddOutFile(t_outfile **root, t_token *token)
 
 int ftAddInFile(t_infile **root, t_token *token)
 {
-	int			mode;
 	t_infile	*new;
 	t_infile	*tmp;
 
@@ -232,10 +229,10 @@ int ftAddInFile(t_infile **root, t_token *token)
 	if (!new)
 		return (0);	
 	new->mode = token->typeId;
-	if (new->mode == 7)
-		new->is_herdoc = 1;
-	else
-		new->is_herdoc = 0;
+	// if (new->mode == 7)
+	// 	new->is_herdoc = 1;
+	// else
+	// 	new->is_herdoc = 0;
 	new->filename = ft_strdup (token->next->value);
 	new->next = NULL;
 	if (!*root)
@@ -261,15 +258,12 @@ int ftAddRedirection(t_redirection **root, t_token *token, int inredirection , i
 
 void ftGetRedirection(t_redirection **redirection, t_token *token, int inflag, int outflag)
 {
-    int             flag;
-
 	if (!*redirection)
 	{
     	*redirection = malloc(sizeof(t_redirection));
     	(*redirection)->in_file = NULL;
     	(*redirection)->out_file = NULL;
 	}
-    flag = 0;
     while (token)
     {
         if ((token->typeId >= 1 && token->typeId <= 3) || token->typeId == 5)
@@ -281,7 +275,6 @@ void ftGetRedirection(t_redirection **redirection, t_token *token, int inflag, i
         }
         token = token->next;
     }
-
 }
 
 int is_parenthise_redirection(t_token *tokens)
@@ -348,7 +341,6 @@ int ft_search_expanded_token(char *token, int *counter)
 	int i;
 	int start;
 	char *str;
-	int len;
 	
 	i = 0;
 	start = 1;
@@ -372,10 +364,8 @@ int ft_get_unexpanded_token(char *token, int *counter)
 	return (i)	;
 }
 
-
 int ft_get_expanded_quoted_token(char *token, int *counter)
 {
-	int start;
 	int i;
 
 	i = 0;
@@ -399,13 +389,15 @@ int ft_get_expanded_quoted_token(char *token, int *counter)
 	return (i);
 }
 
+
+
+
 int ft_get_expanded_unquoted_token(char *token, int *counter)
 {
 	int		i;
 	char	*str;
 	
 	i = 0;
-
 
 	if (token[i + 1] && is_dollar_sign(token[i]) && ft_isdigit(token[i + 1]))
 		return (1);
@@ -504,6 +496,14 @@ char *ft_get_env_var(char *str)
 	return (NULL);
 }
 
+
+
+void ft_join_expanded_token(char **joined_str, char *tmp, char *str)
+{
+	tmp = ft_get_env_var(str);
+	*joined_str = ft_strcat(*joined_str, tmp);
+}
+
 int ft_gen_expanded_unquoted_token(char **s1, char *token)
 {
 	int		i;
@@ -511,14 +511,12 @@ int ft_gen_expanded_unquoted_token(char **s1, char *token)
 	int		env_len;
 	char	*tmp;
 	
+	tmp = NULL;
 	i = 0;
 	if (token[i+ 1] && is_dollar_sign(token[i]) && ft_isdigit(token[i + 1]))
 		return (1);
 	if (token[i + 1] && (is_dollar_sign(token[i + 1]) || token[i + 1] == '?'))
-	{
-		ft_gen_pid_token(s1, token[i+1]);
-		return (1);		
-	}
+		return (ft_gen_pid_token(s1, token[i+1]), 1);		
 	else if ( is_dollar_sign(token[i]) && (!token[i + 1] || is_quote(token[i + 1]) || is_whites_space(token[i + 1])))
 	{
 		*s1 = ft_strcat_char(*s1, token[i]);
@@ -528,10 +526,7 @@ int ft_gen_expanded_unquoted_token(char **s1, char *token)
 	str = ft_substr(token, 1, i);
 	env_len = ft_check_env_var(str);
 	if (env_len)
-	{
-		tmp = ft_get_env_var(str);
-		*s1 = ft_strcat(*s1, tmp);
-	}
+		ft_join_expanded_token(s1, tmp, str);
 	free(str);
 	return (i);
 }
@@ -696,7 +691,6 @@ t_cmd *ft_gen_new_cmds(char *arg)
 t_cmd  *ft_split_cmd( char *arg)
 {
 	t_cmd	*new;
-	t_cmd	*s_tmp;
 	
 	new = ft_gen_new_cmds(arg);
 	free(arg);
@@ -831,28 +825,11 @@ int	ft_gen_delimter(char **str,char *token)
 	i = -1;
 	while (token[++i])
 	{
-		if (is_quote(token[i]))
-			i += ft_gen_expanded_deliter(str ,&token[i]);		
-		else
+		if (! is_quote(token[i]))
 			*str = ft_strcat_char(*str, token[i]);
 	}
 	return (1);
 }
-
-void ft_expand_delimiter(char **arg)
-{
-	// int len;
-	// char *tmp;
-	// char *new;
-	// tmp = *arg;
-	// len = ft_count_delimter_len(tmp);
-	// new = malloc(sizeof(char) * (len +  1));
-	// new[0] = '\0';
-	// ft_gen_delimter(&new, tmp);
-	// free (tmp);
-	// *arg = new;
-}
-
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
@@ -893,7 +870,8 @@ void ft_expand_redirection(t_redirection **redirection)
 }
 
 
-t_tnode	*ft_new_tnode(int n_type, t_token *tokens)
+
+t_tnode *ft_gen_new_node(int n_type)
 {
 	t_tnode *new;
 
@@ -904,10 +882,20 @@ t_tnode	*ft_new_tnode(int n_type, t_token *tokens)
 	new->t_right = NULL;
 	new->t_left = NULL;
 	new->t_parent = NULL;
+	new->cmd = NULL;
+	new->redirection = NULL;
+	return (new);
+}
+
+t_tnode	*ft_new_tnode(int n_type, t_token *tokens)
+{
+	t_tnode *new;
+
+	new = ft_gen_new_node(n_type);
+	if (!new)
+		return (NULL);
 	if (n_type)
 	{
-		new->cmd = NULL;
-		new->redirection = NULL;
 		if ( n_type == 4 && is_parenthise_redirection(tokens))
 		{	
 			while (tokens && tokens->typeId != 5)
@@ -918,11 +906,25 @@ t_tnode	*ft_new_tnode(int n_type, t_token *tokens)
 	else
 	{
 		new->cmd = ftGenCmd(tokens);
-		new->redirection = NULL;
 		ftGetRedirection(&new->redirection, tokens,1, 1);
 	}
 	return (new);
 }
+
+void	ft_insert_node(t_tnode **root, t_tnode **new)
+{
+	if (!*root)
+		*root = *new;
+	else
+	{
+		if ((*root)->t_left)
+			(*root)->t_right = *new;
+		else
+			(*root)->t_left = *new;
+	}
+}
+
+
 
 void ft_parse_parenthise(t_tnode **root, t_token **tokens)
 {
@@ -933,28 +935,30 @@ void ft_parse_parenthise(t_tnode **root, t_token **tokens)
 
     tmp = *tokens;
     while (tmp && tmp->value && !is_l_parenthise(tmp->value[0]))
-        tmp = tmp->next;
+        	tmp = tmp->next;
 	free(tmp->value);
 	free(tmp->next->next->value);
 	tmp->value = NULL;
 	tmp->next->next->value = NULL;
 	new = ft_new_tnode(4, *tokens);
-	if (!*root)
-		*root = new;
-	else
-	{
-		if ((*root)->t_left)
-			(*root)->t_right = new;
-		else
-			(*root)->t_left = new;
-	}
+	ft_insert_node(root, &new);
 	tParenthise = ft_tokinizer(tmp->next->value);
 	tmp1 = tParenthise;
 	while (tmp1->next)
 		tmp1 = tmp1->next;
 	tmp1->next = tmp->next->next;
+	free(tmp->next->value);
+	free(tmp->next);
 	tmp->next = tParenthise;
 	ft_parse_ast(&new, &tParenthise);
+}
+
+
+void ft_parser_helper(char **token_value, t_tnode **root, t_tnode **new)
+{
+	free(*token_value);
+	(*token_value) = NULL;
+	(*new)->t_parent = *root;
 }
 
 void	ft_parse_pipe(t_tnode **root, t_token **tokens)
@@ -979,9 +983,7 @@ void	ft_parse_pipe(t_tnode **root, t_token **tokens)
 		else
 			(*root)->t_left = new;
 	}
-	free(tmp->value);
-	tmp->value = NULL;
-	new->t_parent = *root;
+	ft_parser_helper(&tmp->value, root, &new);
 	ft_parse_ast(&new, tokens);
 	ft_parse_ast(&new, &tmp->next);	
 }
@@ -1008,12 +1010,11 @@ void	ft_parse_or_operator(t_tnode **root, t_token **tokens)
 		else
 			(*root)->t_right = new;
 	}
-	free(tmp->value);
-	tmp->value = NULL;
-	new->t_parent = *root;
+	ft_parser_helper(&tmp->value, root, &new);
 	ft_parse_ast(&new, tokens);
 	ft_parse_ast(&new, &(tmp->next));
 }
+
 
 void	ft_parse_and_operator(t_tnode **root, t_token **tokens)
 {
@@ -1021,7 +1022,7 @@ void	ft_parse_and_operator(t_tnode **root, t_token **tokens)
 	t_tnode	*new;
 
 	tmp = *tokens;
-	while (tmp )
+	while (tmp)
 	{
 		if (tmp->value && is_operator(tmp->value[0]) && isLastOperator(tmp->next))
 			break;
@@ -1037,9 +1038,7 @@ void	ft_parse_and_operator(t_tnode **root, t_token **tokens)
 		else
 			(*root)->t_right = new;
 	}
-	free(tmp->value);
-	tmp->value = NULL;
-	new->t_parent = *root;
+	ft_parser_helper(&tmp->value, root, &new);
 	ft_parse_ast(&new, tokens);
 	ft_parse_ast(&new, &(tmp->next));
 }
@@ -1047,14 +1046,10 @@ void	ft_parse_and_operator(t_tnode **root, t_token **tokens)
 void	ft_parse_cmd(t_tnode **root, t_token **tokens)
 {
 	t_tnode *new;
-	
 
 	new = ft_new_tnode(0, *tokens);
 	if (!*root)
-	{
 		*root = new;
-		return ;
-	}
 	else
 	{
 		new->t_parent = *root;
@@ -1065,24 +1060,24 @@ void	ft_parse_cmd(t_tnode **root, t_token **tokens)
 	}
 }
 
+
+
 void ft_parse_ast(t_tnode **root, t_token **tokens)
 {
 	t_token *tmp;
-	int i;
 
-	i = 0;
 	tmp = *tokens;
-	while (tmp && tmp->value)
+	if (tmp && tmp->value)
 	{	
 		if (ft_check_and_operator(tmp))
-			return (ft_parse_and_operator(root, tokens));
-		if (ft_check_or_operator(tmp))
-			return (ft_parse_or_operator(root, tokens));
-		if (ft_check_pipe(tmp))
-			return (ft_parse_pipe(root, tokens));
-		if (ft_check_parenthises(tmp))
-			return (ft_parse_parenthise(root, tokens));
-		return ft_parse_cmd(root, tokens);
-		tmp = tmp->next;
+			ft_parse_and_operator(root, tokens);
+		else if (ft_check_or_operator(tmp))
+			ft_parse_or_operator(root, tokens);
+		else if (ft_check_pipe(tmp))
+			ft_parse_pipe(root, tokens);
+		else if (ft_check_parenthises(tmp))
+			ft_parse_parenthise(root, tokens);
+		else 
+			ft_parse_cmd(root, tokens);
 	}
 } 

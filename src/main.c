@@ -32,12 +32,12 @@ void	var_dump(char **str)
 
 void	var_dump_token(t_token *tokens)
 {
-	// if (! tokens)
-	// 	ft_printf("=====tokens are Null====\n");
+	if (! tokens)
+		ft_printf("=====tokens are Null====\n");
 	while (tokens)
 	{
-		// ft_printf("==type===(%s)-----\n",tokens->type);
-		// ft_printf("===value==(%s)====\n",tokens->value);
+		ft_printf("==type===(%s)-----\n",tokens->type);
+		ft_printf("===value==(%s)====\n",tokens->value);
 		tokens = tokens->next;
 	}
 }
@@ -147,59 +147,62 @@ void var_dump_tree(t_tnode *tree)
     }
 }
 
-
-void	ft_free_tokens(t_token **tokens)
+void ft_free_tokens(t_token **tokens)
 {
-	t_token *tmp;
-	
-	while (*tokens)
-	{
-		tmp = (*tokens)->next;
-		free((*tokens)->value);	
-		free(*tokens);
-		*tokens = tmp;
-	}
-	free(*tokens);
-	*tokens = NULL;
-}
- 
-void	ftFreeInFile(t_infile *infile)
-{
-	t_infile *tmp;
+    t_token *tmp;
 
-	while (infile->next)
-	{
-		tmp = infile->next;
-		free(infile->filename);
-		free(infile);
-		infile = tmp;
-	}
-	free(infile->filename);
-	free(infile);
+  if (!tokens || !*tokens)
+        return;
+    while (*tokens)
+    {
+        tmp = (*tokens)->next; 
+		if ((*tokens)->value)
+            free((*tokens)->value); 
+        free(*tokens); 
+        *tokens = tmp; 
+    }
+    *tokens = NULL;
 }
 
-void	ftFreeOutFile(t_outfile *outfile)
+void ftFreeInFile(t_infile *infile)
 {
-	t_outfile *tmp;
+    t_infile *tmp;
 
-	while (outfile->next)
-	{
-		tmp = outfile->next;
-		free(outfile->filename);
-		free(outfile);
-		outfile = tmp;
-	}
-	free(outfile->filename);
-	free(outfile);
+    while (infile)
+    {
+        tmp = infile->next;
+        if (infile->filename)
+            free(infile->filename); 
+        free(infile);
+        infile = tmp; 
+    }
 }
+
+void ftFreeOutFile(t_outfile *outfile)
+{
+    t_outfile *tmp;
+
+    while (outfile)
+    {
+        tmp = outfile->next; 
+        if (outfile->filename)
+            free(outfile->filename);
+        free(outfile);
+        outfile = tmp;
+    }
+}
+
 
 void	ftFreeRedirection(t_redirection *redirection)
 {
-	if (redirection->in_file)
-		ftFreeInFile(redirection->in_file);
-	if (redirection->out_file)
-		ftFreeOutFile(redirection->out_file);
-	free(redirection);
+	if (redirection)
+	{
+	    if (redirection->in_file)
+		    ftFreeInFile(redirection->in_file);
+	    if (redirection->out_file)
+		    ftFreeOutFile(redirection->out_file);
+	    free(redirection);
+	}
 }
 
 void	ft_free_cmds(t_cmd *cmds)
@@ -216,30 +219,21 @@ void	ft_free_cmds(t_cmd *cmds)
 	free(cmds);
 }
 
-void	ft_free_tree(t_tnode **tree)
+void ft_free_tree(t_tnode **tree)
 {
-	if (*tree)
-	{
-		if (!(*tree)->t_left && !(*tree)->t_right )
-		{
-			free((*tree)->t_left);
-			free((*tree)->t_right);
-			ft_free_cmds((*tree)->cmd);
-			if ((*tree)->redirection)
-				ftFreeRedirection((*tree)->redirection);
-			free(*tree);
-			*tree = NULL;
-			return ;
-		}
-		else
-		{
-			ft_free_tree(&(*tree)->t_left);
-			ft_free_tree(&(*tree)->t_right);
-			free(*tree);
-			*tree = NULL;
-		}
-	}
+    if (*tree)
+    {
+        ft_free_tree(&(*tree)->t_left);
+        ft_free_tree(&(*tree)->t_right);
+        if ((*tree)->cmd)
+            ft_free_cmds((*tree)->cmd); 
+        if ((*tree)->redirection)
+            ftFreeRedirection((*tree)->redirection);
+        free(*tree);
+        *tree = NULL;
+    }
 }
+
 
 void	var_dump_herdocs(t_herdoc *herdoc)
 {
@@ -376,6 +370,7 @@ int main(int ac, char **av, char **envp)
 	char	*cmd_line;
 	t_token *tokens;
 	t_tnode	*cmd_tree;
+
 	tokens = NULL;
 	cmd_tree = NULL;
 	m_shell_init(envp);
@@ -390,7 +385,6 @@ int main(int ac, char **av, char **envp)
 		}
 		if (!ft_check_syntax(cmd_line))
 		{
-			free(cmd_line);
 			if (check_tty())
 				continue;
 			return (free(cmd_line), free_gvar(), EXIT_FAILURE);
@@ -398,25 +392,24 @@ int main(int ac, char **av, char **envp)
 		if ((tokens = ft_tokinizer(cmd_line)) != NULL)
 		{
 			// ft_printf("==============first token format===============\n\n");
-			// var_dump_token(tokens);
 			ft_expand_tokens(&tokens);
-			ft_parse_ast(&cmd_tree, &tokens);		
+			ft_parse_ast(&cmd_tree, &tokens);	
+			// var_dump_token(tokens);
 			// var_dump_tree(cmd_tree);
 			g_mshell.herdocs = ft_gen_herdocs(tokens);
-			// var_dump_token(tokens);
 			// var_dump_herdocs(g_mshell.herdocs);
 			execute(cmd_tree, &g_mshell);
 			ft_free_tokens(&tokens);
 			ft_free_herdoc(&g_mshell.herdocs);
+			ft_free_tree(&cmd_tree);
 			// ft_printf("+++==============second token format===============\n\n");
 			// var_dump_token(tokens);
-			ft_free_tree(&cmd_tree);
 			// printf("exit_value: %d\n", g_mshell.exit_value);
 		}
 		free(cmd_line);
 	}
     return (EXIT_SUCCESS);
 }
-//TODO: compile with flags and see
+//TODO: compile with flags and see 
 //TODO: norminette and check the leaks
-//TODO: wrong file name (ls >> out ) < sdfsdfds
+//TODO: wrong file name (ls >> out ) < sdfsdfds || done
