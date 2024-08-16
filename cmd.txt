@@ -1,9 +1,0 @@
-/*
-The file output will receive any combined output from the grouped commands, but since cat makefile >out1 redirects its output to out1, it doesn't produce output for output.
-The command primarily appends the results of the initial ls command to output, given that cat makefile >out1 operates within the group but redirects its own output to out1.
-*/
-(ls && cat makefile >out1) >>output
-
-(ls && cat makefile) >output
-ls <>filename
-(ls) <>filename

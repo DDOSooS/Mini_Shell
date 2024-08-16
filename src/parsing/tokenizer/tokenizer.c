@@ -10,14 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-# include "../../includes/mshell.h"
-
-int is_or_operator(char *token)
-{
-    if (is_pipe(token[0]) && token[1] && is_pipe(token[1]))
-        return (1);
-    return (0);
-}
+# include "../../../includes/mshell.h"
 
 /*
     @return (char *)
@@ -47,38 +40,18 @@ char * ft_get_token_type(char *token)
     return ("T_WORD");       
 }
  
-/*
-    @return (int)
-    @Description this function return the type id of a token that well be used in the parser 
-*/
 
-int ftGetTokenId(char *token)
+
+void ft_add_token_back(t_token **root, t_token *new)
 {
-    if (is_operator(token[0]))
-        return (3);
-    if (is_or_operator(token))
-        return (2);
-    else if (is_pipe(token[0]))
-        return (1);
-    else if (is_l_parenthise(token[0]))
-        return (4);
-    else if (is_r_parenthise(token[0]))
-        return (5);
-    else if (is_append(token))
-        return (6);
-    else if (is_herdoc(token))
-        return (7);
-    else if (in_redirection(token[0]))
-        return (8);
-    else if (out_redirection(token[0]))
-        return (9);
-    return (0);       
-}
+    t_token *tmp;
 
-/*
-    @return (t_token)
-    @Description this function create a new token 
-*/
+    tmp = *root;
+    while (tmp->next)
+        tmp = tmp->next;
+    tmp->next = new;
+    new->previous = tmp;
+}
 
 t_token *ft_new_token(char *token)
 {
@@ -106,22 +79,6 @@ t_token *ft_new_token(char *token)
     return new;
 }
 
-/*
-    @return (int)
-    @Description this function is responsible for adding  a token 
-*/
-
-void ft_add_token_back(t_token **root, t_token *new)
-{
-    t_token *tmp;
-
-    tmp = *root;
-    while (tmp->next)
-        tmp = tmp->next;
-    tmp->next = new;
-    new->previous = tmp;
-}
-
 int ft_add_token(t_token **tokens, char *cmd_line, int start, int end)
 {
     char    *token;
@@ -144,75 +101,6 @@ int ft_add_token(t_token **tokens, char *cmd_line, int start, int end)
     ft_add_token_back(tokens, new);
     return (1);
 }
-
-int is_tokens(char c)
-{
-    if (is_redirection(c) || is_l_parenthise(c) || is_r_parenthise(c) || is_pipe(c) || is_operator(c))
-        return (1);
-    return (0);
-}
-
-int is_parenthise(char c)
-{
-    if (is_l_parenthise(c) || is_r_parenthise(c))
-        return (1);
-    return (0);
-}
-
-int ft_check_parenthisis_spaces(char *cmd, int index)
-{
-    int i = index;
-
-    while (i >= 0 && is_whites_space(cmd[i]))
-        i--;
-    if (i >= 0 && is_parenthise(cmd[i]))
-        return 0;
-    if (!is_closed_parenthise(cmd, i))
-        return (1);
-    return 0;
-}
-
-int ft_check_opened_token(char *cmd, int len)
-{
-    if (!ft_check_quote(cmd, len) && !ft_check_parenthisis_spaces(cmd, len))
-            return (1);
-    return (0);
-}
-
-int ft_check_l_parenthise(char *cmd, int i)
-{
-    while (cmd[i])
-    {
-        if (is_whites_space(cmd[i]) && !ft_check_quote(cmd, i))
-        {
-            i++;
-            continue;
-        }
-        if (is_l_parenthise(cmd[i]) && !ft_check_quote(cmd, i))
-            return (1);
-        i++;
-    }
-    return (0);
-}
-
-int ft_check_r_parenthise(char *cmd, int i)
-{
-    if (!cmd[i])
-        return (0);
-    while (cmd[i])
-    {
-        if (is_whites_space(cmd[i]) && !ft_check_quote(cmd, i))
-        {
-            i++;
-            continue;
-        }        
-        if (is_r_parenthise(cmd[i]) && !ft_check_quote(cmd, i))
-            return (1);
-        i++;
-    }
-    return (0);
-}
-
 //to be resized
 
 t_token *ft_tokinizer(char *cmd)

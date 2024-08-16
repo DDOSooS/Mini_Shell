@@ -385,9 +385,10 @@ int main(int ac, char **av, char **envp)
 		}
 		if (!ft_check_syntax(cmd_line))
 		{
+			free(cmd_line);
 			if (check_tty())
 				continue;
-			return (free(cmd_line), free_gvar(), EXIT_FAILURE);
+			return (free_gvar(), EXIT_FAILURE);
 		}
 		if ((tokens = ft_tokinizer(cmd_line)) != NULL)
 		{
