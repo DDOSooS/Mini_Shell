@@ -202,7 +202,7 @@ int ft_check_opened_token(char *cmd, int len);
 int ft_check_parenthisis_spaces(char *cmd, int index);
 int ft_check_l_parenthise(char *cmd, int i);
 int ft_check_r_parenthise(char *cmd, int i);
-
+void ft_free_tokens(t_token **tokens);
 
 /*========== expnder functions =====================*/
 int  ft_expand_tokens(t_token **tokens);
@@ -226,6 +226,7 @@ int check_unclosed_quote(char *token);
 pid_t get_pid();
 
 /*============  generate herdoc functions ==========*/
+
 t_herdoc *ft_gen_herdocs(t_token *tokens);
 void    ft_free_herdoc(t_herdoc **herdocs);
 
@@ -252,59 +253,6 @@ int ftAddOutFile(t_outfile **root, t_token *token);
 t_tnode	*ft_new_tnode(int n_type, t_token *tokens);
 int ft_add_to_cmd (t_cmd **root, char *token);
 int	ftAddCmd(t_cmd **cmd, char *str);
-
-// /*================ Parsing =================*/
-// pid_t get_pid();
-// int ft_check_white_spaces(char *ctokmd);
-// void ft_expand_delimiter(char **arg);
-// void	var_dump_cmd(t_cmd *cmds);
-
-// //this function is reponsible for expanding envp var
-// int     ft_expand_arg(char **arg);
-
-// char    **ft_split_words(char *words, char *delimiter);
-// void	ft_free_tokens(t_token **tokens);
-// int is_dollar_sign(char c);
-// int ft_check_expand(char *token);
-// void	varDumpOutFile(t_outfile *redirection);
-// int ft_expand_tokens(t_token **tokens);
-// void	varDumpInFile(t_infile *redirection);
-// int ftGetTokenId(char *token);
-// int ft_get_unexpanded_token(char *token, int *counter);
-// int ft_check_and_operator(t_token *token);
-// int ft_check_or_operator(t_token *token);
-// void ft_parse_ast(t_tnode **root, t_token **tokens);
-// int is_append(char *cmd);
-// int is_herdoc(char *cmd);
-// int is_redirection(char c);
-// int is_character(char c);
-// t_token *ft_tokinizer(char *cmd);
-// int is_closed_parenthise(char *cmd_line, int len);
-// // void ft_parse_ast(Tree **root, t_token *tokens);
-// int is_doubled_token(char *cmd);
-// int is_herapp_redirection(char *cmd);
-// int is_logical_operator(char *cmd);
-// int is_herdoc(char *cmd);
-// int is_append(char *cmd);
-// void	var_dump_token(t_token *tokens);
-// t_token *ft_tokinizer(char *cmd_line);
-// int ft_check_syntax(char *cmd_line);
-// int in_redirection(char c);
-// int out_redirection(char c);
-// int is_pipe(char c);
-// int is_operator(char c);
-// int is_r_parenthise(char c);
-// int is_l_parenthise(char c);
-// int is_whites_space(char c);
-// int is_charachter(char c);
-// int ft_check_quote(char *cmd_line, int len);
-// int is_single_quote(char c);
-// int is_double_quote(char c);
-// int is_quote(char c);
-// int is_quote(char c);
-// int ft_add_herdoc(t_herdoc **root, char *del);
-// t_herdoc *ft_gen_herdocs(t_token *tokens);
-// // void ft_parse_input(char *cmd);
 
 /*================= bultins =================*/
 int		ft_cd(t_cmd *cmd, t_mshell *shell);
@@ -374,58 +322,7 @@ int		export_erorr(char *arg, int status);
 /*================var dumping data==============*/
 void	ft_free_herdoc(t_herdoc **herdocs);
 void	var_dump_herdoc(t_herdoc *herdocs);
-// /*================ Parsing =================*/
-// pid_t get_pid();
-// int ft_check_white_spaces(char *ctokmd);
-// void ft_expand_delimiter(char **arg);
-// void	var_dump_cmd(t_cmd *cmds);
 
-// //this function is reponsible for expanding envp var
-// int     ft_expand_arg(char **arg);
-
-// char    **ft_split_words(char *words, char *delimiter);
-// void	ft_free_tokens(t_token **tokens);
-// int is_dollar_sign(char c);
-// int ft_check_expand(char *token);
-// void	varDumpOutFile(t_outfile *redirection);
-// int ft_expand_tokens(t_token **tokens);
-// void	varDumpInFile(t_infile *redirection);
-// int ftGetTokenId(char *token);
-// int ft_get_unexpanded_token(char *token, int *counter);
-// int ft_check_and_operator(t_token *token);
-// int ft_check_or_operator(t_token *token);
-// void ft_parse_ast(t_tnode **root, t_token **tokens);
-// int is_append(char *cmd);
-// int is_herdoc(char *cmd);
-// int is_redirection(char c);
-// int is_character(char c);
-// t_token *ft_tokinizer(char *cmd);
-// int is_closed_parenthise(char *cmd_line, int len);
-// // void ft_parse_ast(Tree **root, t_token *tokens);
-// int is_doubled_token(char *cmd);
-// int is_herapp_redirection(char *cmd);
-// int is_logical_operator(char *cmd);
-// int is_herdoc(char *cmd);
-// int is_append(char *cmd);
-// void	var_dump_token(t_token *tokens);
-// t_token *ft_tokinizer(char *cmd_line);
-// int ft_check_syntax(char *cmd_line);
-// int in_redirection(char c);
-// int out_redirection(char c);
-// int is_pipe(char c);
-// int is_operator(char c);
-// int is_r_parenthise(char c);
-// int is_l_parenthise(char c);
-// int is_whites_space(char c);
-// int is_charachter(char c);
-// int ft_check_quote(char *cmd_line, int len);
-// int is_single_quote(char c);
-// int is_double_quote(char c);
-// int is_quote(char c);
-// int is_quote(char c);
-// int ft_add_herdoc(t_herdoc **root, char *del);
-// t_herdoc *ft_gen_herdocs(t_token *tokens);
-// // void ft_parse_input(char *cmd);ocs(t_herdoc *herdoc);
 
 /*=============== signals =======================*/
 void	handle_signals(void (*sigint)(int), void (*sigquit)(int), void (*sigint_old)(int), void (*sigquit_old)(int));
