@@ -141,6 +141,8 @@ typedef struct mshell
  int        n_herdoc;
  int        n_herdoc_executed;
  t_herdoc   *herdocs;
+ t_tnode    *cmd_tree;
+ t_token    *token;
 //  t_signal   sig;
 } t_mshell;
 
@@ -150,6 +152,7 @@ void	varDumpOutFile(t_outfile *redirection);
 void	varDumpInFile(t_infile *redirection);
 
 /*========== lexer functions ============*/
+
 int is_tokens(char c);
 int is_parenthise(char c);
 int is_or_operator(char *token);
@@ -175,6 +178,7 @@ int is_l_parenthise(char c);
 int is_word_character(char c);
 
 /*======== syntax error functions ========*/
+
 int ft_check_syntax(char *cmd_line);
 int ft_check_operation_error(char *cmd);
 int ft_pipe_sequence_error(char *cmd);
@@ -195,6 +199,7 @@ int ft_check_in_redirection(char *cmd_line , int len);
 int ft_check_file_name(char *cmd_line);
 
 /*==============tokeinzer function =================*/
+
 t_token *ft_tokinizer(char *cmd);
 int ft_add_token(t_token **tokens, char *cmd_line, int start, int end);
 int ftGetTokenId(char *token);
@@ -205,6 +210,7 @@ int ft_check_r_parenthise(char *cmd, int i);
 void ft_free_tokens(t_token **tokens);
 
 /*========== expnder functions =====================*/
+
 int  ft_expand_tokens(t_token **tokens);
 int ft_expand_token(t_token **tokens);
 char **ft_split_words(char *words, char *delimiter);
@@ -232,6 +238,7 @@ void    ft_free_herdoc(t_herdoc **herdocs);
 
 
 /*============  parser functions  ===================*/
+
 void ft_parse_ast(t_tnode **root, t_token **tokens);
 void ft_parse_parenthise(t_tnode **root, t_token **tokens);
 void	ft_parse_cmd(t_tnode **root, t_token **tokens);
@@ -322,7 +329,10 @@ int		export_erorr(char *arg, int status);
 /*================var dumping data==============*/
 void	ft_free_herdoc(t_herdoc **herdocs);
 void	var_dump_herdoc(t_herdoc *herdocs);
+<<<<<<< HEAD
 
+=======
+>>>>>>> 3c3f338 (fixing still reachable leaks)
 
 /*=============== signals =======================*/
 void	handle_signals(void (*sigint)(int), void (*sigquit)(int), void (*sigint_old)(int), void (*sigquit_old)(int));
@@ -338,5 +348,8 @@ void	interactive_sigint(int sig);
 void	star_expansion(t_cmd *cmd, char ***args);
 int		find_char(char *str, char c);
 // void star_expansion(char **cmd_args);
+
+void ft_free_tokens(t_token **tokens);
+void ft_free_tree(t_tnode **tree);
 
 #endif

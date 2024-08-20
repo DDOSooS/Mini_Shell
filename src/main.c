@@ -368,12 +368,11 @@ int	get_status(int status)
 int main(int ac, char **av, char **envp)
 {
 	char	*cmd_line;
-	t_token *tokens;
-	t_tnode	*cmd_tree;
 
-	tokens = NULL;
-	cmd_tree = NULL;
+	cmd_line = NULL;
 	m_shell_init(envp);
+	g_mshell.cmd_tree = NULL;
+	g_mshell.token = NULL;
 	while (1)
 	{
 		handle_signals(interactive_sigint, SIG_IGN, SIG_IGN, SIG_IGN);
@@ -390,22 +389,15 @@ int main(int ac, char **av, char **envp)
 				continue;
 			return (free_gvar(), EXIT_FAILURE);
 		}
-		if ((tokens = ft_tokinizer(cmd_line)) != NULL)
+		if ((g_mshell.token = ft_tokinizer(cmd_line)) != NULL)
 		{
-			// ft_printf("==============first token format===============\n\n");
-			ft_expand_tokens(&tokens);
-			ft_parse_ast(&cmd_tree, &tokens);	
-			// var_dump_token(tokens);
-			// var_dump_tree(cmd_tree);
-			g_mshell.herdocs = ft_gen_herdocs(tokens);
-			// var_dump_herdocs(g_mshell.herdocs);
-			execute(cmd_tree, &g_mshell);
-			ft_free_tokens(&tokens);
+			ft_expand_tokens(&g_mshell.token);
+			ft_parse_ast(&g_mshell.cmd_tree, &g_mshell.token);	
+			g_mshell.herdocs = ft_gen_herdocs(g_mshell.token);
+			execute(g_mshell.cmd_tree, &g_mshell);
+			ft_free_tokens(&g_mshell.token);
 			ft_free_herdoc(&g_mshell.herdocs);
-			ft_free_tree(&cmd_tree);
-			// ft_printf("+++==============second token format===============\n\n");
-			// var_dump_token(tokens);
-			// printf("exit_value: %d\n", g_mshell.exit_value);
+			ft_free_tree(&g_mshell.cmd_tree);
 		}
 		free(cmd_line);
 	}

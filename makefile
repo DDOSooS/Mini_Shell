@@ -81,6 +81,6 @@ fclean: clean
 re: fclean all	
 sup: all
 	@echo "Running valgrind"
-	valgrind -s --leak-check=full --suppressions=readline.supp ./minishell
+	valgrind -s --leak-check=full --show-leak-kinds=all --suppressions=readline.supp ./minishell
 .PHONY: all clean fclean re
 .SECONDARY: $(OBJ)

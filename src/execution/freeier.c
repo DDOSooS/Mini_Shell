@@ -52,8 +52,12 @@ void free_history(t_history *history)
 
 void free_gvar(void)
 {
+
 	free_env(g_mshell.env);
 	free_history(g_mshell.history);
+	ft_free_tokens(&g_mshell.token);
+	ft_free_herdoc(&g_mshell.herdocs);
+	ft_free_tree(&g_mshell.cmd_tree);
 	// free_herdoc(g_mshell.herdocs);
 }
 
