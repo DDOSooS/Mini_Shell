@@ -1,4 +1,4 @@
-#include "../../includes/mshell.h"
+#include "../../../includes/mshell.h"
 
 static char	*find_command_path(char **cmd_args, char **path, int *status)
 {
@@ -47,13 +47,10 @@ static void	handle_child_process(t_cmd *cmd, t_mshell *shell)
 	char	**cmd_args;
 	char	**path;
 	char	**envp;
-	int		i;
 
 	path = NULL;
-	i = 1;
 	handle_signals(active_sigint, active_sigquit, SIG_IGN, SIG_IGN);
 	star_expansion(cmd, &cmd_args);
-	// cmd_args = cmd_args_getter(cmd);
 	if (find_env(shell->env, "PATH"))
 		path = get_path(find_env(shell->env, "PATH")->value);
 	envp = get_envp(shell->env);

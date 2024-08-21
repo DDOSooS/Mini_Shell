@@ -5,6 +5,7 @@ static int	export_checker(t_env *new, char *arg)
 	int	i;
 	int	plus;
 
+	UNUSED(arg);
 	i = 0;
 	plus = 0;
 	while (new && new->key[i])
@@ -60,11 +61,9 @@ static void	add_append_env(t_env *env, t_env *new)
 static int	add_export(t_cmd *cmd, t_mshell *shell)
 {
 	t_env	*new;
-	int		i;
 	int		status;
 	int		returned_status;
 
-	i = 1;
 	status = 0;
 	while (cmd && cmd->arg && cmd->arg[0])
 	{

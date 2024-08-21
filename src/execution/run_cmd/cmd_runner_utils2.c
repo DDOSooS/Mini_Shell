@@ -1,4 +1,4 @@
-#include "../../includes/mshell.h"
+#include "../../../includes/mshell.h"
 
 static int	count_env_entries(t_env *env)
 {
@@ -43,9 +43,7 @@ static void	populate_envp_array(t_env *env, char **envp)
 	while (tmp)
 	{
 		if (tmp->key)
-		{
 			envp[i] = create_env_entry(tmp);
-		}
 		i++;
 		tmp = tmp->next;
 	}

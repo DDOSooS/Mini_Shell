@@ -54,10 +54,10 @@ void	ft_execute_tree(t_tnode *root, t_mshell *shell)
 		run_pipe(root, shell);
 	else if (root->node_type == TOKEN_PARENTHISE)
 		ft_execute_parenthises(root, shell);
-	else if (root->node_type == TOKEN_WORD)
-		handle_word(root, shell);
 	else if (root->node_type == TOKEN_AND || root->node_type == TOKEN_OR)
 		exec_and_or(root, shell);
+	else if (root->node_type == TOKEN_WORD)
+		handle_word(root, shell);
 	reset_in_out(stdin_fd, stdout_fd);
 }
 

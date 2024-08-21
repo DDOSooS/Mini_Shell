@@ -21,13 +21,11 @@ t_env	*extarct_node(char *args)
 
 void	appned_export(t_env *env, t_env *new)
 {
-	t_env	*tmp;
 	t_env	*found_env;
 	char	*tmp_value;
 
 	new->key[ft_strlen(new->key) - 1] = '\0';
 	found_env = find_env(env, new->key);
-	tmp = env;
 	if (found_env == NULL)
 	{
 		env_add_back(&env, new);
@@ -46,13 +44,9 @@ void	appned_export(t_env *env, t_env *new)
 
 void	replacement_export(t_env *env, t_env *new)
 {
-	t_env	*tmp;
-	t_env	*tmp2;
 	t_env	*found_env;
 
 	found_env = find_env(env, new->key);
-	tmp = env;
-	tmp2 = env->next;
 	if (found_env == NULL)
 	{
 		env_add_back(&env, new);

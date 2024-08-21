@@ -20,7 +20,7 @@ void	ft_execute_parenthises(t_tnode *root, t_mshell *shell)
 {
 	int	pid;
 
-	if (apply_redirections(root, shell) == -1)
+	if (apply_redirections(root) == -1)
 	{
 		shell->exit_value = 1;
 		return ;
@@ -61,7 +61,7 @@ void	ft_execute_cmd(t_tnode *root, t_mshell *shell)
 
 void	handle_word(t_tnode *root, t_mshell *shell)
 {
-	if (apply_redirections(root, shell) == -1)
+	if (apply_redirections(root) == -1)
 	{
 		shell->exit_value = 1;
 		return ;
