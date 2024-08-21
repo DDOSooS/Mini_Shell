@@ -35,6 +35,7 @@
 // 	struct sigaction	sig_int;
 // 	struct sigaction	sig_quit;
 // }	t_signal;
+# define UNUSED(x) (void)(x)
 
 typedef struct token
 {
@@ -109,7 +110,11 @@ enum TokenType
 	TOKEN_OR,
 	TOKEN_AND,
 	TOKEN_PARENTHISE,
-	// TOKEN_R_PARENTHISE,
+	TOKEN_R_PARENTHISE,
+	TOKEN_APPEND,
+	TOKEN_HERDOC,
+	TOKEN_IN_REDIR,
+	TOKEN_OUT_REDIR,
 } ;
 
 enum buitins
@@ -121,7 +126,7 @@ enum buitins
 	EXPORT,
 	UNSET,
 	ENV,
-	HISTORY
+	HISTORY,
 };
 typedef struct herdoc
 {
@@ -298,9 +303,10 @@ void	run_curr(char **cmd_args, char **paths, char **envp);
 char	**cmd_args_getter(t_cmd *cmd);
 char	**get_path(char *path);
 char	**get_envp(t_env *env);
+int	check_cmd(char *cmd);
 
 /*================= redirections ==================*/
-int		apply_redirections(t_tnode *root, t_mshell *shell);
+int		apply_redirections(t_tnode *root);
 
 /*================= ENV ==================*/
 char	**get_envp(t_env *env);
@@ -332,7 +338,19 @@ void	create_heredoc(char *del, int id, int write_fd);
 void	print_stderr(char *str);
 int		export_erorr(char *arg, int status);
 
-/*================var dumping data==============*/
+/*================ wildcards ===================*/
+void	star_expansion(t_cmd *cmd, char ***args);
+int		find_char(char *str, char c);
+void	get_list_files(char *exp, char ***file_list);
+int		open_dir(char *directory, DIR **dir);
+int	check_valid(struct dirent *file_entry, int dir_flag, char *exp);
+int	check_exp(char *file_name, char *exp);
+void	fill_list(char *directory, char *exp, char **file_list, int dir_flag);
+char	**list_join(char **list_one, char **list_two, int i);
+char	*consume_extra(char *reg, char c);
+int	match_symbol(char *regexp, char *text);
+
+/*================ var dumping data==============*/
 void	ft_free_herdoc(t_herdoc **herdocs);
 void	var_dump_herdoc(t_herdoc *herdocs);
 
@@ -347,8 +365,6 @@ void	interactive_sigint(int sig);
 // void star_expansion(char ***cmd_args);
 // void	star_expansion(char ***cmd_args, int i);
 // void star_expansion(t_cmd *cmd);
-void	star_expansion(t_cmd *cmd, char ***args);
-int		find_char(char *str, char c);
 // void star_expansion(char **cmd_args);
 
 void ft_free_tokens(t_token **tokens);

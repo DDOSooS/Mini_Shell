@@ -1,5 +1,7 @@
 {
 	"files.associations": {
 		"header.h": "c"
-	}
+	},
+	"42header.username": "mkartit",
+	"42header.email": "mkartit@student.42.fr"
 }
