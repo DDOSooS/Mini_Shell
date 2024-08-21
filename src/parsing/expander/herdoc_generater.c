@@ -1,17 +1,5 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   herdoc_generater.c                                 :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: aghergho <aghergho@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/08/21 20:37:56 by aghergho          #+#    #+#             */
-/*   Updated: 2024/08/21 20:38:08 by aghergho         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
 
 #include "../../../includes/mshell.h"
-
 void    ft_free_herdoc(t_herdoc **herdocs)
 {
     t_herdoc *tmp;
@@ -19,6 +7,7 @@ void    ft_free_herdoc(t_herdoc **herdocs)
     
     if (!herdocs || !*herdocs)
         return ;
+
     tmp = *herdocs;
     while (tmp)
     {
@@ -35,7 +24,8 @@ void    ft_free_herdoc(t_herdoc **herdocs)
 
 int ft_count_expanded_len(char *delimimiter)
 {
-    int (counter), (i);
+    int counter;
+    int i;
     char  quote;
 
     i = -1;
@@ -50,8 +40,12 @@ int ft_count_expanded_len(char *delimimiter)
         if (is_quote(delimimiter[i]))
         {
             quote = delimimiter[i];
-            while (delimimiter[i++] && delimimiter[++i] != quote)
+            i++;
+            while (delimimiter[i] && delimimiter[i] != quote)
+            {
                 counter++;
+                i++;
+            }
         }
         else
             counter++;
@@ -75,8 +69,13 @@ void    ft_gen_expanded_delimiter(char **new_del, char *del)
         if (is_quote(del[i]))
         {
             quote = del[i];
-            while (del[++i] && del[++i] != quote)
+            i++;
+
+            while (del[i] && del[i] != quote)
+            {
                 ft_strcat_char(*new_del, del[i]);
+                i++;
+            }
         }
         else
             ft_strcat_char(*new_del, del[i]);
@@ -116,6 +115,8 @@ t_herdoc *ft_new_herdoc(char *delimiter)
     if (!new)
         return (NULL);
     new->delimiter = delimiter;
+    // new->delimiter = ft_expand(delimiter);
+    // ft_trim_delimiter_quotes(&new->delimiter);
     new->next = NULL;
     return (new);
 }
