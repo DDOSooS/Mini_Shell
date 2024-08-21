@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   syntax_error_utils.c                               :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: aghergho <aghergho@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/08/21 12:56:10 by aghergho          #+#    #+#             */
+/*   Updated: 2024/08/21 13:02:57 by aghergho         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../../includes/mshell.h"
 
 int	ft_check_operation_error(char *cmd)
@@ -83,13 +95,11 @@ int	ft_check_file_name(char *cmd_line)
 		;
 	if (!cmd_line[i])
 		return (ft_printf("parse error near `\\n'\n"), 0);
-	if (is_operator(cmd_line[i]) && cmd_line[i + 1] && is_operator(cmd_line[i
-			+ 1]))
+	if (is_operator(cmd_line[i]) && cmd_line[i + 1] && is_operator(cmd_line[i + 1]))
 		return (ft_printf("parse error near `&&'\n"), 0);
 	if (is_operator(cmd_line[i]))
 		return (ft_printf("parse error near `&'\n"), 0);
-	else if (is_pipe(cmd_line[i]) && cmd_line[i + 1] && is_pipe(cmd_line[i
-			+ 1]))
+	else if (is_pipe(cmd_line[i]) && cmd_line[i + 1] && is_pipe(cmd_line[i + 1]))
 		return (ft_printf("parse error near `||'\n"), 0);
 	else if (is_pipe(cmd_line[i]))
 		return (ft_printf("parse error near `|'\n"), 0);

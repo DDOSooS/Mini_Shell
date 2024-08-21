@@ -1,19 +1,28 @@
-# include "../../../includes/mshell.h"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   cmd_generator.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: aghergho <aghergho@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/08/21 13:03:55 by aghergho          #+#    #+#             */
+/*   Updated: 2024/08/21 13:03:56 by aghergho         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
-
+#include "../../../includes/mshell.h"
 
 int	ftAddCmd(t_cmd **cmd, char *str)
 {
-	t_cmd *new;
-	t_cmd *tmp;
+	t_cmd	*new;
+	t_cmd	*tmp;
 
 	new = malloc(sizeof(t_cmd));
 	new->arg = ft_strdup(str);
 	new->check_wildcard = ftCheckWildCard(new->arg);
 	new->next = NULL;
-	if (! cmd || !*cmd)
+	if (!cmd || !*cmd)
 		*cmd = new;
-
 	else
 	{
 		tmp = *cmd;
@@ -22,12 +31,11 @@ int	ftAddCmd(t_cmd **cmd, char *str)
 		tmp->next = new;
 	}
 	return (1);
-	
 }
 
-int ft_add_to_cmd (t_cmd **root, char *token)
+int	ft_add_to_cmd(t_cmd **root, char *token)
 {
-	char *cmd;
+	char	*cmd;
 	t_cmd	*tmp;
 	t_cmd	*new;
 
@@ -49,11 +57,11 @@ int ft_add_to_cmd (t_cmd **root, char *token)
 	return (1);
 }
 
-t_cmd *ft_gen_new_cmds(char *arg)
+t_cmd	*ft_gen_new_cmds(char *arg)
 {
-	t_cmd *new;
-	char **cmds;
-	int	i;
+	t_cmd	*new;
+	char	**cmds;
+	int		i;
 
 	i = 0;
 	new = NULL;
@@ -67,12 +75,11 @@ t_cmd *ft_gen_new_cmds(char *arg)
 	free(cmds);
 	return (new);
 }
-t_cmd  *ft_split_cmd( char *arg)
+t_cmd	*ft_split_cmd(char *arg)
 {
 	t_cmd	*new;
-	
+
 	new = ft_gen_new_cmds(arg);
 	free(arg);
 	return (new);
 }
-

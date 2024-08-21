@@ -5,42 +5,41 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: aghergho <aghergho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2024/07/20 02:43:19 by aghergho         ###   ########.fr       */
+/*   Created: 2024/08/21 13:06:08 by aghergho          #+#    #+#             */
+/*   Updated: 2024/08/21 13:06:26 by aghergho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "../../../includes/mshell.h"
 
-# include "../../../includes/mshell.h"
-
-// those function are responsible forn parsing the tokenizer 
-// and generate the command table and also well hanele quote expand cases 
+// those function are responsible forn parsing the tokenizer
+// and generate the command table and also well hanele quote expand cases
 
 /*
-    flag is an index to indecate which logical operation 
-	flag 0-> it's a commamd to be executed 
-    flag 1-> is pipe (|)
-    flag 2-> is pipe (||)
-    flag 3-> is pipe (&&)
+	flag is an index to indecate which logical operation
+	flag 0-> it's a commamd to be executed
+	flag 1-> is pipe (|)
+	flag 2-> is pipe (||)
+	flag 3-> is pipe (&&)
 
-              | 1
-            /   \
-          (||)2   |1
-          /\    / \
-        c10  c20  c10 |
-                  / \ 
-                 0c1  0c2
+				| 1
+			/   \
+			(||)2   |1
+			/\    / \
+		c10  c20  c10 |
+					/ \
+					0c1  0c2
 */
 /*
-	flag 0-> it's a commamd to be executed 
-    flag is an index to indecate which logical operation 
-    flag 1-> is pipe (|)
-    flag 2-> is pipe (||)
-    flag 3-> is pipe (&&)
+	flag 0-> it's a commamd to be executed
+	flag is an index to indecate which logical operation
+	flag 1-> is pipe (|)
+	flag 2-> is pipe (||)
+	flag 3-> is pipe (&&)
 	flag 4-> parenthisis  (())
 */
 
-void ft_parser_helper(char **token_value, t_tnode **root, t_tnode **new)
+void	ft_parser_helper(char **token_value, t_tnode **root, t_tnode **new)
 {
 	free(*token_value);
 	(*token_value) = NULL;
@@ -49,14 +48,14 @@ void ft_parser_helper(char **token_value, t_tnode **root, t_tnode **new)
 
 void	ft_parse_pipe(t_tnode **root, t_token **tokens)
 {
-	t_token *tmp;
-	t_tnode *new;
+	t_token	*tmp;
+	t_tnode	*new;
 
 	tmp = *tokens;
 	while (tmp)
 	{
 		if (tmp->value && is_pipe(tmp->value[0]) && !ft_check_pipe(tmp->next))
-			break;
+			break ;
 		tmp = tmp->next;
 	}
 	new = ft_new_tnode(1, *tokens);
@@ -71,7 +70,7 @@ void	ft_parse_pipe(t_tnode **root, t_token **tokens)
 	}
 	ft_parser_helper(&tmp->value, root, &new);
 	ft_parse_ast(&new, tokens);
-	ft_parse_ast(&new, &tmp->next);	
+	ft_parse_ast(&new, &tmp->next);
 }
 
 void	ft_parse_or_operator(t_tnode **root, t_token **tokens)
@@ -82,8 +81,9 @@ void	ft_parse_or_operator(t_tnode **root, t_token **tokens)
 	tmp = *tokens;
 	while (tmp)
 	{
-		if (tmp->value && is_pipe(tmp->value[0]) && is_pipe(tmp->value[1]) && isLastOperator(tmp->next))
-			break;
+		if (tmp->value && is_pipe(tmp->value[0]) && is_pipe(tmp->value[1])
+			&& isLastOperator(tmp->next))
+			break ;
 		tmp = tmp->next;
 	}
 	new = ft_new_tnode(2, *tokens);
@@ -101,17 +101,17 @@ void	ft_parse_or_operator(t_tnode **root, t_token **tokens)
 	ft_parse_ast(&new, &(tmp->next));
 }
 
-
 void	ft_parse_and_operator(t_tnode **root, t_token **tokens)
 {
-	t_token *tmp;
+	t_token	*tmp;
 	t_tnode	*new;
 
 	tmp = *tokens;
 	while (tmp)
 	{
-		if (tmp->value && is_operator(tmp->value[0]) && isLastOperator(tmp->next))
-			break;
+		if (tmp->value && is_operator(tmp->value[0])
+			&& isLastOperator(tmp->next))
+			break ;
 		tmp = tmp->next;
 	}
 	new = ft_new_tnode(3, *tokens);
@@ -129,16 +129,13 @@ void	ft_parse_and_operator(t_tnode **root, t_token **tokens)
 	ft_parse_ast(&new, &(tmp->next));
 }
 
-
-
-
-void ft_parse_ast(t_tnode **root, t_token **tokens)
+void	ft_parse_ast(t_tnode **root, t_token **tokens)
 {
-	t_token *tmp;
+	t_token	*tmp;
 
 	tmp = *tokens;
 	if (tmp && tmp->value)
-	{	
+	{
 		if (ft_check_and_operator(tmp))
 			ft_parse_and_operator(root, tokens);
 		else if (ft_check_or_operator(tmp))
@@ -147,7 +144,7 @@ void ft_parse_ast(t_tnode **root, t_token **tokens)
 			ft_parse_pipe(root, tokens);
 		else if (ft_check_parenthises(tmp))
 			ft_parse_parenthise(root, tokens);
-		else 
+		else
 			ft_parse_cmd(root, tokens);
 	}
-} 
+}

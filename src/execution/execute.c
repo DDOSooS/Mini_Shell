@@ -40,6 +40,16 @@ void	reset_in_out(int stdin, int stdout)
 	close(stdout);
 }
 
+void	execute(t_tnode *root, t_mshell *shell)
+{
+	if (shell->n_herdoc > 0 && shell->n_herdoc_executed < 17)
+	{
+		ft_heredoc(root, shell);
+		shell->n_herdoc = 0;
+	}
+	ft_execute_tree(root, shell);
+}
+
 void	ft_execute_tree(t_tnode *root, t_mshell *shell)
 {
 	int (stdout_fd), (stdin_fd);
@@ -58,15 +68,8 @@ void	ft_execute_tree(t_tnode *root, t_mshell *shell)
 		exec_and_or(root, shell);
 	else if (root->node_type == TOKEN_WORD)
 		handle_word(root, shell);
+	else if (root->node_type == TOKEN_AND || root->node_type == TOKEN_OR)
+		exec_and_or(root, shell);
 	reset_in_out(stdin_fd, stdout_fd);
 }
 
-void	execute(t_tnode *root, t_mshell *shell)
-{
-	if (shell->n_herdoc > 0 && shell->n_herdoc_executed < 17)
-	{
-		ft_heredoc(root, shell);
-		shell->n_herdoc = 0;
-	}
-	ft_execute_tree(root, shell);
-}

@@ -20,7 +20,7 @@ void	active_sigint(int sig)
 {
 	(void)sig;
 	printf("\n");
-	free_gvar();
+	free_gvar(1);
 	exit(130);
 }
 

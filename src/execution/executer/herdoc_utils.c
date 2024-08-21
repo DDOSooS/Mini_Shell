@@ -46,7 +46,8 @@ void	update_history_from_pipe(int fd, t_history *history)
 
 int	write_to_fd(int fd, char *str)
 {
-	write(fd, str, ft_strlen(str));
+	if (str)
+		write(fd, str, ft_strlen(str));
 	write(fd, "\n", 1);
 	return (0);
 }
@@ -56,7 +57,11 @@ void	create_heredoc(char *del, int id, int write_fd)
 	int		fd;
 	char	*line;
 	char	*filename;
+	int 	expand_flag;
+	char	*delimiter;
 
+	expand_flag = ft_check_expand_delimiter(del);
+	delimiter = ft_trim_delimiter_quotes(del);
 	filename = create_heredoc_filename(id);
 	fd = open(filename, O_CREAT | O_RDWR | O_TRUNC, 0644);
 	if (fd == -1)
@@ -66,14 +71,15 @@ void	create_heredoc(char *del, int id, int write_fd)
 		line = readline(">");
 		if (line)
 			write_to_fd(write_fd, line);
-		if (heredoc_cheker(line, del, fd))
+		if (heredoc_cheker(line, delimiter, fd))
 			break ;
-		if (ft_strchr(line, '$'))
-			ft_expand_arg(&line);
+		if (expand_flag)
+			ft_expand_herdoc_arg(&line);
 		write_to_fd(fd, line);
 		if (line)
 			free(line);
 	}
+	free(delimiter);
 	free(filename);
 	close(fd);
 }

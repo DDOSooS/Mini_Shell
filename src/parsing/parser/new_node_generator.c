@@ -1,29 +1,42 @@
-# include "../../../includes/mshell.h"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   new_node_generator.c                               :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: aghergho <aghergho@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/08/21 13:03:58 by aghergho          #+#    #+#             */
+/*   Updated: 2024/08/21 13:03:59 by aghergho         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
-void ftGetRedirection(t_redirection **redirection, t_token *token, int inflag, int outflag)
+#include "../../../includes/mshell.h"
+
+void	ftGetRedirection(t_redirection **redirection, t_token *token,
+		int inflag, int outflag)
 {
 	if (!*redirection)
 	{
-    	*redirection = malloc(sizeof(t_redirection));
-    	(*redirection)->in_file = NULL;
-    	(*redirection)->out_file = NULL;
+		*redirection = malloc(sizeof(t_redirection));
+		(*redirection)->in_file = NULL;
+		(*redirection)->out_file = NULL;
 	}
-    while (token)
-    {
-        if ((token->typeId >= 1 && token->typeId <= 3) || token->typeId == 5)
-            break;
-        if (token->typeId >= 6 && token->typeId <= 9)
-        {
-            ftAddRedirection(redirection , token, inflag, outflag);
-            token = token->next;
-        }
-        token = token->next;
-    }
+	while (token)
+	{
+		if ((token->typeId >= 1 && token->typeId <= 3) || token->typeId == 5)
+			break ;
+		if (token->typeId >= 6 && token->typeId <= 9)
+		{
+			ftAddRedirection(redirection, token, inflag, outflag);
+			token = token->next;
+		}
+		token = token->next;
+	}
 }
 
-t_cmd *ftGenCmd(t_token *tokens)
+t_cmd	*ftGenCmd(t_token *tokens)
 {
-	int flag;
+	int		flag;
 	t_cmd	*cmd;
 
 	cmd = NULL;
@@ -32,12 +45,13 @@ t_cmd *ftGenCmd(t_token *tokens)
 	{
 		if (!tokens->typeId && !flag)
 		{
-			if (tokens->value[0] && is_double_quote(tokens->value[0]) && is_double_quote(tokens->value[ft_strlen(tokens->value) -1]))
+			if (tokens->value[0] && is_double_quote(tokens->value[0])
+				&& is_double_quote(tokens->value[ft_strlen(tokens->value) - 1]))
 				ft_add_to_cmd(&cmd, tokens->value);
 			else if (!ftAddCmd(&cmd, tokens->value))
-				return NULL;
+				return (NULL);
 		}
-		if (tokens->typeId >=6 && tokens->typeId <=9)
+		if (tokens->typeId >= 6 && tokens->typeId <= 9)
 			flag = 1;
 		if (!tokens->typeId && flag)
 			flag = 0;
@@ -58,9 +72,9 @@ void	ft_insert_node(t_tnode **root, t_tnode **new)
 			(*root)->t_left = *new;
 	}
 }
-t_tnode *ft_gen_new_node(int n_type)
+t_tnode	*ft_gen_new_node(int n_type)
 {
-	t_tnode *new;
+	t_tnode	*new;
 
 	new = malloc(sizeof(t_tnode));
 	if (!new)
@@ -76,25 +90,24 @@ t_tnode *ft_gen_new_node(int n_type)
 
 t_tnode	*ft_new_tnode(int n_type, t_token *tokens)
 {
-	t_tnode *new;
+	t_tnode	*new;
 
 	new = ft_gen_new_node(n_type);
 	if (!new)
 		return (NULL);
 	if (n_type)
 	{
-		if ( n_type == 4 && is_parenthise_redirection(tokens))
-		{	
+		if (n_type == 4 && is_parenthise_redirection(tokens))
+		{
 			while (tokens && tokens->typeId != 5)
 				tokens = tokens->next;
-			ftGetRedirection(&new->redirection ,tokens->next, 1 , 1);
+			ftGetRedirection(&new->redirection, tokens->next, 1, 1);
 		}
 	}
 	else
 	{
 		new->cmd = ftGenCmd(tokens);
-		ftGetRedirection(&new->redirection, tokens,1, 1);
+		ftGetRedirection(&new->redirection, tokens, 1, 1);
 	}
 	return (new);
 }
-

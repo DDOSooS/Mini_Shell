@@ -6,7 +6,7 @@
 /*   By: aghergho <aghergho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/01 01:15:21 by aghergho          #+#    #+#             */
-/*   Updated: 2024/07/17 20:34:21 by aghergho         ###   ########.fr       */
+/*   Updated: 2024/08/21 18:20:54 by aghergho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,76 +111,72 @@ int  ft_expand_tokens(t_token **tokens)
 
 
 
-// int ft_count_token_len(char *token)
-// {
-//     int i;
-//     int counter;
+int ft_count_token_len(char *token)
+{
+    int i;
+    int counter;
 
-//     i = -1;
-//     counter = 0;
-//     while (token[++i])
-//     {
-//         if (check_dollar_sign_quoted(token , i) || check_closed_quote_sequence(token , i))
-//             i++;
-//         else if (is_quote(token[i]))
-//         {
-//             while (token[i] && ft_check_quote(token, i+1))
-//             {
-//                 i++;
-//                 counter++;
-//             }
-//             counter++;
-//         }
-//         else if (token[i])
-//             counter++;
-//     }
-//     return (counter);
-// }
+    i = -1;
+    counter = 0;
+    while (token && token[++i])
+    {
+        if (check_dollar_sign_quoted(token , i) || check_closed_quote_sequence(token , i))
+            i++;
+        else if (is_quote(token[i]))
+        {
+            while (token[i] && ft_check_quote(token, i+1))
+            {
+                i++;
+                counter++;
+            }
+            counter++;
+        }
+        else if (token[i])
+            counter++;
+    }
+    return (counter);
+}
 
+char *ft_gen_token_toexpand(char *str, char *token)
+{
+    int i;
+    int j;
 
-
-
-
-
-// char *ft_gen_token_toexpand(char *str, char *token)
-// {
-//     int i;
-//     int j;
-
-//     j = 0;
-//     i = -1;
-//     while (token[++i])
-//     {
-//         if (is_dollar_sign(token[i]) && token[i + 1] && is_quote(token[i + 1]) && !is_dollar_sign(token[i - 1]) && !ft_check_quote(token, i + 1))
-//             continue;
-//         else if (is_quote(token[i]) && token[i + 1] && token[i] == token[i + 1] && !ft_check_quote(token, i + 2))
-//             i++;
-//         else if (is_quote(token[i]))
-//         {
-//             while (token[i] && ft_check_quote(token, i+1))
-//                 str[j++] = token[i++];
-//             str[j++] =token[i];
-//         }
-//         else if (token[i])
-//             str[j++] = token[i];
-//     }
-//     str[j] = '\0';
-//     return (str);
-// }
+    j = 0;
+    i = -1;
+    while (token[++i])
+    {
+        if (is_dollar_sign(token[i]) && token[i + 1] && is_quote(token[i + 1]) && !is_dollar_sign(token[i - 1]) && !ft_check_quote(token, i + 1))
+            continue;
+        else if (is_quote(token[i]) && token[i + 1] && token[i] == token[i + 1] && !ft_check_quote(token, i + 2))
+            i++;
+        else if (is_quote(token[i]))
+        {
+            while (token[i] && ft_check_quote(token, i+1))
+                str[j++] = token[i++];
+            str[j++] =token[i];
+        }
+        else if (token[i])
+            str[j++] = token[i];
+    }
+    str[j] = '\0';
+    return (str);
+}
 
 
-// char    *ft_expand(char *token)
-// {
-//     char *str;
-//     int len;
+char    *ft_expand(char *token)
+{
+    char *str;
+    int len;
   
-//     len = ft_count_token_len(token);
-//     str = malloc(sizeof(char) * (len + 1));
-//     if (!str)
-//         return (NULL);
-//     str = ft_gen_token_toexpand(str, token);
-//     return (str);
-// }
+    len = ft_count_token_len(token);
+    str = malloc(sizeof(char) * (len + 1));
+    if (!str)
+        return (NULL);
+    str = ft_gen_token_toexpand(str, token);
+    return (str);
+}
+
 // void ft_expand_quotes(t_token **tokens)
 // {
 //     t_token *tmp;

@@ -1,7 +1,7 @@
 NAME = minishell
 
 CC = cc
-CFLAGS = -Wall -Wextra -Werror -pedantic
+CFLAGS = -Wall -Wextra  -pedantic
 LIBS = -lreadline
 LIBFT = includes/libft/libft.a
 PRINTF = includes/printf/libftprintf.a
@@ -21,6 +21,7 @@ SRC = src/main.c \
 		src/parsing/tokenizer/tokenizer.c\
 		src/parsing/tokenizer/tokenizer_checker.c \
 		src/parsing/expander/expander.c\
+		src/parsing/expander/herdoc_expnader.c\
 		src/parsing/expander/precised_split.c \
 		src/parsing/expander/expander_checker.c \
 		src/parsing/expander/expand_generator.c \

@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   syntax_cheker.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: aghergho <aghergho@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/08/21 12:50:48 by aghergho          #+#    #+#             */
+/*   Updated: 2024/08/21 16:52:57 by aghergho         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../../includes/mshell.h"
 
 int	ft_check_quote(char *cmd_line, int len)
@@ -9,7 +21,7 @@ int	ft_check_quote(char *cmd_line, int len)
 	i = -1;
 	d_quote = 0;
 	s_quote = 0;
-	while (++i < len)
+	while (++i < len && cmd_line[i])
 	{
 		if (cmd_line[i] == 34 && !s_quote && !d_quote)
 			d_quote = 1;
@@ -105,7 +117,7 @@ int	ft_pipe_sequence_error(char *cmd)
 
 int	ft_operatore_sequence_error(char *cmd)
 {
-	int i;
+	int	i;
 
 	i = -1;
 	while (cmd[++i])

@@ -33,30 +33,14 @@ void	free_history(t_history *history)
 		tmp = tmp2;
 	}
 }
-/*
-void free_herdoc(t_herdoc *herdoc)
-{
-	t_herdoc *tmp;
-	t_herdoc *tmp2;
 
-	tmp = herdoc;
-	while (tmp)
-	{
-		tmp2 = tmp->next;
-		if (tmp->delimiter)
-			free(tmp->delimiter);
-		free(tmp);
-		tmp = tmp2;
-	}
-}
-*/
-
-void	free_gvar(void)
+void free_gvar(int flag)
 {
 	free_env(g_mshell.env);
 	free_history(g_mshell.history);
+	if (flag)
+		ft_free_herdoc(&g_mshell.herdocs);
 	ft_free_tokens(&g_mshell.token);
-	ft_free_herdoc(&g_mshell.herdocs);
 	ft_free_tree(&g_mshell.cmd_tree);
 }
 

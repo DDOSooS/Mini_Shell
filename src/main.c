@@ -6,7 +6,7 @@
 /*   By: aghergho <aghergho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/06 16:02:56 by aghergho          #+#    #+#             */
-/*   Updated: 2024/07/20 02:33:33 by aghergho         ###   ########.fr       */
+/*   Updated: 2024/08/21 17:17:42 by aghergho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -312,16 +312,19 @@ void extarct_env(char **envp, t_env **env)
 
 void m_shell_init(char **envp)
 {
+	g_mshell.cmd_tree = NULL;
+	g_mshell.token = NULL;
 	g_mshell.pid = get_pid();
+	g_mshell.herdocs = NULL;
+	g_mshell.n_herdoc = 0;
+	g_mshell.n_herdoc_executed = 0;
+	g_mshell.exit_value = 0;
 	extarct_env(envp, &g_mshell.env);
 	g_mshell.history = NULL;
 	g_mshell.history = (t_history *)malloc(sizeof(t_history));
 	g_mshell.history->id = 0;
 	g_mshell.history->cmd = NULL;
 	g_mshell.history->next = NULL;
-	g_mshell.n_herdoc = 0;
-	g_mshell.n_herdoc_executed = 0;
-	g_mshell.exit_value = 0;
 }
 
 char *costum_readline()
@@ -336,7 +339,7 @@ char *costum_readline()
 	{
 		if (check_tty())
 			ft_printf("exit\n");
-		free_gvar();
+		free_gvar(1);
 		exit(0);
 	}
 	return (line);
@@ -373,8 +376,6 @@ int main(int ac, char **av, char **envp)
 	UNUSED(av);
 	cmd_line = NULL;
 	m_shell_init(envp);
-	g_mshell.cmd_tree = NULL;
-	g_mshell.token = NULL;
 	while (1)
 	{
 		handle_signals(interactive_sigint, SIG_IGN, SIG_IGN, SIG_IGN);
@@ -389,7 +390,7 @@ int main(int ac, char **av, char **envp)
 			free(cmd_line);
 			if (check_tty())
 				continue;
-			return (free_gvar(), EXIT_FAILURE);
+			return (free_gvar(1), EXIT_FAILURE);
 		}
 		if ((g_mshell.token = ft_tokinizer(cmd_line)) != NULL)
 		{
@@ -405,6 +406,4 @@ int main(int ac, char **av, char **envp)
 	}
     return (EXIT_SUCCESS);
 }
-//TODO: compile with flags and see 
-//TODO: norminette and check the leaks
-//TODO: wrong file name (ls >> out ) < sdfsdfds || done
+

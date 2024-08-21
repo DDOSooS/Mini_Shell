@@ -27,13 +27,13 @@ static int	exit_handler(char *arg)
 		write(2, buffer, ft_strlen(buffer));
 		write(2, ": numeric argument required\n", 28);
 		free(buffer);
-		free_gvar();
+		free_gvar(1);
 		return (2);
 	}
 	exit_value = ft_atoi(arg);
 	if (exit_value < 0)
 		exit_value = 256 + exit_value;
-	free_gvar();
+	free_gvar(1);
 	return (exit_value);
 }
 
@@ -55,7 +55,7 @@ int	ft_exit(t_cmd *cmd, t_mshell *shell)
 		exit(exit_handler(tmp->arg));
 	else
 	{
-		free_gvar();
+		free_gvar(1);
 		exit(g_mshell.exit_value);
 	}
 	return (0);

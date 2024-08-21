@@ -29,7 +29,7 @@ static void	execute_command(char **cmd_args, char **path, char **envp)
 			free_func(path);
 		if (envp)
 			free_func(envp);
-		free_gvar();
+		free_gvar(1);
 		exit(status);
 	}
 	execve(cmd_path, cmd_args, envp);
@@ -39,7 +39,7 @@ static void	execute_command(char **cmd_args, char **path, char **envp)
 		free_func(path);
 	if (envp)
 		free_func(envp);
-	free_gvar();
+	free_gvar(1);
 }
 
 static void	handle_child_process(t_cmd *cmd, t_mshell *shell)

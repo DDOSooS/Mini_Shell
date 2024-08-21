@@ -35,7 +35,17 @@ int ft_check_expand(char *tmp)
 
 int ft_check_expand_delimiter(char *delimiter)
 {
-    if (delimiter && delimiter[0] == '$')
-        return (1);
-    return (0);
+    int checker;
+    int i;
+
+    checker = 0;
+    i = -1;
+    if (delimiter && !delimiter[0])
+        return (0);
+    while (delimiter[++i])
+    {
+        if (is_quote(delimiter[i]))
+            return (0);
+    }
+    return (1);
 }

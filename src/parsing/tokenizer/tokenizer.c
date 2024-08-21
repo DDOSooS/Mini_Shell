@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenizer.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aghergho <aghergho@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: aghergho <aghergho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/13 15:14:32 by aghergho          #+#    #+#             */
-/*   Updated: 2024/08/19 12:15:20 by aghergho         ###   ########.fr       */
+/*   Updated: 2024/08/21 12:34:19 by aghergho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ void ft_add_token_back(t_token **root, t_token *new)
     new->previous = tmp;
 }
 
-t_token *ft_new_token(char *token)
+t_token *ft_new_token(t_token **tokens, char *token, char *cmd_line)
 {
     t_token *new;
     int type;
@@ -61,9 +61,9 @@ t_token *ft_new_token(char *token)
     type = ftGetTokenId(token);
     if (type == 7 && g_mshell.n_herdoc == 16)
     {
-        free(token);
-        ft_putstr_fd("maximum here-document count exceeded\n", 2);
-        return (NULL);
+        ft_putstr_fd("minishell: maximum here-document count exceeded\n", 2);
+        ft_free_tokens(tokens);
+        return (free(token), free(cmd_line), free_gvar(0) ,exit(2),NULL);
     }
     else if (type == 7)
         g_mshell.n_herdoc++;   
@@ -90,7 +90,7 @@ int ft_add_token(t_token **tokens, char *cmd_line, int start, int end)
         token = ft_substr(cmd_line, start, end - start + 1);    
     if (! token)
         return (0);
-    new = ft_new_token(token);
+    new = ft_new_token(tokens, token, cmd_line);
     if (!new)
         return (0);
     if(!*tokens)

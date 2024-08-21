@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   syntax_error_utils3.c                              :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: aghergho <aghergho@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/08/21 13:00:48 by aghergho          #+#    #+#             */
+/*   Updated: 2024/08/21 13:01:51 by aghergho         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../../includes/mshell.h"
 
 int	ft_check_out_redirection(char *cmd_line, int len)
@@ -86,8 +98,8 @@ int	ft_check_closed_parenthise(char *cmd_line)
 
 int	is_closed_parenthise(char *cmd_line, int len)
 {
-	int i;
-	int closed_parenth;
+	int	i;
+	int	closed_parenth;
 
 	closed_parenth = 0;
 	i = -1;

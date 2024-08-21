@@ -235,12 +235,11 @@ int ft_count_number_len(char token);
 int ft_check_env_var(char *str);
 int check_unclosed_quote(char *token);
 pid_t get_pid();
-
+int ft_expand_herdoc_arg(char **arg);
 /*============  generate herdoc functions ==========*/
 
 t_herdoc *ft_gen_herdocs(t_token *tokens);
 void    ft_free_herdoc(t_herdoc **herdocs);
-
 
 /*============  parser functions  ===================*/
 
@@ -325,7 +324,7 @@ t_env	*create_env_node(char *key, char *value, int is_exported);
 /*================ Clear Allocted ============*/
 void	free_env(t_env *env);
 void	free_history(t_history *history);
-void	free_gvar(void);
+void	free_gvar(int flag);
 void	free_func(char **strings);
 /*================= Herdoc, red and pipes utils ====================*/
 int		heredoc_cheker(char*str, char *filename, int fd);

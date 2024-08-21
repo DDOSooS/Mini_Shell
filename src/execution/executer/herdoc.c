@@ -4,7 +4,6 @@ static int	run_heredoc_child(t_tnode *root, t_mshell *shell, int pipe_fds[2])
 {
 	t_herdoc	*herdoc;
 
-	UNUSED(root);
 	herdoc = shell->herdocs;
 	close(pipe_fds[0]);
 	handle_signals(active_sigint, SIG_IGN, SIG_IGN, SIG_IGN);
@@ -32,8 +31,11 @@ static int	run_heredoc_parent(int pid, int pipe_fds[2], t_mshell *shell)
 
 int	ft_heredoc(t_tnode *root, t_mshell *shell)
 {
+	t_herdoc	*herdoc;
+
 	int (pid), (status), (pipe_fds[2]);
 	status = 0;
+	herdoc = shell->herdocs;
 	if (pipe(pipe_fds) == -1)
 		(perror("pipe"), exit(EXIT_FAILURE));
 	handle_signals(SIG_IGN, SIG_IGN, interactive_sigint, SIG_IGN);
