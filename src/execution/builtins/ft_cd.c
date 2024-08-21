@@ -98,6 +98,7 @@ int	ft_cd(t_cmd *cmd, t_mshell *shell)
 {
 	int	cmd_count;
 
+	UNUSED(shell);
 	cmd_count = count_args(cmd);
 	if (cmd_count == 1)
 		return (cha_dir("HOME"));

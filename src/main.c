@@ -369,6 +369,8 @@ int main(int ac, char **av, char **envp)
 {
 	char	*cmd_line;
 
+	UNUSED(ac);
+	UNUSED(av);
 	cmd_line = NULL;
 	m_shell_init(envp);
 	g_mshell.cmd_tree = NULL;

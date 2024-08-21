@@ -40,7 +40,6 @@ static int	exit_handler(char *arg)
 int	ft_exit(t_cmd *cmd, t_mshell *shell)
 {
 	t_cmd	*tmp;
-	int		exit_value;
 
 	tmp = NULL;
 	(void)shell;

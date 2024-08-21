@@ -1,9 +1,9 @@
-#include "../../includes/mshell.h"
+#include "../../../includes/mshell.h"
 
-void add_env(t_env *env, char *key, char *value)
+void	add_env(t_env *env, char *key, char *value)
 {
-	t_env *tmp;
-	t_env *new;
+	t_env	*tmp;
+	t_env	*new;
 
 	tmp = env;
 	new = (t_env *)malloc(sizeof(t_env));
@@ -19,7 +19,7 @@ void add_env(t_env *env, char *key, char *value)
 	tmp->next = new;
 }
 
-int builtins_checker(t_cmd *cmd)
+int	builtins_checker(t_cmd *cmd)
 {
 	if (ft_strcmp(cmd->arg, "cd") == 0)
 		return (CD);
@@ -40,7 +40,7 @@ int builtins_checker(t_cmd *cmd)
 	return (-1);
 }
 
-int builtins_finder(t_cmd *cmd, t_mshell *shell, int type)
+int	builtins_finder(t_cmd *cmd, t_mshell *shell, int type)
 {
 	if (type == CD)
 		return (ft_cd(cmd, shell));

@@ -1,4 +1,4 @@
-#include "../../includes/mshell.h"
+#include "../../../includes/mshell.h"
 
 static void	swap_envs(t_env *env1, t_env *env2)
 {
@@ -17,8 +17,6 @@ t_env	*sort_env(t_env *env)
 {
 	t_env	*tmp;
 	t_env	*tmp2;
-	char	*key;
-	char	*value;
 
 	tmp = env;
 	while (tmp)

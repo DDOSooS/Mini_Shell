@@ -1,8 +1,8 @@
-#include "../../includes/mshell.h"
+#include "../../../includes/mshell.h"
 
-static int check_last_command(char *cmd, t_history *history)
+static int	check_last_command(char *cmd, t_history *history)
 {
-	t_history *tmp;
+	t_history	*tmp;
 
 	tmp = history;
 	if (!tmp->cmd)
@@ -14,9 +14,9 @@ static int check_last_command(char *cmd, t_history *history)
 	return (0);
 }
 
-void put_tohistory(char *cmd, t_history *history, int herdoc)
+void	put_tohistory(char *cmd, t_history *history, int herdoc)
 {
-	t_history *tmp;
+	t_history	*tmp;
 
 	tmp = history;
 	if (!cmd)
@@ -39,9 +39,10 @@ void put_tohistory(char *cmd, t_history *history, int herdoc)
 	tmp->next->next = NULL;
 }
 
-int ft_history(t_cmd *cmd, t_mshell *shell)
+int	ft_history(t_cmd *cmd, t_mshell *shell)
 {
-	t_history *tmp;
+	t_history	*tmp;
+
 	(void)cmd;
 	tmp = shell->history;
 	while (tmp && tmp->cmd)

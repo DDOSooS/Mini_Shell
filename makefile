@@ -1,11 +1,13 @@
 NAME = minishell
 
 CC = cc
-CFLAGS = -Wall -Wextra -pedantic
+CFLAGS = -Wall -Wextra -Werror -pedantic
 LIBS = -lreadline
 LIBFT = includes/libft/libft.a
 PRINTF = includes/printf/libftprintf.a
 SRC = src/main.c \
+		includes/gnl/get_next_line.c\
+		includes/gnl/get_next_line_utils.c\
 		src/parsing/lexer/syntax_error.c\
 		src/parsing/lexer/lexer_cheker.c\
 		src/parsing/lexer/lexer_cheker_utils.c\
@@ -33,22 +35,24 @@ SRC = src/main.c \
 		src/parsing/parser/parser_cheker.c\
 		src/parsing/parser/parser_cheker_utils.c\
 		src/parsing/parser/redirection_generator.c\
-		src/execution/builtins.c\
 		src/execution/execute.c\
-		src/execution/cmd_runner.c\
-		src/execution/cmd_runner_utils1.c\
-		src/execution/cmd_runner_utils2.c\
-		src/execution/redirections.c\
-		src/execution/signals.c\
-		src/execution/environ.c\
-		src/execution/environ_utils.c\
-		src/execution/history.c\
-		src/execution/freeier.c\
-		src/execution/printer.c\
-		src/execution/pipes.c\
-		src/execution/herdoc.c\
-		includes/gnl/get_next_line.c\
-		includes/gnl/get_next_line_utils.c\
+		src/execution/run_cmd/builtins.c\
+		src/execution/run_cmd/builtins_utils.c\
+		src/execution/run_cmd/cmd_runner.c\
+		src/execution/run_cmd/cmd_runner_utils1.c\
+		src/execution/run_cmd/cmd_runner_utils2.c\
+		src/execution/run_cmd/cmd_error_handler.c\
+		src/execution/utilities/redirections.c\
+		src/execution/utilities/signals.c\
+		src/execution/utilities/environ.c\
+		src/execution/utilities/environ_utils.c\
+		src/execution/utilities/freeier.c\
+		src/execution/utilities/printer.c\
+		src/execution/executer/history.c\
+		src/execution/executer/pipes.c\
+		src/execution/executer/exec_cases.c\
+		src/execution/executer/herdoc.c\
+		src/execution/executer/herdoc_utils.c\
 		src/execution/builtins/ft_cd.c\
 		src/execution/builtins/ft_env.c\
 		src/execution/builtins/ft_pwd.c\
@@ -57,8 +61,10 @@ SRC = src/main.c \
 		src/execution/builtins/ft_export_utils.c\
 		src/execution/builtins/ft_export.c\
 		src/execution/builtins/ft_unset.c\
-		src/execution/builtins_utils.c\
-		src/execution/wildcards.c\
+		src/execution/wildcards/wildcards.c\
+		src/execution/wildcards/wildcards_utils.c\
+		src/execution/wildcards/get_list_files.c\
+		src/execution/wildcards/join_list_files.c\
 
 
 OBJ = $(SRC:.c=.o)
