@@ -42,11 +42,13 @@ SRC = src/main.c \
 		src/execution/signals.c\
 		src/execution/environ.c\
 		src/execution/environ_utils.c\
-		src/execution/history.c\
+		src/execution/executer/history.c\
 		src/execution/freeier.c\
 		src/execution/printer.c\
-		src/execution/pipes.c\
-		src/execution/herdoc.c\
+		src/execution/executer/pipes.c\
+		src/execution/executer/exec_cases.c\
+		src/execution/executer/herdoc.c\
+		src/execution/executer/herdoc_utils.c\
 		includes/gnl/get_next_line.c\
 		includes/gnl/get_next_line_utils.c\
 		src/execution/builtins/ft_cd.c\

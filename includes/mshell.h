@@ -281,9 +281,16 @@ void	put_tohistory(char *cmd, t_history *history, int herdoc);
 
 /*================= execution ===============*/
 void	execute(t_tnode *root, t_mshell *shell);
-void	cmd_runner(t_cmd *cmd, t_mshell *shell);
 void	ft_execute_tree(t_tnode *root, t_mshell *shell);
+void	exec_and_or(t_tnode *root, t_mshell *shell);
+void	ft_execute_parenthises(t_tnode *root, t_mshell *shell);
+void	run_pipe(t_tnode *root, t_mshell *shell);
+int		ft_heredoc(t_tnode *root, t_mshell *shell);
+void	ft_execute_cmd(t_tnode *root, t_mshell *shell);
+void	cmd_runner(t_cmd *cmd, t_mshell *shell);
+void	handle_word(t_tnode *root, t_mshell *shell);
 int		get_status(int status);
+void	set_under_score(t_env *env, t_cmd *cmd);
 
 /*=============== execution utils ===================*/
 char	*check_command(char *cmd, char **paths, int *status);
@@ -314,13 +321,12 @@ void	free_env(t_env *env);
 void	free_history(t_history *history);
 void	free_gvar(void);
 void	free_func(char **strings);
-/*================= Herdoc, red and pipes ====================*/
-void	run_pipe(t_tnode *root, t_mshell *shell);
-
-// int ft_heredoc(t_tnode *root, t_mshell *shell);
-int		ft_heredoc(t_tnode *root, t_mshell *shell);
+/*================= Herdoc, red and pipes utils ====================*/
 int		heredoc_cheker(char*str, char *filename, int fd);
 char	*create_heredoc_filename(int here_doc_num);
+void	update_history_from_pipe(int fd, t_history *history);
+int		write_to_fd(int fd, char *str);
+void	create_heredoc(char *del, int id, int write_fd);
 
 /*================= Printers =================*/
 void	print_stderr(char *str);
@@ -329,10 +335,6 @@ int		export_erorr(char *arg, int status);
 /*================var dumping data==============*/
 void	ft_free_herdoc(t_herdoc **herdocs);
 void	var_dump_herdoc(t_herdoc *herdocs);
-<<<<<<< HEAD
-
-=======
->>>>>>> 3c3f338 (fixing still reachable leaks)
 
 /*=============== signals =======================*/
 void	handle_signals(void (*sigint)(int), void (*sigquit)(int), void (*sigint_old)(int), void (*sigquit_old)(int));
