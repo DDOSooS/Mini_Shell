@@ -1,37 +1,36 @@
-# include "../../../includes/mshell.h"
+#include "../../../includes/mshell.h"
 
-
-int is_whites_space(char c)
+int	is_whites_space(char c)
 {
-    if (c == ' ' || c == '\t')
-        return (1);
-    return (0);
+	if (c == ' ' || c == '\t')
+		return (1);
+	return (0);
 }
 
-int is_quote(char c)
+int	is_quote(char c)
 {
-    if (is_double_quote(c) || is_single_quote(c))
-        return (1);
-    return (0);
+	if (is_double_quote(c) || is_single_quote(c))
+		return (1);
+	return (0);
 }
 
-int is_single_quote(char c)
+int	is_single_quote(char c)
 {
-    if (c == 39)
-        return (1);
-    return (0);
+	if (c == 39)
+		return (1);
+	return (0);
 }
 
-int is_double_quote(char c)
+int	is_double_quote(char c)
 {
-    if (c == 34)
-        return (1);
-    return (0);
+	if (c == 34)
+		return (1);
+	return (0);
 }
 
-int is_append(char *cmd)
+int	is_append(char *cmd)
 {
-    if (cmd[0] && cmd[1] && out_redirection(cmd[0]) && out_redirection(cmd[1]))
-        return (1);
-    return (0);
+	if (cmd[0] && cmd[1] && out_redirection(cmd[0]) && out_redirection(cmd[1]))
+		return (1);
+	return (0);
 }
