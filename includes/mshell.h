@@ -181,6 +181,7 @@ int is_operator(char c);
 int is_r_parenthise(char c);
 int is_l_parenthise(char c);
 int is_word_character(char c);
+int is_symbol(char c);
 
 /*======== syntax error functions ========*/
 

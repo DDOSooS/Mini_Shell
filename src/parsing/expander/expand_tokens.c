@@ -6,7 +6,7 @@
 /*   By: aghergho <aghergho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/22 11:02:13 by aghergho          #+#    #+#             */
-/*   Updated: 2024/08/22 11:55:32 by aghergho         ###   ########.fr       */
+/*   Updated: 2024/08/22 13:23:31 by aghergho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,7 @@ int	ft_count_expanded_token(char *token, int *counter)
 			i += ft_get_expanded_quoted_token(&token[i], counter);
 			return (i);
 		}
-		else if (is_dollar_sign(token[i]))
+		else if (is_dollar_sign(token[i]) && token[i + 1] && ft_isalnum(token[i + 1]))
 		{
 			i += ft_get_expanded_unquoted_token(&token[i], counter);
 			return (i);
@@ -86,7 +86,7 @@ int	ft_expanded_token_len(char *token)
 	i = -1;
 	while (token[++i])
 	{
-		if (is_quote(token[i]) || is_dollar_sign(token[i]))
+		if (is_quote(token[i]) || (is_dollar_sign(token[i]) && token[i+ 1] && (is_symbol(token[i + 1]) || is_quote(token[i + 1]))))
 			i += ft_count_expanded_token(&token[i], &counter);
 		else
 			counter++;
