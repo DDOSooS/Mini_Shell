@@ -6,7 +6,7 @@
 /*   By: aghergho <aghergho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/21 12:56:10 by aghergho          #+#    #+#             */
-/*   Updated: 2024/08/21 13:02:57 by aghergho         ###   ########.fr       */
+/*   Updated: 2024/08/22 11:39:29 by aghergho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,28 +86,28 @@ int	ft_check_redirection_sequence(char *cmd_line)
 	return (0);
 }
 
-int	ft_check_file_name(char *cmd_line)
+int	ft_check_file_name(char *cmd)
 {
 	int	i;
 
 	i = -1;
-	while (cmd_line[++i] && is_whites_space(cmd_line[i]))
+	while (cmd[++i] && is_whites_space(cmd[i]))
 		;
-	if (!cmd_line[i])
+	if (!cmd[i])
 		return (ft_printf("parse error near `\\n'\n"), 0);
-	if (is_operator(cmd_line[i]) && cmd_line[i + 1] && is_operator(cmd_line[i + 1]))
+	if (is_operator(cmd[i]) && cmd[i + 1] && is_operator(cmd[i + 1]))
 		return (ft_printf("parse error near `&&'\n"), 0);
-	if (is_operator(cmd_line[i]))
+	if (is_operator(cmd[i]))
 		return (ft_printf("parse error near `&'\n"), 0);
-	else if (is_pipe(cmd_line[i]) && cmd_line[i + 1] && is_pipe(cmd_line[i + 1]))
+	else if (is_pipe(cmd[i]) && cmd[i + 1] && is_pipe(cmd[i + 1]))
 		return (ft_printf("parse error near `||'\n"), 0);
-	else if (is_pipe(cmd_line[i]))
+	else if (is_pipe(cmd[i]))
 		return (ft_printf("parse error near `|'\n"), 0);
-	else if (in_redirection(cmd_line[i]))
+	else if (in_redirection(cmd[i]))
 		return (ft_printf("parse error near `<'\n"), 0);
-	else if (out_redirection(cmd_line[i]))
+	else if (out_redirection(cmd[i]))
 		return (ft_printf("parse error near `>'\n"), 0);
-	else if (is_r_parenthise(cmd_line[i]) || is_r_parenthise(cmd_line[i]))
+	else if (is_r_parenthise(cmd[i]) || is_r_parenthise(cmd[i]))
 		return (ft_printf("parse error near `)'\n"), 0);
 	return (1);
 }

@@ -6,20 +6,20 @@
 /*   By: aghergho <aghergho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/21 13:03:55 by aghergho          #+#    #+#             */
-/*   Updated: 2024/08/21 13:03:56 by aghergho         ###   ########.fr       */
+/*   Updated: 2024/08/22 11:47:59 by aghergho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../../includes/mshell.h"
 
-int	ftAddCmd(t_cmd **cmd, char *str)
+int	ft_add_cmd(t_cmd **cmd, char *str)
 {
 	t_cmd	*new;
 	t_cmd	*tmp;
 
 	new = malloc(sizeof(t_cmd));
 	new->arg = ft_strdup(str);
-	new->check_wildcard = ftCheckWildCard(new->arg);
+	new->check_wildcard = ft_check_wild_card(new->arg);
 	new->next = NULL;
 	if (!cmd || !*cmd)
 		*cmd = new;
@@ -68,13 +68,14 @@ t_cmd	*ft_gen_new_cmds(char *arg)
 	cmds = ft_split_words(arg, " \t");
 	while (cmds[i])
 	{
-		ftAddCmd(&new, cmds[i]);
+		ft_add_cmd(&new, cmds[i]);
 		free(cmds[i]);
 		i++;
 	}
 	free(cmds);
 	return (new);
 }
+
 t_cmd	*ft_split_cmd(char *arg)
 {
 	t_cmd	*new;

@@ -6,13 +6,13 @@
 /*   By: aghergho <aghergho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/21 13:03:58 by aghergho          #+#    #+#             */
-/*   Updated: 2024/08/21 13:03:59 by aghergho         ###   ########.fr       */
+/*   Updated: 2024/08/22 11:46:53 by aghergho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../../includes/mshell.h"
 
-void	ftGetRedirection(t_redirection **redirection, t_token *token,
+void	ft_get_redirection(t_redirection **redirection, t_token *token,
 		int inflag, int outflag)
 {
 	if (!*redirection)
@@ -23,18 +23,18 @@ void	ftGetRedirection(t_redirection **redirection, t_token *token,
 	}
 	while (token)
 	{
-		if ((token->typeId >= 1 && token->typeId <= 3) || token->typeId == 5)
+		if ((token->type_id >= 1 && token->type_id <= 3) || token->type_id == 5)
 			break ;
-		if (token->typeId >= 6 && token->typeId <= 9)
+		if (token->type_id >= 6 && token->type_id <= 9)
 		{
-			ftAddRedirection(redirection, token, inflag, outflag);
+			ft_add_redirection(redirection, token, inflag, outflag);
 			token = token->next;
 		}
 		token = token->next;
 	}
 }
 
-t_cmd	*ftGenCmd(t_token *tokens)
+t_cmd	*ft_gen_cmd(t_token *tokens)
 {
 	int		flag;
 	t_cmd	*cmd;
@@ -43,17 +43,17 @@ t_cmd	*ftGenCmd(t_token *tokens)
 	flag = 0;
 	while (tokens && tokens->value)
 	{
-		if (!tokens->typeId && !flag)
+		if (!tokens->type_id && !flag)
 		{
 			if (tokens->value[0] && is_double_quote(tokens->value[0])
 				&& is_double_quote(tokens->value[ft_strlen(tokens->value) - 1]))
 				ft_add_to_cmd(&cmd, tokens->value);
-			else if (!ftAddCmd(&cmd, tokens->value))
+			else if (!ft_add_cmd(&cmd, tokens->value))
 				return (NULL);
 		}
-		if (tokens->typeId >= 6 && tokens->typeId <= 9)
+		if (tokens->type_id >= 6 && tokens->type_id <= 9)
 			flag = 1;
-		if (!tokens->typeId && flag)
+		if (!tokens->type_id && flag)
 			flag = 0;
 		tokens = tokens->next;
 	}
@@ -72,6 +72,7 @@ void	ft_insert_node(t_tnode **root, t_tnode **new)
 			(*root)->t_left = *new;
 	}
 }
+
 t_tnode	*ft_gen_new_node(int n_type)
 {
 	t_tnode	*new;
@@ -99,15 +100,15 @@ t_tnode	*ft_new_tnode(int n_type, t_token *tokens)
 	{
 		if (n_type == 4 && is_parenthise_redirection(tokens))
 		{
-			while (tokens && tokens->typeId != 5)
+			while (tokens && tokens->type_id != 5)
 				tokens = tokens->next;
-			ftGetRedirection(&new->redirection, tokens->next, 1, 1);
+			ft_get_redirection(&new->redirection, tokens->next, 1, 1);
 		}
 	}
 	else
 	{
-		new->cmd = ftGenCmd(tokens);
-		ftGetRedirection(&new->redirection, tokens, 1, 1);
+		new->cmd = ft_gen_cmd(tokens);
+		ft_get_redirection(&new->redirection, tokens, 1, 1);
 	}
 	return (new);
 }

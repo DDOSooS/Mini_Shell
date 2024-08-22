@@ -40,7 +40,7 @@
 typedef struct token
 {
 	char            *type;
-	int             typeId;
+	int             type_id;
 	char            *value;
 	int             is_exported;
 	struct token    *next;
@@ -207,7 +207,7 @@ int ft_check_file_name(char *cmd_line);
 
 t_token *ft_tokinizer(char *cmd);
 int ft_add_token(t_token **tokens, char *cmd_line, int start, int end);
-int ftGetTokenId(char *token);
+int ft_get_token_id(char *token);
 int ft_check_opened_token(char *cmd, int len);
 int ft_check_parenthisis_spaces(char *cmd, int index);
 int ft_check_l_parenthise(char *cmd, int i);
@@ -236,10 +236,15 @@ int ft_check_env_var(char *str);
 int check_unclosed_quote(char *token);
 pid_t get_pid();
 int ft_expand_herdoc_arg(char **arg);
+int ft_count_expanded_len(char *delimimiter);
+void    ft_gen_expanded_delimiter(char **new_del, char *del);
+
+
 /*============  generate herdoc functions ==========*/
 
 t_herdoc *ft_gen_herdocs(t_token *tokens);
 void    ft_free_herdoc(t_herdoc **herdocs);
+int ft_check_sing_dollor(char *token , int i);
 
 /*============  parser functions  ===================*/
 
@@ -249,12 +254,12 @@ void	ft_parse_cmd(t_tnode **root, t_token **tokens);
 void	ft_insert_node(t_tnode **root, t_tnode **new);
 int ft_check_operator(t_token *token);
 int ft_check_parenthises(t_token *tokens);
-int isLastOperator(t_token *tokens);
+int is_last_operator(t_token *tokens);
 int ft_check_and_operator(t_token *token);
 int ft_check_or_operator(t_token *token);
 int check_unclosed_quote(char *token);
 int is_parenthise_redirection(t_token *tokens);
-int ftCheckWildCard(char *arg);
+int ft_check_wild_card(char *arg);
 int ft_check_pipe(t_token *token);
 t_cmd *ft_gen_new_cmds(char *arg);
 t_cmd  *ft_split_cmd( char *arg);
@@ -263,7 +268,7 @@ int ftAddInFile(t_infile **root, t_token *token);
 int ftAddOutFile(t_outfile **root, t_token *token);
 t_tnode	*ft_new_tnode(int n_type, t_token *tokens);
 int ft_add_to_cmd (t_cmd **root, char *token);
-int	ftAddCmd(t_cmd **cmd, char *str);
+int	ft_add_cmd(t_cmd **cmd, char *str);
 
 /*================= bultins =================*/
 int		ft_cd(t_cmd *cmd, t_mshell *shell);

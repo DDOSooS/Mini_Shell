@@ -6,7 +6,7 @@
 /*   By: aghergho <aghergho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/21 13:06:08 by aghergho          #+#    #+#             */
-/*   Updated: 2024/08/21 13:06:26 by aghergho         ###   ########.fr       */
+/*   Updated: 2024/08/22 11:45:51 by aghergho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,7 @@ void	ft_parse_or_operator(t_tnode **root, t_token **tokens)
 	while (tmp)
 	{
 		if (tmp->value && is_pipe(tmp->value[0]) && is_pipe(tmp->value[1])
-			&& isLastOperator(tmp->next))
+			&& is_last_operator(tmp->next))
 			break ;
 		tmp = tmp->next;
 	}
@@ -110,7 +110,7 @@ void	ft_parse_and_operator(t_tnode **root, t_token **tokens)
 	while (tmp)
 	{
 		if (tmp->value && is_operator(tmp->value[0])
-			&& isLastOperator(tmp->next))
+			&& is_last_operator(tmp->next))
 			break ;
 		tmp = tmp->next;
 	}

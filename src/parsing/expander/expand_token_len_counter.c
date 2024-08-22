@@ -1,9 +1,26 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   expand_token_len_counter.c                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: aghergho <aghergho@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/08/22 11:08:35 by aghergho          #+#    #+#             */
+/*   Updated: 2024/08/22 12:17:18 by aghergho         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
-# include "../../../includes/mshell.h"
+#include "../../../includes/mshell.h"
 
-int ft_check_env_var(char *str) 
+int	ft_check_sing_dollor(char *token, int i)
 {
-	t_env *tmp;
+	return (is_dollar_sign(token[i]) && (!token[i + 1] || is_quote(token[i + 1])
+			|| is_whites_space(token[i + 1])));
+}
+
+int	ft_check_env_var(char *str)
+{
+	t_env	*tmp;
 
 	tmp = g_mshell.env;
 	while (tmp)
@@ -15,16 +32,17 @@ int ft_check_env_var(char *str)
 	return (0);
 }
 
-
-int ft_search_expanded_token(char *token, int *counter)
+int	ft_search_expanded_token(char *token, int *counter)
 {
-	int i;
-	int start;
-	char *str;
-	
+	int		i;
+	int		start;
+	char	*str;
+
 	i = 0;
 	start = 1;
-	while (token[++i] && !is_quote(token[i + 1]) && !is_whites_space(token[i + 1]) && !ft_check_quote(token, i + 1));
+	while (token[++i] && !is_quote(token[i + 1])
+		&& !is_whites_space(token[i + 1]) && !ft_check_quote(token, i + 1))
+		;
 	str = ft_substr(token, 1, i);
 	start = ft_check_env_var(str);
 	(*counter) = (*counter) + start;
@@ -32,18 +50,18 @@ int ft_search_expanded_token(char *token, int *counter)
 	return (i);
 }
 
-int ft_count_number_len(char token)
+int	ft_count_number_len(char token)
 {
-	int counter;
-	int number;
-	
+	int	counter;
+	int	number;
+
 	if (token == '?')
 		number = g_mshell.exit_value;
 	else
 		number = g_mshell.pid;
 	counter = 0;
 	while (number > 9)
-	{	
+	{
 		number = number / 10;
 		counter++;
 	}
@@ -51,10 +69,9 @@ int ft_count_number_len(char token)
 	return (counter);
 }
 
-
-int ft_get_expanded_quoted_token(char *token, int *counter)
+int	ft_get_expanded_quoted_token(char *token, int *counter)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	while (token[++i] && ft_check_quote(token, i + 1))
@@ -62,19 +79,19 @@ int ft_get_expanded_quoted_token(char *token, int *counter)
 		if (!is_dollar_sign(token[i]))
 		{
 			(*counter)++;
-			continue;
+			continue ;
 		}
-		if (is_dollar_sign(token[i]) && token[i + 1] && is_dollar_sign(token[i + 1]))
+		if (is_dollar_sign(token[i]) && token[i + 1]
+			&& is_dollar_sign(token[i + 1]))
 		{
-			(*counter) += ft_count_number_len(token[i+1]);
+			(*counter) += ft_count_number_len(token[i + 1]);
 			i++;
 		}
-		else if (is_dollar_sign(token[i]) && token[i + 1] && !is_whites_space(token[i + 1]) && ! is_double_quote(token[i + 1]))
+		else if (is_dollar_sign(token[i])
+			&& token[i + 1] && ft_isalnum(token[i + 1]))
 			i += ft_search_expanded_token(&token[i], counter);
 		else
 			(*counter)++;
 	}
 	return (i);
 }
-
-
