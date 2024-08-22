@@ -12,6 +12,15 @@
 
 #include "../../../includes/mshell.h"
 
+static void	print_file_error(char *name, char *error)
+{
+	ft_putstr_fd("minishell: ", 2);
+	ft_putstr_fd(name, 2);
+	ft_putstr_fd(": ", 2);
+	ft_putstr_fd(error, 2);
+	ft_putstr_fd("\n", 2);
+}
+
 static int	handle_input_redirection(t_infile *in_file)
 {
 	char	(*filename);
@@ -30,7 +39,7 @@ static int	handle_input_redirection(t_infile *in_file)
 		{
 			fd = open(in_file->filename, O_RDONLY);
 			if (fd == -1)
-				return (printf("minishell: %s: %s\n", in_file->filename,
+				return (print_file_error(in_file->filename,
 						strerror(errno)), -1);
 		}
 		dup2(fd, STDIN_FILENO);
@@ -51,10 +60,7 @@ static int	handle_output_redirection(t_outfile *out_file)
 		else if (out_file->mode == TOKEN_APPEND)
 			fd = open(out_file->filename, O_CREAT | O_WRONLY | O_APPEND, 0644);
 		if (fd == -1)
-		{
-			printf("minishell: %s: %s\n", out_file->filename, strerror(errno));
-			return (-1);
-		}
+			return (print_file_error(out_file->filename, strerror(errno)), -1);
 		dup2(fd, STDOUT_FILENO);
 		close(fd);
 		out_file = out_file->next;

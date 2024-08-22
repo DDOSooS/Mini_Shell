@@ -107,7 +107,7 @@ int	ft_expand_arg(char **arg)
 	if (tmp)
 	{
 		len = ft_expanded_token_len(tmp);
-		printf("len (%d)=(%s)===\n", len, *arg);
+		// printf("len (%d)=(%s)===\n", len, *arg);
 		new = malloc(sizeof(char) * (len + 1));
 		if (!new)
 			return (0);

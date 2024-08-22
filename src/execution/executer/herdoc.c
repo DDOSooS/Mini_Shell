@@ -16,8 +16,6 @@ static int	run_heredoc_child(t_mshell *shell, int pipe_fds[2])
 {
 	t_herdoc	*herdoc;
 
-
-	UNUSED(root);
 	herdoc = shell->herdocs;
 	close(pipe_fds[0]);
 	handle_signals(active_sigint, SIG_IGN, SIG_IGN, SIG_IGN);
