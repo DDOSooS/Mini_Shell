@@ -6,7 +6,7 @@
 /*   By: aghergho <aghergho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/21 12:56:10 by aghergho          #+#    #+#             */
-/*   Updated: 2024/08/22 11:39:29 by aghergho         ###   ########.fr       */
+/*   Updated: 2024/08/22 13:47:25 by aghergho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,7 +94,7 @@ int	ft_check_file_name(char *cmd)
 	while (cmd[++i] && is_whites_space(cmd[i]))
 		;
 	if (!cmd[i])
-		return (ft_printf("parse error near `\\n'\n"), 0);
+		return (ft_printf("parse error near `/n'\n"), 0);
 	if (is_operator(cmd[i]) && cmd[i + 1] && is_operator(cmd[i + 1]))
 		return (ft_printf("parse error near `&&'\n"), 0);
 	if (is_operator(cmd[i]))

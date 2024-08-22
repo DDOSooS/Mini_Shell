@@ -237,16 +237,16 @@ int ft_check_env_var(char *str);
 int check_unclosed_quote(char *token);
 pid_t get_pid();
 int ft_expand_herdoc_arg(char **arg);
-int ft_count_expanded_len(char *delimimiter);
 void    ft_gen_expanded_delimiter(char **new_del, char *del);
 
 
 /*============  generate herdoc functions ==========*/
 
 t_herdoc *ft_gen_herdocs(t_token *tokens);
-void    ft_free_herdoc(t_herdoc **herdocs);
 int ft_check_sing_dollor(char *token , int i);
-
+char	*ft_trim_delimiter_quotes(char *delimiter);
+char	*ft_get_delimiter(char *delimiter);
+int	ft_count_expanded_len(char *delimimiter);
 /*============  parser functions  ===================*/
 
 void ft_parse_ast(t_tnode **root, t_token **tokens);
@@ -264,9 +264,8 @@ int ft_check_wild_card(char *arg);
 int ft_check_pipe(t_token *token);
 t_cmd *ft_gen_new_cmds(char *arg);
 t_cmd  *ft_split_cmd( char *arg);
-int ftAddRedirection(t_redirection **root, t_token *token, int inredirection , int out_redirection);
-int ftAddInFile(t_infile **root, t_token *token);
-int ftAddOutFile(t_outfile **root, t_token *token);
+void	ft_get_redirection(t_redirection **redirection, t_token *token, int inflag, int outflag);
+int	ft_add_redirection(t_redirection **root, t_token *token, int inredirection, int out_redirection);
 t_tnode	*ft_new_tnode(int n_type, t_token *tokens);
 int ft_add_to_cmd (t_cmd **root, char *token);
 int	ft_add_cmd(t_cmd **cmd, char *str);

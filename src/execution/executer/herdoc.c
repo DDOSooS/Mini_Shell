@@ -1,8 +1,9 @@
 #include "../../../includes/mshell.h"
 
-static int	run_heredoc_child(t_tnode *root, t_mshell *shell, int pipe_fds[2])
+static int	run_heredoc_child(t_mshell *shell, int pipe_fds[2])
 {
 	t_herdoc	*herdoc;
+
 
 	herdoc = shell->herdocs;
 	close(pipe_fds[0]);
@@ -33,6 +34,7 @@ int	ft_heredoc(t_tnode *root, t_mshell *shell)
 {
 	t_herdoc	*herdoc;
 
+	UNUSED(root);
 	int (pid), (status), (pipe_fds[2]);
 	status = 0;
 	herdoc = shell->herdocs;
@@ -41,7 +43,7 @@ int	ft_heredoc(t_tnode *root, t_mshell *shell)
 	handle_signals(SIG_IGN, SIG_IGN, interactive_sigint, SIG_IGN);
 	pid = fork();
 	if (pid == 0)
-		run_heredoc_child(root, shell, pipe_fds);
+		run_heredoc_child(shell, pipe_fds);
 	else
 		status = run_heredoc_parent(pid, pipe_fds, shell);
 	handle_signals(interactive_sigint, SIG_IGN, SIG_IGN, SIG_IGN);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line_utils.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mkartit <marvin@42.fr>                     +#+  +:+       +#+        */
+/*   By: aghergho <aghergho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/24 11:53:02 by mkartit           #+#    #+#             */
-/*   Updated: 2023/11/25 15:54:34 by mkartit          ###   ########.fr       */
+/*   Updated: 2024/08/22 14:02:05 by aghergho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,3 +65,4 @@ char	*ft_strchr_gnl(char *s, char c)
 		return (s);
 	return (NULL);
 }
+
