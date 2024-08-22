@@ -6,7 +6,7 @@
 /*   By: aghergho <aghergho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/21 16:33:07 by mkartit           #+#    #+#             */
-/*   Updated: 2024/08/22 16:20:55 by aghergho         ###   ########.fr       */
+/*   Updated: 2024/08/22 16:25:11 by aghergho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,6 @@ static int	run_heredoc_child(t_mshell *shell, int pipe_fds[2])
 {
 	t_herdoc	*herdoc;
 
-
-	UNUSED(root);
 	herdoc = shell->herdocs;
 	close(pipe_fds[0]);
 	handle_signals(active_sigint, SIG_IGN, SIG_IGN, SIG_IGN);

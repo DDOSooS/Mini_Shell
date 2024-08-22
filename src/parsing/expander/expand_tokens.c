@@ -6,7 +6,7 @@
 /*   By: aghergho <aghergho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/22 11:02:13 by aghergho          #+#    #+#             */
-/*   Updated: 2024/08/22 16:16:13 by aghergho         ###   ########.fr       */
+/*   Updated: 2024/08/22 17:45:11 by aghergho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,7 +107,7 @@ int	ft_expand_arg(char **arg)
 	if (tmp)
 	{
 		len = ft_expanded_token_len(tmp);
-		printf("len (%d)=(%s)===\n", len, *arg);
+		// printf("len (%d)=(%s)===\n", len, *arg);
 		new = malloc(sizeof(char) * (len + 1));
 		if (!new)
 			return (0);

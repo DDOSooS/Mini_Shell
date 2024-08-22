@@ -238,7 +238,9 @@ int check_unclosed_quote(char *token);
 pid_t get_pid();
 int ft_expand_herdoc_arg(char **arg);
 void    ft_gen_expanded_delimiter(char **new_del, char *del);
-
+void ft_reset_token(t_token **token, t_token **root);
+void    ft_expand_token_helper(int *flag, t_token **token);
+void ft_delet_token(t_token **token, t_token **root);
 
 /*============  generate herdoc functions ==========*/
 
@@ -247,6 +249,7 @@ int ft_check_sing_dollor(char *token , int i);
 char	*ft_trim_delimiter_quotes(char *delimiter);
 char	*ft_get_delimiter(char *delimiter);
 int	ft_count_expanded_len(char *delimimiter);
+
 /*============  parser functions  ===================*/
 
 void ft_parse_ast(t_tnode **root, t_token **tokens);
@@ -271,6 +274,7 @@ int ft_add_to_cmd (t_cmd **root, char *token);
 int	ft_add_cmd(t_cmd **cmd, char *str);
 
 /*================= bultins =================*/
+
 int		ft_cd(t_cmd *cmd, t_mshell *shell);
 int		ft_echo(t_cmd *cmd, t_mshell *shell);
 int		ft_env(t_cmd *cmd, t_mshell *shell);
@@ -281,6 +285,7 @@ int		ft_unset(t_cmd *cmd, t_mshell *shell);
 int		ft_history(t_cmd *cmd, t_mshell *shell);
 
 /*================= builtins utils =================*/
+
 t_env	*extarct_node(char *args);
 void	appned_export(t_env *env, t_env *new);
 void	replacement_export(t_env *env, t_env *new);
@@ -289,6 +294,7 @@ int		builtins_checker(t_cmd *cmd);
 void	put_tohistory(char *cmd, t_history *history, int herdoc);
 
 /*================= execution ===============*/
+
 void	execute(t_tnode *root, t_mshell *shell);
 void	ft_execute_tree(t_tnode *root, t_mshell *shell);
 void	exec_and_or(t_tnode *root, t_mshell *shell);
@@ -302,6 +308,7 @@ int		get_status(int status);
 void	set_under_score(t_env *env, t_cmd *cmd);
 
 /*=============== execution utils ===================*/
+
 char	*check_command(char *cmd, char **paths, int *status);
 void	run_curr(char **cmd_args, char **paths, char **envp);
 char	**cmd_args_getter(t_cmd *cmd);
@@ -310,9 +317,11 @@ char	**get_envp(t_env *env);
 int	check_cmd(char *cmd);
 
 /*================= redirections ==================*/
+
 int		apply_redirections(t_tnode *root);
 
 /*================= ENV ==================*/
+
 char	**get_envp(t_env *env);
 void	extarct_env(char **envp, t_env **env);
 void	edit_env(t_env *env, char *key, char *value);
@@ -327,11 +336,14 @@ t_env	*find_env(t_env *env, char *key);
 t_env	*create_env_node(char *key, char *value, int is_exported);
 
 /*================ Clear Allocted ============*/
+
 void	free_env(t_env *env);
 void	free_history(t_history *history);
 void	free_gvar(int flag);
 void	free_func(char **strings);
+
 /*================= Herdoc, red and pipes utils ====================*/
+
 int		heredoc_cheker(char*str, char *filename, int fd);
 char	*create_heredoc_filename(int here_doc_num);
 void	update_history_from_pipe(int fd, t_history *history);
@@ -339,10 +351,12 @@ int		write_to_fd(int fd, char *str);
 void	create_heredoc(char *del, int id, int write_fd);
 
 /*================= Printers =================*/
+
 void	print_stderr(char *str);
 int		export_erorr(char *arg, int status);
 
 /*================ wildcards ===================*/
+
 void	star_expansion(t_cmd *cmd, char ***args);
 int		find_char(char *str, char c);
 void	get_list_files(char *exp, char ***file_list);
@@ -355,6 +369,7 @@ char	*consume_extra(char *reg, char c);
 int	match_symbol(char *regexp, char *text);
 
 /*================ var dumping data==============*/
+
 void	ft_free_herdoc(t_herdoc **herdocs);
 void	var_dump_herdoc(t_herdoc *herdocs);
 

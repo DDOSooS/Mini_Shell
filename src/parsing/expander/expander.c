@@ -6,38 +6,36 @@
 /*   By: aghergho <aghergho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/01 01:15:21 by aghergho          #+#    #+#             */
-/*   Updated: 2024/08/22 12:01:19 by aghergho         ###   ########.fr       */
+/*   Updated: 2024/08/22 20:25:31 by aghergho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../../includes/mshell.h"
 
-int	ft_expand_token(t_token **tokens)
-{
-	t_token	*tmp;
-	int		flag;
 
-	tmp = *tokens;
-	while (tmp)
-	{
-		flag = 0;
-		if (!tmp->previous || (tmp->previous->type_id != 7))
-		{
-			if (tmp->value && ft_check_dollar(tmp->value))
-			{
-				flag = 1;
-				tmp->is_exported = 1;
-			}
-			ft_expand_arg(&tmp->value);
-		}
-		if (!tmp->value[0] && flag && tmp->previous
-			&& (tmp->previous->type_id == 6 || tmp->previous->type_id == 8
-				|| tmp->previous->type_id == 9))
-			return (ft_putstr_fd("ambiguous redirect\n", 2), 0);
-		tmp = tmp->next;
-	}
-	return (1);
+int ft_expand_token(t_token **tokens)
+{
+    t_token *tmp;
+    int flag;
+
+    tmp = *tokens;
+    while (tmp)
+    {
+        flag = 0;
+        if (!tmp->previous || (tmp->previous->type_id != 7))
+            ft_expand_token_helper(&flag, &tmp);
+        if (tmp->value && !tmp->value[0] && flag && tmp->previous
+            && (tmp->previous->type_id == 6 || tmp->previous->type_id == 8
+                || tmp->previous->type_id == 9))
+            return (ft_putstr_fd("ambiguous redirect\n", 2), 0);
+        if (tmp->value && !tmp->value[0] && tmp->is_exported)
+            ft_delet_token(&tmp, tokens);
+        else
+            tmp = tmp->next;
+    }
+    return (1);
 }
+
 
 void	ft_expand_exported_tokens(t_token **tokens, t_token **curr_token)
 {

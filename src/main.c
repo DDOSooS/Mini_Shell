@@ -6,7 +6,7 @@
 /*   By: aghergho <aghergho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/06 16:02:56 by aghergho          #+#    #+#             */
-/*   Updated: 2024/08/22 15:05:35 by aghergho         ###   ########.fr       */
+/*   Updated: 2024/08/22 21:06:23 by aghergho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -395,6 +395,7 @@ int main(int ac, char **av, char **envp)
 		if ((g_mshell.token = ft_tokinizer(cmd_line)) != NULL)
 		{
 			ft_expand_tokens(&g_mshell.token);
+			// var_dump_token(g_mshell.token);
 			ft_parse_ast(&g_mshell.cmd_tree, &g_mshell.token);	
 			g_mshell.herdocs = ft_gen_herdocs(g_mshell.token);
 			execute(g_mshell.cmd_tree, &g_mshell);
