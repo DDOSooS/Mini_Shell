@@ -6,7 +6,7 @@
 /*   By: aghergho <aghergho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/21 13:04:03 by aghergho          #+#    #+#             */
-/*   Updated: 2024/08/21 13:04:04 by aghergho         ###   ########.fr       */
+/*   Updated: 2024/08/22 11:48:13 by aghergho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ int	ft_check_pipe(t_token *token)
 	return (0);
 }
 
-int	ftCheckWildCard(char *arg)
+int	ft_check_wild_card(char *arg)
 {
 	int	i;
 
@@ -40,7 +40,7 @@ int	is_parenthise_redirection(t_token *tokens)
 {
 	while (tokens)
 	{
-		if (tokens->typeId == 5)
+		if (tokens->type_id == 5)
 			return (1);
 		tokens = tokens->next;
 	}

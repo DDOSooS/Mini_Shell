@@ -30,6 +30,7 @@ SRC = src/main.c \
 		src/parsing/expander/expand_tokens.c \
 		src/parsing/expander/expander_generator_utils.c \
 		src/parsing/expander/herdoc_generater.c \
+		src/parsing/expander/herdoc_utils.c \
 		src/parsing/parser/parser.c\
 		src/parsing/parser/parser_utils.c\
 		src/parsing/parser/cmd_generator.c\
