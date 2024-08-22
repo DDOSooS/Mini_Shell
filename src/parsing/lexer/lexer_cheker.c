@@ -43,7 +43,7 @@ int	is_parenthise(char c)
 
 int	in_redirection(char c)
 {
-	if (c == '<')
-		return (1);
-	return (0);
+    if (c == '<')
+        return (1);
+    return (0);
 }

@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   pipes.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mkartit <marvin@42.fr>                     +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/08/21 16:33:24 by mkartit           #+#    #+#             */
+/*   Updated: 2024/08/21 16:33:25 by mkartit          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../../includes/mshell.h"
 
 void	create_pipe(int pipefd[2])
@@ -28,6 +40,7 @@ void	setup_left_child(int pipefd[2], t_tnode *root, t_mshell *shell)
 	dup2(pipefd[1], STDOUT_FILENO);
 	close(pipefd[1]);
 	ft_execute_tree(root->t_left, shell);
+	free_gvar(1);
 	exit(shell->exit_value);
 }
 
@@ -37,6 +50,7 @@ void	setup_right_child(int pipefd[2], t_tnode *root, t_mshell *shell)
 	dup2(pipefd[0], STDIN_FILENO);
 	close(pipefd[0]);
 	ft_execute_tree(root->t_right, shell);
+	free_gvar(1);
 	exit(shell->exit_value);
 }
 

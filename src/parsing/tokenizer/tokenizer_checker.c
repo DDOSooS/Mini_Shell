@@ -82,4 +82,3 @@ int ft_check_r_parenthise(char *cmd, int i)
     }
     return (0);
 }
-

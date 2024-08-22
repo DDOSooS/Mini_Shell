@@ -145,4 +145,4 @@ t_token *ft_tokinizer(char *cmd)
         }
     } 
     return (tokens);
-} 
+}

@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   exec_cases.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mkartit <marvin@42.fr>                     +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/08/21 16:33:03 by mkartit           #+#    #+#             */
+/*   Updated: 2024/08/21 16:33:04 by mkartit          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../../includes/mshell.h"
 
 void	exec_and_or(t_tnode *root, t_mshell *shell)
@@ -34,6 +46,7 @@ void	ft_execute_parenthises(t_tnode *root, t_mshell *shell)
 	if (pid == 0)
 	{
 		ft_execute_tree(root->t_left, shell);
+		free_gvar(1);
 		exit(shell->exit_value);
 	}
 	else

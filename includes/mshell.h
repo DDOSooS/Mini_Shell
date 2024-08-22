@@ -236,6 +236,7 @@ int ft_check_env_var(char *str);
 int check_unclosed_quote(char *token);
 pid_t get_pid();
 int ft_expand_herdoc_arg(char **arg);
+char  *ft_trim_delimiter_quotes(char *delimiter);
 /*============  generate herdoc functions ==========*/
 
 t_herdoc *ft_gen_herdocs(t_token *tokens);
