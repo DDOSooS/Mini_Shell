@@ -6,7 +6,7 @@
 /*   By: aghergho <aghergho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/21 16:08:32 by aghergho          #+#    #+#             */
-/*   Updated: 2024/08/22 11:36:38 by aghergho         ###   ########.fr       */
+/*   Updated: 2024/08/22 16:17:59 by aghergho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,7 @@ int	ft_counte_herdoc_len(char *line)
 	i = -1;
 	while (line[++i])
 	{
-		if (is_dollar_sign(line[i]) && line[i + 1] && ft_isalnum(line[i + 1]))
+		if (is_dollar_sign(line[i]) && line[i + 1] && is_symbol(line[i + 1]))
 			i += ft_count_expanded_line(&line[i + 1], &counter);
 		else
 			counter++;

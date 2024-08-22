@@ -6,7 +6,7 @@
 /*   By: aghergho <aghergho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/21 13:03:55 by aghergho          #+#    #+#             */
-/*   Updated: 2024/08/22 11:47:59 by aghergho         ###   ########.fr       */
+/*   Updated: 2024/08/22 16:10:08 by aghergho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,10 @@ int	ft_add_cmd(t_cmd **cmd, char *str)
 	t_cmd	*tmp;
 
 	new = malloc(sizeof(t_cmd));
-	new->arg = ft_strdup(str);
+	if (!new)
+		return (0);
+	if (str)
+		new->arg = ft_strdup(str);
 	new->check_wildcard = ft_check_wild_card(new->arg);
 	new->next = NULL;
 	if (!cmd || !*cmd)

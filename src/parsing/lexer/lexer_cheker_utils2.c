@@ -6,7 +6,7 @@
 /*   By: aghergho <aghergho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/21 12:30:59 by aghergho          #+#    #+#             */
-/*   Updated: 2024/08/21 13:01:35 by aghergho         ###   ########.fr       */
+/*   Updated: 2024/08/22 15:51:05 by aghergho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,18 +24,20 @@ int	ft_check_white_spaces(char *cmd)
 {
 	int	i;
 
+	if (!cmd)
+		return (0);
 	i = 0;
 	while (cmd[i] && is_whites_space(cmd[i]))
 		i++;
-	while (cmd[i])
+	while (cmd[i] && cmd[i + 1])
 	{
-		if (is_whites_space(cmd[i]) && cmd[i + 1]
-			&& !is_whites_space(cmd[i + 1]))
+		if (is_whites_space(cmd[i]) && !is_whites_space(cmd[i + 1]))
 			return (1);
 		i++;
 	}
 	return (0);
 }
+
 
 int	is_exist_quote(char *token)
 {
