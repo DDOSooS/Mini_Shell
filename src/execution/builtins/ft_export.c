@@ -77,6 +77,7 @@ static int	add_export(t_cmd *cmd, t_mshell *shell)
 	int		returned_status;
 
 	status = 0;
+	returned_status = 0;
 	while (cmd && cmd->arg && cmd->arg[0])
 	{
 		new = extarct_node(cmd->arg);

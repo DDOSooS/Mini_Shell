@@ -31,9 +31,9 @@ static int	echo_arg(char *arg)
 static void	print_args(t_cmd *tmp, int flag)
 {
 	tmp = tmp->next;
-	if (flag == 1)
+	if (flag == 1 && tmp && tmp->next)
 		tmp = tmp->next;
-	while (tmp)
+	while (tmp && tmp->arg)
 	{
 		printf("%s", tmp->arg);
 		if (tmp->next)
@@ -45,17 +45,25 @@ static void	print_args(t_cmd *tmp, int flag)
 int	ft_echo(t_cmd *cmd, t_mshell *shell)
 {
 	t_cmd	*tmp;
-	int		flag;
 
+	int (flag), (count);
 	tmp = cmd;
-	flag = 0;
-	(void)shell;
+	flag = 1;
+	count = 0;
+	UNUSED(shell);
 	if (tmp->next && tmp->next->arg)
 	{
-		flag = echo_arg(tmp->next->arg);
+		while (tmp->next && tmp->next->arg)
+		{
+			flag = echo_arg(tmp->next->arg);
+			if (!flag)
+				break ;
+			count++;
+			tmp = tmp->next;
+		}
 		print_args(tmp, flag);
 	}
-	if (flag == 0)
+	if (count == 0)
 		printf("\n");
 	return (0);
 }

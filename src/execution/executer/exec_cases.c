@@ -61,6 +61,8 @@ void	ft_execute_cmd(t_tnode *root, t_mshell *shell)
 	t_cmd	*cmd;
 	int		status;
 
+	cmd = NULL;
+	status = 0;
 	cmd = root->cmd;
 	if (!cmd)
 		return ;
@@ -69,6 +71,7 @@ void	ft_execute_cmd(t_tnode *root, t_mshell *shell)
 		cmd_runner(cmd, shell);
 	else
 		shell->exit_value = status;
+	printf("exit after running %d\n", shell->exit_value);
 	set_under_score(shell->env, root->cmd);
 }
 

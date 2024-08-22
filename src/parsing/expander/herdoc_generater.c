@@ -34,7 +34,7 @@ char	*ft_trim_delimiter_quotes(char *delimiter)
 	if (is_exist_quote(delimiter))
 		trimed_delimter = ft_get_delimiter(delimiter);
 	else
-		trimed_delimter = delimiter;
+		trimed_delimter = ft_strdup(delimiter);
 	return (trimed_delimter);
 }
 
