@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   execute.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mkartit <marvin@42.fr>                     +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/08/21 16:34:56 by mkartit           #+#    #+#             */
+/*   Updated: 2024/08/21 16:34:57 by mkartit          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../includes/mshell.h"
 
 char	*get_last_arg(t_cmd *cmd)
@@ -72,4 +84,3 @@ void	ft_execute_tree(t_tnode *root, t_mshell *shell)
 		exec_and_or(root, shell);
 	reset_in_out(stdin_fd, stdout_fd);
 }
-

@@ -147,4 +147,4 @@ void	ft_parse_ast(t_tnode **root, t_token **tokens)
 		else
 			ft_parse_cmd(root, tokens);
 	}
-}
+} 

@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   herdoc_utils.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mkartit <marvin@42.fr>                     +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/08/21 16:33:11 by mkartit           #+#    #+#             */
+/*   Updated: 2024/08/21 16:33:13 by mkartit          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../../includes/mshell.h"
 
 int	heredoc_cheker(char *str, char *filename, int fd)
@@ -54,12 +66,11 @@ int	write_to_fd(int fd, char *str)
 
 void	create_heredoc(char *del, int id, int write_fd)
 {
-	int		fd;
 	char	*line;
 	char	*filename;
-	int 	expand_flag;
 	char	*delimiter;
 
+	int (fd), (expand_flag);
 	expand_flag = ft_check_expand_delimiter(del);
 	delimiter = ft_trim_delimiter_quotes(del);
 	filename = create_heredoc_filename(id);
@@ -79,7 +90,5 @@ void	create_heredoc(char *del, int id, int write_fd)
 		if (line)
 			free(line);
 	}
-	free(delimiter);
-	free(filename);
-	close(fd);
+	(free(delimiter), free(filename), close(fd));
 }

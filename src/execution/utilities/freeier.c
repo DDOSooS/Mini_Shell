@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   freeier.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mkartit <marvin@42.fr>                     +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/08/21 16:34:13 by mkartit           #+#    #+#             */
+/*   Updated: 2024/08/21 16:34:14 by mkartit          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../../includes/mshell.h"
 
 void	free_env(t_env *env)
@@ -34,7 +46,7 @@ void	free_history(t_history *history)
 	}
 }
 
-void free_gvar(int flag)
+void	free_gvar(int flag)
 {
 	free_env(g_mshell.env);
 	free_history(g_mshell.history);

@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   herdoc.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: aghergho <aghergho@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/08/21 16:33:07 by mkartit           #+#    #+#             */
+/*   Updated: 2024/08/22 16:20:55 by aghergho         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../../includes/mshell.h"
 
 static int	run_heredoc_child(t_mshell *shell, int pipe_fds[2])
@@ -5,6 +17,7 @@ static int	run_heredoc_child(t_mshell *shell, int pipe_fds[2])
 	t_herdoc	*herdoc;
 
 
+	UNUSED(root);
 	herdoc = shell->herdocs;
 	close(pipe_fds[0]);
 	handle_signals(active_sigint, SIG_IGN, SIG_IGN, SIG_IGN);
@@ -14,6 +27,7 @@ static int	run_heredoc_child(t_mshell *shell, int pipe_fds[2])
 		herdoc = herdoc->next;
 	}
 	close(pipe_fds[1]);
+	free_gvar(1);
 	exit(EXIT_SUCCESS);
 }
 

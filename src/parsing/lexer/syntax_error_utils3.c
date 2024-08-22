@@ -101,19 +101,18 @@ int	is_closed_parenthise(char *cmd_line, int len)
 	int	i;
 	int	closed_parenth;
 
-	closed_parenth = 0;
-	i = -1;
-	while (++i < len)
-	{
-		if (is_r_parenthise(cmd_line[i]) && !ft_check_quote(cmd_line, i)
-			&& !closed_parenth)
-			return (0);
-		if (is_r_parenthise(cmd_line[i]) && !ft_check_quote(cmd_line, i))
-			closed_parenth--;
-		if (is_l_parenthise(cmd_line[i]) && !ft_check_quote(cmd_line, i))
-			closed_parenth++;
-	}
-	if (closed_parenth)
-		return (0);
-	return (1);
+    closed_parenth = 0;
+    i = -1;
+    while (++i < len)
+    {
+        if (is_r_parenthise(cmd_line[i]) && !ft_check_quote(cmd_line, i) && !closed_parenth)
+            return (0);
+        if (is_r_parenthise(cmd_line[i]) && !ft_check_quote(cmd_line, i))
+            closed_parenth--;
+        if (is_l_parenthise(cmd_line[i]) && !ft_check_quote(cmd_line, i)  )
+            closed_parenth++;
+    }
+    if (closed_parenth)
+        return (0);
+    return (1);
 }

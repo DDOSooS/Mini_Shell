@@ -1,7 +1,7 @@
 NAME = minishell
 
 CC = cc
-CFLAGS = -Wall -Wextra -Werror 
+CFLAGS = -Wall -Wextra  -pedantic
 LIBS = -lreadline
 LIBFT = includes/libft/libft.a
 PRINTF = includes/printf/libftprintf.a

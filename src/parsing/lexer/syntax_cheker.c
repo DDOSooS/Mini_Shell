@@ -117,29 +117,29 @@ int	ft_pipe_sequence_error(char *cmd)
 
 int	ft_operatore_sequence_error(char *cmd)
 {
-	int	i;
-
-	i = -1;
-	while (cmd[++i])
-	{
-		if (is_whites_space(cmd[i]))
-			continue ;
-		if (is_operator(cmd[i]) && !ft_check_quote(cmd, i))
-		{
-			if (cmd[i + 1] && is_operator(cmd[i + 1]))
-				i++;
-			else
-				return (0);
-			while (cmd[++i])
-			{
-				if (is_whites_space(cmd[i]))
-					continue ;
-				if (is_pipe(cmd[i]) || is_operator(cmd[i]))
-					return (0);
-				else
-					break ;
-			}
-		}
-	}
-	return (1);
+    int i;
+    
+    i = -1;
+    while (cmd[++i])
+    {
+        if (is_whites_space(cmd[i]))
+            continue;
+        if (is_operator(cmd[i]) && !ft_check_quote(cmd, i))
+        {
+            if (cmd[i + 1] && is_operator(cmd[i + 1]))
+                i++;
+            else
+                return (0);
+            while (cmd[++i])
+            {
+                if (is_whites_space(cmd[i]))
+                    continue;
+                if (is_pipe(cmd[i]) || is_operator(cmd[i]))
+                    return (0);
+                else
+                    break;
+            }
+        }   
+    }
+    return (1);
 }
