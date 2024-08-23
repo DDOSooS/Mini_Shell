@@ -6,7 +6,7 @@
 /*   By: aghergho <aghergho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/06 16:02:56 by aghergho          #+#    #+#             */
-/*   Updated: 2024/08/23 12:53:24 by aghergho         ###   ########.fr       */
+/*   Updated: 2024/08/23 15:08:00 by aghergho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -353,7 +353,6 @@ int	main(int ac, char **av, char **envp)
 			return (free_gvar(1), EXIT_FAILURE);
 		}
 		g_mshell.token = ft_tokinizer(cmd_line);
-		var_dump_token(g_mshell.token);
 		if (g_mshell.token)
 			ft_execute_cli();
 		free(cmd_line);
