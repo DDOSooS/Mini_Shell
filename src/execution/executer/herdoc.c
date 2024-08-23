@@ -21,7 +21,7 @@ static int	run_heredoc_child(t_mshell *shell, int pipe_fds[2])
 	handle_signals(active_sigint, SIG_IGN, SIG_IGN, SIG_IGN);
 	while (herdoc)
 	{
-		create_heredoc(herdoc->delimiter, herdoc->id, pipe_fds[1]);
+		create_heredoc(herdoc, pipe_fds[1]);
 		herdoc = herdoc->next;
 	}
 	close(pipe_fds[1]);

@@ -73,7 +73,6 @@ void	create_heredoc(char *del, int id, int write_fd)
 	int (fd), (expand_flag);
 	expand_flag = ft_check_expand_delimiter(del);
 	delimiter = ft_trim_delimiter_quotes(del);
-	filename = create_heredoc_filename(id);
 	fd = open(filename, O_CREAT | O_RDWR | O_TRUNC, 0644);
 	if (fd == -1)
 		(perror("open"), exit(EXIT_FAILURE));

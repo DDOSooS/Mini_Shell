@@ -69,6 +69,7 @@ int	ft_add_herdoc(t_herdoc **root, char *del)
 		tmp = tmp->next;
 	tmp->next = new;
 	new->id = tmp->id + 1;
+	new->filename = create_heredoc_filename(new->id);
 	return (1);
 }
 

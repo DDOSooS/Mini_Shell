@@ -126,6 +126,7 @@ enum				e_buitins
 typedef struct herdoc
 {
 	char			*delimiter;
+	char			*filename;
 	int				id;
 	int				is_expanded;
 	struct herdoc	*next;
