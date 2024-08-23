@@ -6,7 +6,7 @@
 /*   By: aghergho <aghergho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/24 11:52:57 by mkartit           #+#    #+#             */
-/*   Updated: 2024/08/22 14:02:26 by aghergho         ###   ########.fr       */
+/*   Updated: 2024/08/23 10:10:25 by aghergho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,8 @@ char	*ft_new_lines(char *read_lines)
 		free(read_lines);
 		return (NULL);
 	}
-	new_lines = (char *)malloc(sizeof(char) * (ft_strlen_gnl(read_lines) - i + 1));
+	new_lines = (char *)malloc(sizeof(char) * (ft_strlen_gnl(read_lines) - i
+				+ 1));
 	if (!new_lines)
 		return (NULL);
 	i++;
@@ -58,10 +59,7 @@ char	*ft_lines(char *read_lines)
 		i++;
 	}
 	if (read_lines[i] == '\n')
-	{
 		lines[i] = read_lines[i];
-		// i++;
-	}
 	lines[i] = '\0';
 	return (lines);
 }
@@ -88,7 +86,7 @@ char	*ft_read_lines(int fd, char *read_lines)
 		buffer[r] = '\0';
 		read_lines = ft_strjoin_gnl(read_lines, buffer);
 	}
-	free (buffer);
+	free(buffer);
 	return (read_lines);
 }
 
@@ -108,11 +106,12 @@ char	*get_next_line(int fd)
 }
 /*
 #include <stdio.h>
-int main() {
-    int o = open("test.txt", O_RDONLY);
-    if (o < 0)
-        return (-1);
-    char *lines;
+
+int	main(void) {
+	int o = open("test.txt", O_RDONLY);
+	if (o < 0)
+		return (-1);
+	char *lines;
 	int x = 0;
 	while (x < 10)
 	{
@@ -122,6 +121,6 @@ int main() {
 	}
 	close(o);
 	system("leaks a.out");
-    return 0;
+	return (0);
 }
 */

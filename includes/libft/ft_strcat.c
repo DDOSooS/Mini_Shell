@@ -6,26 +6,26 @@
 /*   By: aghergho <aghergho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/07 16:38:17 by aghergho          #+#    #+#             */
-/*   Updated: 2024/06/07 18:08:16 by aghergho         ###   ########.fr       */
+/*   Updated: 2024/08/23 10:08:39 by aghergho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-char *ft_strcat(char *s1, char *s2)
+char	*ft_strcat(char *s1, char *s2)
 {
-	int i;
-    int j;
+	int	i;
+	int	j;
 
-    j = 0;
+	j = 0;
 	i = 0;
 	while (s1[i])
-        i++;
-    while (s2[j])
-    {
-        s1[i + j] = s2[j];
-        j++;
-    }
+		i++;
+	while (s2[j])
+	{
+		s1[i + j] = s2[j];
+		j++;
+	}
 	s1[i + j] = '\0';
 	return (s1);
 }

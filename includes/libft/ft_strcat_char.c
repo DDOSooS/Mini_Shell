@@ -6,20 +6,20 @@
 /*   By: aghergho <aghergho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/07 16:00:13 by aghergho          #+#    #+#             */
-/*   Updated: 2024/06/07 18:07:50 by aghergho         ###   ########.fr       */
+/*   Updated: 2024/08/23 10:07:59 by aghergho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-# include "libft.h"
+#include "libft.h"
 
-char *ft_strcat_char(char *s1, char c)
+char	*ft_strcat_char(char *s1, char c)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	while (s1[i])
 		i++;
-    s1[i] = c;
+	s1[i] = c;
 	s1[i + 1] = '\0';
 	return (s1);
 }

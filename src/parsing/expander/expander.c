@@ -6,7 +6,7 @@
 /*   By: aghergho <aghergho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/01 01:15:21 by aghergho          #+#    #+#             */
-/*   Updated: 2024/08/22 12:01:19 by aghergho         ###   ########.fr       */
+/*   Updated: 2024/08/23 11:06:45 by aghergho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,19 +22,15 @@ int	ft_expand_token(t_token **tokens)
 	{
 		flag = 0;
 		if (!tmp->previous || (tmp->previous->type_id != 7))
-		{
-			if (tmp->value && ft_check_dollar(tmp->value))
-			{
-				flag = 1;
-				tmp->is_exported = 1;
-			}
-			ft_expand_arg(&tmp->value);
-		}
-		if (!tmp->value[0] && flag && tmp->previous
+			ft_expand_token_helper(&flag, &tmp);
+		if (tmp->value && !tmp->value[0] && flag && tmp->previous
 			&& (tmp->previous->type_id == 6 || tmp->previous->type_id == 8
 				|| tmp->previous->type_id == 9))
 			return (ft_putstr_fd("ambiguous redirect\n", 2), 0);
-		tmp = tmp->next;
+		if (tmp->value && !tmp->value[0] && tmp->is_exported)
+			ft_delete_token(&tmp, tokens);
+		else
+			tmp = tmp->next;
 	}
 	return (1);
 }

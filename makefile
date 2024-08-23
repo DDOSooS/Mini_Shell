@@ -30,6 +30,7 @@ SRC = src/main.c \
 		src/parsing/expander/expander_generator_utils.c \
 		src/parsing/expander/herdoc_generater.c \
 		src/parsing/expander/herdoc_expand_utils.c \
+		src/parsing/expander/expand_token_utils.c \
 		src/parsing/parser/parser.c\
 		src/parsing/parser/parser_utils.c\
 		src/parsing/parser/cmd_generator.c\
@@ -49,6 +50,8 @@ SRC = src/main.c \
 		src/execution/utilities/environ.c\
 		src/execution/utilities/environ_utils.c\
 		src/execution/utilities/freeier.c\
+		src/execution/utilities/freeier_utils.c\
+		src/execution/utilities/freeier_utils1.c\
 		src/execution/utilities/printer.c\
 		src/execution/executer/history.c\
 		src/execution/executer/pipes.c\

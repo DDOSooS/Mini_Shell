@@ -38,7 +38,6 @@ int	ft_check_white_spaces(char *cmd)
 	return (0);
 }
 
-
 int	is_exist_quote(char *token)
 {
 	int	i;
@@ -59,7 +58,7 @@ int	is_herdoc(char *cmd)
 
 int	is_doubled_token(char *cmd)
 {
-    if (is_herdoc(cmd) || is_append(cmd) || is_logical_operator(cmd))
-        return (1);
-    return (0);
+	if (is_herdoc(cmd) || is_append(cmd) || is_logical_operator(cmd))
+		return (1);
+	return (0);
 }

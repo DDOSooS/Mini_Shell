@@ -1,26 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_lstadd_front_bonus.c                            :+:      :+:    :+:   */
+/*   freeier_utils1.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: aghergho <aghergho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/11/03 01:34:40 by aghergho          #+#    #+#             */
-/*   Updated: 2023/11/12 18:10:20 by aghergho         ###   ########.fr       */
+/*   Created: 2024/08/23 11:23:52 by aghergho          #+#    #+#             */
+/*   Updated: 2024/08/23 11:59:03 by aghergho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "../../../includes/mshell.h"
 
-void	ft_lstadd_front(t_list **lst, t_list *new)
+void	ft_free_in_file(t_infile *infile)
 {
-	if (!new)
-		return ;
-	if (!*lst)
-		*lst = new;
-	else
+	t_infile	*tmp;
+
+	while (infile)
 	{
-		new->next = *lst;
-		*lst = new;
+		tmp = infile->next;
+		if (infile->filename)
+			free(infile->filename);
+		free(infile);
+		infile = tmp;
 	}
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   mshell.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: shinra <shinra@student.42.fr>              +#+  +:+       +#+        */
+/*   By: aghergho <aghergho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/06 16:01:09 by aghergho          #+#    #+#             */
-/*   Updated: 2024/08/23 08:49:39 by shinra           ###   ########.fr       */
+/*   Updated: 2024/08/23 11:27:20 by aghergho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -174,9 +174,12 @@ int					is_r_parenthise(char c);
 int					is_l_parenthise(char c);
 int					is_word_character(char c);
 int					is_symbol(char c);
+int					is_question_symbol(char c);
+int					is_white_space(char c);
 
 /*======== syntax error functions ========*/
 
+int					check_white_spaces(char *cmd);
 int					ft_check_syntax(char *cmd_line);
 int					ft_check_operation_error(char *cmd);
 int					ft_pipe_sequence_error(char *cmd);
@@ -206,7 +209,6 @@ int					ft_check_opened_token(char *cmd, int len);
 int					ft_check_parenthisis_spaces(char *cmd, int index);
 int					ft_check_l_parenthise(char *cmd, int i);
 int					ft_check_r_parenthise(char *cmd, int i);
-void				ft_free_tokens(t_token **tokens);
 
 /*========== expnder functions =====================*/
 
@@ -232,7 +234,8 @@ int					check_unclosed_quote(char *token);
 pid_t				get_pid(void);
 int					ft_expand_herdoc_arg(char **arg);
 void				ft_gen_expanded_delimiter(char **new_del, char *del);
-
+void				ft_delete_token(t_token **token, t_token **root);
+void				ft_expand_token_helper(int *flag, t_token **token);
 /*============  generate herdoc functions ==========*/
 
 t_herdoc			*ft_gen_herdocs(t_token *tokens);
@@ -314,8 +317,7 @@ void				edit_env(t_env *env, char *key, char *value);
 void				env_add_back(t_env **env, t_env *new);
 void				add_env(t_env *env, char *key, char *value);
 int					count_args(t_cmd *cmd);
-// int					find_env_rem(t_env *env, char *key);
-int find_env_rem(t_env **env, char *key);
+int					find_env_rem(t_env **env, char *key);
 t_env				*find_env(t_env *env, char *key);
 t_env				*sort_env(t_env *env);
 t_env				*copy_env(t_env *env);
@@ -370,7 +372,12 @@ void				interactive_sigint(int sig);
 // void star_expansion(t_cmd *cmd);
 // void star_expansion(char **cmd_args);
 
+/*=============== cleaning ressources =============*/
 void				ft_free_tokens(t_token **tokens);
 void				ft_free_tree(t_tnode **tree);
-
+void				ft_free_redirections(t_redirection *redirection);
+void				ft_free_out_files(t_outfile *outfile);
+void				ft_free_cmds(t_cmd *cmds);
+void				ft_free_out_files(t_outfile *outfile);
+void				ft_free_in_file(t_infile *infile);
 #endif
