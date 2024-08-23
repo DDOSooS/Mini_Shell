@@ -299,18 +299,13 @@ void ft_handle_comment(char **cmd_line)
 	char *new_cli;
 	char *tmp;
 	int i;
-	int end;
 
 	tmp = *cmd_line;
 	i = -1;
-	end = 0;
 	while (tmp[++i])
 	{
 		if (tmp[i] == '#' && !ft_check_quote(tmp, i) && (!i || is_white_space(tmp[i - 1])))
-		{
-			end = i;
 			break;
-		}
 	}
 	if (tmp[i])
 	{
@@ -369,7 +364,6 @@ int	main(int ac, char **av, char **envp)
 			return (free_gvar(1), EXIT_FAILURE);
 		}
 		g_mshell.token = ft_tokinizer(cmd_line);
-		var_dump_token(g_mshell.token);
 		if (g_mshell.token)
 			ft_execute_cli();
 		free(cmd_line);
