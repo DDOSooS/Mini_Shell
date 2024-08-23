@@ -43,8 +43,7 @@ int	ft_add_to_cmd(t_cmd **root, char *token)
 	t_cmd	*new;
 
 	tmp = *root;
-	cmd = ft_substr(token, 1, ft_strlen(token) - 2);
-	free(token);
+	cmd = ft_strdup(token);
 	new = malloc(sizeof(t_cmd));
 	new->arg = cmd;
 	new->check_wildcard = 0;
