@@ -54,9 +54,11 @@ void	reset_in_out(int stdin, int stdout)
 
 void	execute(t_tnode *root, t_mshell *shell)
 {
-	if (shell->n_herdoc > 0 && shell->n_herdoc_executed < 17)
+	if (shell->n_herdoc > 0 && shell->n_herdoc < 17)
 	{
-		ft_heredoc(root, shell);
+		shell->exit_value = ft_heredoc(root, shell);
+		if (shell->exit_value)
+			return ;
 		shell->n_herdoc = 0;
 	}
 	ft_execute_tree(root, shell);
