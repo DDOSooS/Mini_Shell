@@ -12,15 +12,6 @@
 
 #include "../../../includes/mshell.h"
 
-static void	print_file_error(char *name, char *error)
-{
-	ft_putstr_fd("minishell: ", 2);
-	ft_putstr_fd(name, 2);
-	ft_putstr_fd(": ", 2);
-	ft_putstr_fd(error, 2);
-	ft_putstr_fd("\n", 2);
-}
-
 static int	handle_input_redirection(t_infile *in_file)
 {
 	char	(*filename);

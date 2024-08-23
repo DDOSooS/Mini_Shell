@@ -26,3 +26,12 @@ int	export_erorr(char *arg, int status)
 	write(2, "': not a valid identifier\n", 27);
 	return (status);
 }
+
+void	print_file_error(char *name, char *error)
+{
+	ft_putstr_fd("minishell: ", 2);
+	ft_putstr_fd(name, 2);
+	ft_putstr_fd(": ", 2);
+	ft_putstr_fd(error, 2);
+	ft_putstr_fd("\n", 2);
+}

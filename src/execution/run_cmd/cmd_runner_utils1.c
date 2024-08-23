@@ -51,24 +51,6 @@ char	**cmd_args_getter(t_cmd *cmd)
 	return (cmd_args);
 }
 
-void	run_curr(char **cmd_args, char **paths, char **envp)
-{
-	if (access(cmd_args[0], F_OK | X_OK) == 0 || (cmd_args[0][0] == '.'
-		|| cmd_args[0][0] == '/'))
-	{
-		if (execve(cmd_args[0], cmd_args, envp) == -1)
-		{
-			printf("minishell: %s: %s\n", cmd_args[0], strerror(errno));
-			free_func(cmd_args);
-			if (paths)
-				free_func(paths);
-			if (envp)
-				free_func(envp);
-			exit(1);
-		}
-	}
-}
-
 char	*check_command(char *cmd, char **paths, int *status)
 {
 	char	*path_part;

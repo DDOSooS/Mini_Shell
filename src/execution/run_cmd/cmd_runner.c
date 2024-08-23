@@ -45,14 +45,18 @@ static void	execute_command(char **cmd_args, char **path, char **envp)
 		free_gvar(1);
 		exit(status);
 	}
-	execve(cmd_path, cmd_args, envp);
-	perror("execve");
-	free_func(cmd_args);
-	if (path)
-		free_func(path);
-	if (envp)
-		free_func(envp);
-	free_gvar(1);
+	if (execve(cmd_path, cmd_args, envp) == -1)
+	{
+		print_file_error(cmd_path, strerror(errno));
+		free(cmd_path);
+		free_func(cmd_args);
+		if (path)
+			free_func(path);
+		if (envp)
+			free_func(envp);
+		free_gvar(1);
+		exit(126);
+	}
 }
 
 static void	handle_child_process(t_cmd *cmd, t_mshell *shell)

@@ -301,7 +301,6 @@ void				set_under_score(t_env *env, t_cmd *cmd);
 
 /*=============== execution utils ===================*/
 char				*check_command(char *cmd, char **paths, int *status);
-void				run_curr(char **cmd_args, char **paths, char **envp);
 char				**cmd_args_getter(t_cmd *cmd);
 char				**get_path(char *path);
 char				**get_envp(t_env *env);
@@ -339,6 +338,7 @@ void				create_heredoc(char *del, int id, int write_fd);
 /*================= Printers =================*/
 void				print_stderr(char *str);
 int					export_erorr(char *arg, int status);
+void				print_file_error(char *name, char *error);
 
 /*================ wildcards ===================*/
 void				star_expansion(t_cmd *cmd, char ***args);

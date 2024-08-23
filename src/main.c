@@ -226,13 +226,8 @@ void	extarct_env(char **envp, t_env **env)
 	update_shlvl(*env);
 }
 
-int	m_shell_init(char **envp, char **av, int ac)
+void	m_shell_init(char **envp)
 {
-	int fd;
-
-	fd = STDIN_FILENO;
-	if (ac > 1)
-		fd = open_file(av[1]);
 	g_mshell.cmd_tree = NULL;
 	g_mshell.token = NULL;
 	g_mshell.pid = get_pid();
@@ -246,20 +241,19 @@ int	m_shell_init(char **envp, char **av, int ac)
 	g_mshell.history->id = 0;
 	g_mshell.history->cmd = NULL;
 	g_mshell.history->next = NULL;
-	return (fd);
 }
 
-char	*costum_readline(int fd)
+char	*costum_readline()
 {
 	char	*line;
 
-	if (check_tty() && fd == STDIN_FILENO)
+	if (check_tty())
 		line = readline("minishell:$ ");
 	else
-		line = get_next_line(fd);
+		line = get_next_line(STDIN_FILENO);
 	if (!line)
 	{
-		if (check_tty() && fd == STDIN_FILENO)
+		if (check_tty())
 			ft_printf("exit\n");
 		free_gvar(1);
 		exit(0);
@@ -351,15 +345,14 @@ int open_file(char *filename)
 int	main(int ac, char **av, char **envp)
 {
 	char	*cmd_line;
-	int fd;
 
-	fd = 0;
 	cmd_line = NULL;
-	fd = m_shell_init(envp, av, ac);
+	((void)ac, (void)av);
+	m_shell_init(envp);
 	while (1)
 	{
 		handle_signals(interactive_sigint, SIG_IGN, SIG_IGN, SIG_IGN);
-		cmd_line = costum_readline(fd);
+		cmd_line = costum_readline();
 		ft_handle_history(&cmd_line);
 		if (!ft_check_syntax(cmd_line))
 		{
@@ -369,7 +362,7 @@ int	main(int ac, char **av, char **envp)
 			return (free_gvar(1), EXIT_FAILURE);
 		}
 		g_mshell.token = ft_tokinizer(cmd_line);
-		var_dump_token(g_mshell.token);
+		// var_dump_token(g_mshell.token);
 		if (g_mshell.token)
 			ft_execute_cli();
 		free(cmd_line);
