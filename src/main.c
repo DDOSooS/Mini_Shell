@@ -13,6 +13,7 @@
 #include "../includes/mshell.h"
 
 t_mshell	g_mshell;
+int open_file(char *filename);
 
 /*==================================end of var dump function ===========================*/
 
@@ -225,8 +226,13 @@ void	extarct_env(char **envp, t_env **env)
 	update_shlvl(*env);
 }
 
-void	m_shell_init(char **envp)
+int	m_shell_init(char **envp, char **av, int ac)
 {
+	int fd;
+
+	fd = STDIN_FILENO;
+	if (ac > 1)
+		fd = open_file(av[1]);
 	g_mshell.cmd_tree = NULL;
 	g_mshell.token = NULL;
 	g_mshell.pid = get_pid();
@@ -240,19 +246,20 @@ void	m_shell_init(char **envp)
 	g_mshell.history->id = 0;
 	g_mshell.history->cmd = NULL;
 	g_mshell.history->next = NULL;
+	return (fd);
 }
 
-char	*costum_readline(void)
+char	*costum_readline(int fd)
 {
 	char	*line;
 
-	if (check_tty())
+	if (check_tty() && fd == STDIN_FILENO)
 		line = readline("minishell:$ ");
 	else
-		line = get_next_line(STDIN_FILENO);
+		line = get_next_line(fd);
 	if (!line)
 	{
-		if (check_tty())
+		if (check_tty() && fd == STDIN_FILENO)
 			ft_printf("exit\n");
 		free_gvar(1);
 		exit(0);
@@ -332,18 +339,27 @@ void	ft_execute_cli(void)
 	execute(g_mshell.cmd_tree, &g_mshell);
 	ft_free_cmd_var();
 }
+int open_file(char *filename)
+{
+	int fd;
+	fd = open(filename, O_RDONLY);
+	if (fd < 0)
+		return (perror("minishell"), exit(127), 127);
+	return (fd);
+}
 
 int	main(int ac, char **av, char **envp)
 {
 	char	*cmd_line;
+	int fd;
 
-	((void)(ac), (void)(av));
+	fd = 0;
 	cmd_line = NULL;
-	m_shell_init(envp);
+	fd = m_shell_init(envp, av, ac);
 	while (1)
 	{
 		handle_signals(interactive_sigint, SIG_IGN, SIG_IGN, SIG_IGN);
-		cmd_line = costum_readline();
+		cmd_line = costum_readline(fd);
 		ft_handle_history(&cmd_line);
 		if (!ft_check_syntax(cmd_line))
 		{

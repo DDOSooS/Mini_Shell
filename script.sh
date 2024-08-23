@@ -1,3 +1,3 @@
 #!/bin/bash
 #dlmlmdlmd
-ls -all
+ls -all | grep .*
