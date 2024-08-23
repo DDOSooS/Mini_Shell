@@ -6,7 +6,7 @@
 /*   By: aghergho <aghergho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/21 16:33:07 by mkartit           #+#    #+#             */
-/*   Updated: 2024/08/22 16:25:11 by aghergho         ###   ########.fr       */
+/*   Updated: 2024/08/23 10:14:27 by aghergho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ int	ft_heredoc(t_tnode *root, t_mshell *shell)
 {
 	t_herdoc	*herdoc;
 
-	UNUSED(root);
+	(void)(root);
 	int (pid), (status), (pipe_fds[2]);
 	status = 0;
 	herdoc = shell->herdocs;

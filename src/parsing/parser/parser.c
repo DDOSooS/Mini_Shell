@@ -6,7 +6,7 @@
 /*   By: aghergho <aghergho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/21 13:06:08 by aghergho          #+#    #+#             */
-/*   Updated: 2024/08/22 11:45:51 by aghergho         ###   ########.fr       */
+/*   Updated: 2024/08/23 10:05:59 by aghergho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -147,4 +147,4 @@ void	ft_parse_ast(t_tnode **root, t_token **tokens)
 		else
 			ft_parse_cmd(root, tokens);
 	}
-} 
+}

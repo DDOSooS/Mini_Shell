@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_cd.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mkartit <marvin@42.fr>                     +#+  +:+       +#+        */
+/*   By: aghergho <aghergho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/21 16:32:12 by mkartit           #+#    #+#             */
-/*   Updated: 2024/08/21 16:32:14 by mkartit          ###   ########.fr       */
+/*   Updated: 2024/08/23 10:18:44 by aghergho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,7 +110,7 @@ int	ft_cd(t_cmd *cmd, t_mshell *shell)
 {
 	int	cmd_count;
 
-	UNUSED(shell);
+	(void)(shell);
 	cmd_count = count_args(cmd);
 	if (cmd_count == 1)
 		return (cha_dir("HOME"));

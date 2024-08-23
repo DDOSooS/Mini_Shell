@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   history.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mkartit <marvin@42.fr>                     +#+  +:+       +#+        */
+/*   By: aghergho <aghergho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/21 16:33:19 by mkartit           #+#    #+#             */
-/*   Updated: 2024/08/21 16:33:20 by mkartit          ###   ########.fr       */
+/*   Updated: 2024/08/23 10:14:27 by aghergho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ int	ft_history(t_cmd *cmd, t_mshell *shell)
 {
 	t_history	*tmp;
 
-	UNUSED(cmd);
+	(void)(cmd);
 	tmp = shell->history;
 	while (tmp && tmp->cmd)
 	{

@@ -6,7 +6,7 @@
 /*   By: aghergho <aghergho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/22 11:19:40 by aghergho          #+#    #+#             */
-/*   Updated: 2024/08/22 13:23:20 by aghergho         ###   ########.fr       */
+/*   Updated: 2024/08/23 10:02:11 by aghergho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,8 +57,8 @@ int	ft_gen_expanded_quoted_token(char **str, char *token)
 			ft_gen_pid_token(str, token[i + 1]);
 			i++;
 		}
-		else if (is_dollar_sign(token[i])
-			&& token[i + 1] && ft_isalnum(token[i + 1]))
+		else if (is_dollar_sign(token[i]) && token[i + 1]
+			&& ft_isalnum(token[i + 1]))
 			i += ft_gen_search_expanded_token(str, &token[i]);
 		else
 			*str = ft_strcat_char(*str, token[i]);
@@ -78,16 +78,6 @@ int	ft_gen_unexpanded_token(char **str, char *token)
 	return (i);
 }
 
-int is_question_symbol(char c)
-{
-	return (c == '?');
-}
-
-int is_symbol(char c)
-{
-	return (ft_isalnum(c) || is_dollar_sign(c) || is_question_symbol(c));
-}
-
 int	ft_gen_expanded_token(char **str, char *token)
 {
 	int	i;
@@ -105,7 +95,8 @@ int	ft_gen_expanded_token(char **str, char *token)
 			i += ft_gen_expanded_quoted_token(str, &token[i]);
 			return (i);
 		}
-		else if (is_dollar_sign(token[i]) && token[i + 1] && is_symbol(token[i + 1]))
+		else if (is_dollar_sign(token[i]) && token[i + 1]
+			&& is_symbol(token[i + 1]))
 		{
 			i += ft_gen_expanded_unquoted_token(str, &token[i]);
 			return (i);
@@ -123,7 +114,8 @@ int	ft_gen_expanded_arg(char **str, char *token)
 	i = -1;
 	while (token[++i])
 	{
-		if (is_quote(token[i]) || (is_dollar_sign(token[i]) && token[i+ 1] && (is_symbol(token[i + 1]) || is_quote(token[i + 1]))))
+		if (is_quote(token[i]) || (is_dollar_sign(token[i]) && token[i + 1]
+				&& (is_symbol(token[i + 1]) || is_quote(token[i + 1]))))
 			i += ft_gen_expanded_token(str, &token[i]);
 		else
 		{

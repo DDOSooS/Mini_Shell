@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_export.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mkartit <marvin@42.fr>                     +#+  +:+       +#+        */
+/*   By: aghergho <aghergho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/21 16:32:54 by mkartit           #+#    #+#             */
-/*   Updated: 2024/08/21 16:32:55 by mkartit          ###   ########.fr       */
+/*   Updated: 2024/08/23 10:14:27 by aghergho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ static int	export_checker(t_env *new, char *arg)
 	int	i;
 	int	plus;
 
-	UNUSED(arg);
+	(void)(arg);
 	i = 0;
 	plus = 0;
 	while (new && new->key[i])

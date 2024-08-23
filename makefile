@@ -1,7 +1,7 @@
 NAME = minishell
 
 CC = cc
-CFLAGS = -Wall -Wextra  -pedantic -g3
+CFLAGS = -Wall -Wextra -Werror -pedantic -g3
 LIBS = -lreadline
 LIBFT = includes/libft/libft.a
 PRINTF = includes/printf/libftprintf.a
@@ -50,6 +50,8 @@ SRC = src/main.c \
 		src/execution/utilities/environ.c\
 		src/execution/utilities/environ_utils.c\
 		src/execution/utilities/freeier.c\
+		src/execution/utilities/freeier_utils.c\
+		src/execution/utilities/freeier_utils1.c\
 		src/execution/utilities/printer.c\
 		src/execution/executer/history.c\
 		src/execution/executer/pipes.c\

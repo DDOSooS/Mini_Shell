@@ -3,14 +3,29 @@
 /*                                                        :::      ::::::::   */
 /*   freeier.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mkartit <marvin@42.fr>                     +#+  +:+       +#+        */
+/*   By: aghergho <aghergho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/21 16:34:13 by mkartit           #+#    #+#             */
-/*   Updated: 2024/08/21 16:34:14 by mkartit          ###   ########.fr       */
+/*   Updated: 2024/08/23 11:18:06 by aghergho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../../includes/mshell.h"
+
+void	ft_free_tree(t_tnode **tree)
+{
+	if (*tree)
+	{
+		ft_free_tree(&(*tree)->t_left);
+		ft_free_tree(&(*tree)->t_right);
+		if ((*tree)->cmd)
+			ft_free_cmds((*tree)->cmd);
+		if ((*tree)->redirection)
+			ft_free_redirections((*tree)->redirection);
+		free(*tree);
+		*tree = NULL;
+	}
+}
 
 void	free_env(t_env *env)
 {

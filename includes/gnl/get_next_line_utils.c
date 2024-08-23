@@ -6,7 +6,7 @@
 /*   By: aghergho <aghergho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/24 11:53:02 by mkartit           #+#    #+#             */
-/*   Updated: 2024/08/22 14:02:05 by aghergho         ###   ########.fr       */
+/*   Updated: 2024/08/23 10:10:05 by aghergho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,8 @@ char	*ft_strjoin_gnl(char *s1, char *s2)
 	}
 	if (!s1 || !s2)
 		return (NULL);
-	str = (char *)malloc(sizeof(char) * (ft_strlen_gnl(s1) + ft_strlen_gnl(s2) + 1));
+	str = (char *)malloc(sizeof(char) * (ft_strlen_gnl(s1)
+				+ ft_strlen_gnl(s2) + 1));
 	if (!str)
 		return (NULL);
 	i = -1;
@@ -65,4 +66,3 @@ char	*ft_strchr_gnl(char *s, char c)
 		return (s);
 	return (NULL);
 }
-

@@ -6,11 +6,31 @@
 /*   By: aghergho <aghergho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/21 12:51:21 by aghergho          #+#    #+#             */
-/*   Updated: 2024/08/21 13:00:56 by aghergho         ###   ########.fr       */
+/*   Updated: 2024/08/23 11:58:23 by aghergho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../../includes/mshell.h"
+
+int	is_white_space(char c)
+{
+	return (c == ' ' || c == '\t' || c == '\n' || c == '\v' || c == '\f'
+		|| c == '\r');
+}
+
+int	check_white_spaces(char *cmd)
+{
+	int	i;
+
+	i = 0;
+	while (cmd[i])
+	{
+		if (is_white_space(cmd[i]) != 1)
+			return (1);
+		i++;
+	}
+	return (0);
+}
 
 int	check_is_last_parenthis(char *cmd)
 {

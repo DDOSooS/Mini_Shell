@@ -6,7 +6,7 @@
 /*   By: aghergho <aghergho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/22 11:02:13 by aghergho          #+#    #+#             */
-/*   Updated: 2024/08/22 17:45:11 by aghergho         ###   ########.fr       */
+/*   Updated: 2024/08/23 09:47:25 by aghergho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,8 @@ int	ft_count_expanded_token(char *token, int *counter)
 			i += ft_get_expanded_quoted_token(&token[i], counter);
 			return (i);
 		}
-		else if (is_dollar_sign(token[i]) && token[i + 1] && is_symbol(token[i + 1]))
+		else if (is_dollar_sign(token[i]) && token[i + 1]
+			&& is_symbol(token[i + 1]))
 		{
 			i += ft_get_expanded_unquoted_token(&token[i], counter);
 			return (i);
@@ -88,7 +89,8 @@ int	ft_expanded_token_len(char *token)
 	i = 0;
 	while (token[i])
 	{
-		if (is_quote(token[i]) || (is_dollar_sign(token[i]) && token[i+ 1] && (is_symbol(token[i + 1]) || is_quote(token[i + 1]))))
+		if (is_quote(token[i]) || (is_dollar_sign(token[i]) && token[i + 1]
+				&& (is_symbol(token[i + 1]) || is_quote(token[i + 1]))))
 			i += ft_count_expanded_token(&token[i], &counter);
 		else
 			counter++;
@@ -107,7 +109,6 @@ int	ft_expand_arg(char **arg)
 	if (tmp)
 	{
 		len = ft_expanded_token_len(tmp);
-		// printf("len (%d)=(%s)===\n", len, *arg);
 		new = malloc(sizeof(char) * (len + 1));
 		if (!new)
 			return (0);

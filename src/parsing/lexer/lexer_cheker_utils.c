@@ -6,7 +6,7 @@
 /*   By: aghergho <aghergho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/21 13:02:08 by aghergho          #+#    #+#             */
-/*   Updated: 2024/08/21 13:02:20 by aghergho         ###   ########.fr       */
+/*   Updated: 2024/08/23 10:05:31 by aghergho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ int	is_r_parenthise(char c)
 
 int	is_l_parenthise(char c)
 {
-    if (c == '(')
-        return (1);
-    return (0);
+	if (c == '(')
+		return (1);
+	return (0);
 }

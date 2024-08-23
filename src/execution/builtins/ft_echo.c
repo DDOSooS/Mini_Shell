@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_echo.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mkartit <marvin@42.fr>                     +#+  +:+       +#+        */
+/*   By: aghergho <aghergho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/21 16:32:17 by mkartit           #+#    #+#             */
-/*   Updated: 2024/08/21 16:32:18 by mkartit          ###   ########.fr       */
+/*   Updated: 2024/08/23 10:16:47 by aghergho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ int	ft_echo(t_cmd *cmd, t_mshell *shell)
 	tmp = cmd;
 	flag = 1;
 	count = 0;
-	UNUSED(shell);
+	(void)(shell);
 	if (tmp->next && tmp->next->arg)
 	{
 		while (tmp->next && tmp->next->arg)
