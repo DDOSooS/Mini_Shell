@@ -276,7 +276,7 @@ t_env *create_env(void)
 	char *path = "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin";
 
 	env = NULL;
-	env_add_back(&env, create_env_node(ft_strdup("PATH"), ft_strdup(path), 2));
+	env_add_back(&env, create_env_node(ft_strdup("PATH"), ft_strdup(path), 0));
 	env_add_back(&env, create_env_node(ft_strdup("PWD"), getcwd(NULL, 0), 1));
 	env_add_back(&env, create_env_node(ft_strdup("SHLVL"), ft_strdup("1"), 1));
 	env_add_back(&env, create_env_node(ft_strdup("OLDPWD"), NULL, 2));
@@ -372,8 +372,8 @@ int main(int ac, char **av, char **envp)
 {
 	char	*cmd_line;
 
-	UNUSED(ac);
-	UNUSED(av);
+	(void)(ac);
+	(void)(av);
 	cmd_line = NULL;
 	m_shell_init(envp);
 	while (1)

@@ -46,7 +46,7 @@ int	ft_heredoc(t_tnode *root, t_mshell *shell)
 {
 	t_herdoc	*herdoc;
 
-	UNUSED(root);
+	(void)(root);
 	int (pid), (status), (pipe_fds[2]);
 	status = 0;
 	herdoc = shell->herdocs;

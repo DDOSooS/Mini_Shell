@@ -42,7 +42,7 @@ int	ft_history(t_cmd *cmd, t_mshell *shell)
 {
 	t_history	*tmp;
 
-	UNUSED(cmd);
+	(void)(cmd);
 	tmp = shell->history;
 	while (tmp && tmp->cmd)
 	{

@@ -46,6 +46,7 @@ static void	update_env(char *key, char *value)
 	{
 		free(tmp->value);
 		tmp->value = ft_strdup(value);
+		tmp->is_exported = 1;
 	}
 	else
 		add_env(g_mshell.env, ft_strdup(key), ft_strdup(value));
@@ -110,7 +111,7 @@ int	ft_cd(t_cmd *cmd, t_mshell *shell)
 {
 	int	cmd_count;
 
-	UNUSED(shell);
+	(void)(shell);
 	cmd_count = count_args(cmd);
 	if (cmd_count == 1)
 		return (cha_dir("HOME"));

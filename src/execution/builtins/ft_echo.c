@@ -50,7 +50,7 @@ int	ft_echo(t_cmd *cmd, t_mshell *shell)
 	tmp = cmd;
 	flag = 1;
 	count = 0;
-	UNUSED(shell);
+	(void)(shell);
 	if (tmp->next && tmp->next->arg)
 	{
 		while (tmp->next && tmp->next->arg)

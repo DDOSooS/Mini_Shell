@@ -33,6 +33,7 @@ static void	execute_command(char **cmd_args, char **path, char **envp)
 	char	*cmd_path;
 	int		status;
 
+	status = 0;
 	cmd_path = find_command_path(cmd_args, path, &status);
 	if (cmd_path == NULL)
 	{

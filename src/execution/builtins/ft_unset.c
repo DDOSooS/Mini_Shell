@@ -35,7 +35,7 @@ int	ft_unset(t_cmd *cmd, t_mshell *shell)
 	{
 		if (!check_env_key(tmp->arg))
 		{
-			if (find_env_rem(shell->env, tmp->arg) == 0)
+			if (find_env_rem(&shell->env, tmp->arg) == 0)
 				env_error(tmp->arg);
 		}
 		tmp = tmp->next;
