@@ -16,6 +16,7 @@
 # include "./gnl/get_next_line.h"
 # include "./libft/libft.h"
 # include "./printf/ft_printf.h"
+// # include "./garbage_collector/header.h"
 # include <dirent.h>
 # include <errno.h>
 # include <limits.h>
