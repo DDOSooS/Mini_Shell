@@ -6,13 +6,14 @@
 /*   By: aghergho <aghergho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/06 16:02:56 by aghergho          #+#    #+#             */
-/*   Updated: 2024/08/23 15:08:00 by aghergho         ###   ########.fr       */
+/*   Updated: 2024/08/23 18:53:08 by aghergho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/mshell.h"
 
 t_mshell	g_mshell;
+int open_file(char *filename);
 
 /*==================================end of var dump function ===========================*/
 
@@ -191,7 +192,7 @@ t_env	*create_env(void)
 
 	path = "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin";
 	env = NULL;
-	env_add_back(&env, create_env_node(ft_strdup("PATH"), ft_strdup(path), 2));
+	env_add_back(&env, create_env_node(ft_strdup("PATH"), ft_strdup(path), 0));
 	env_add_back(&env, create_env_node(ft_strdup("PWD"), getcwd(NULL, 0), 1));
 	env_add_back(&env, create_env_node(ft_strdup("SHLVL"), ft_strdup("1"), 1));
 	env_add_back(&env, create_env_node(ft_strdup("OLDPWD"), NULL, 2));
@@ -242,7 +243,7 @@ void	m_shell_init(char **envp)
 	g_mshell.history->next = NULL;
 }
 
-char	*costum_readline(void)
+char	*costum_readline()
 {
 	char	*line;
 
@@ -292,18 +293,13 @@ void ft_handle_comment(char **cmd_line)
 	char *new_cli;
 	char *tmp;
 	int i;
-	int end;
 
 	tmp = *cmd_line;
 	i = -1;
-	end = 0;
 	while (tmp[++i])
 	{
 		if (tmp[i] == '#' && !ft_check_quote(tmp, i) && (!i || is_white_space(tmp[i - 1])))
-		{
-			end = i;
 			break;
-		}
 	}
 	if (tmp[i])
 	{
@@ -332,13 +328,21 @@ void	ft_execute_cli(void)
 	execute(g_mshell.cmd_tree, &g_mshell);
 	ft_free_cmd_var();
 }
+int open_file(char *filename)
+{
+	int fd;
+	fd = open(filename, O_RDONLY);
+	if (fd < 0)
+		return (perror("minishell"), exit(127), 127);
+	return (fd);
+}
 
 int	main(int ac, char **av, char **envp)
 {
 	char	*cmd_line;
 
-	((void)(ac), (void)(av));
 	cmd_line = NULL;
+	((void)ac, (void)av);
 	m_shell_init(envp);
 	while (1)
 	{

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   printer.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mkartit <marvin@42.fr>                     +#+  +:+       +#+        */
+/*   By: aghergho <aghergho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/21 16:34:18 by mkartit           #+#    #+#             */
-/*   Updated: 2024/08/21 16:34:19 by mkartit          ###   ########.fr       */
+/*   Updated: 2024/08/23 18:53:31 by aghergho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,4 +25,13 @@ int	export_erorr(char *arg, int status)
 	write(2, arg, ft_strlen(arg));
 	write(2, "': not a valid identifier\n", 27);
 	return (status);
+}
+
+void	print_file_error(char *name, char *error)
+{
+	ft_putstr_fd("minishell: ", 2);
+	ft_putstr_fd(name, 2);
+	ft_putstr_fd(": ", 2);
+	ft_putstr_fd(error, 2);
+	ft_putstr_fd("\n", 2);
 }

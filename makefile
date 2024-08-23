@@ -1,7 +1,7 @@
 NAME = minishell
 
 CC = cc
-CFLAGS = -Wall -Wextra -Werror -pedantic -g3
+CFLAGS = -Wall -Wextra  -Werror -pedantic -g3
 LIBS = -lreadline
 LIBFT = includes/libft/libft.a
 PRINTF = includes/printf/libftprintf.a
@@ -76,7 +76,7 @@ OBJ = $(SRC:.c=.o)
 all: $(NAME)
 $(NAME): $(OBJ) $(LIBFT) $(PRINTF)
 	$(CC) $(CFLAGS) -g3 $^ -o $@ $(LIBS)
-# $(CC) $(CFLAGS) -fsanitize=address $^ -o $@ $(LIBS)
+# $(CC) $(CFLAGS) -g3 -fsanitize=address $^ -o $@ $(LIBS)
 %.o: %.c
 	$(CC) $(CFLAGS) -c $< -o $@
 $(LIBFT):

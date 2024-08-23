@@ -33,8 +33,8 @@
 typedef struct token
 {
 	char			*type;
-	int				type_id;
 	char			*value;
+	int				type_id;
 	int				is_exported;
 	struct token	*next;
 	struct token	*previous;
@@ -51,9 +51,9 @@ typedef struct env
 
 typedef struct history
 {
+	char			*cmd;
 	int				id;
 	int				herdoc;
-	char			*cmd;
 	struct history	*next;
 }					t_history;
 
@@ -67,8 +67,8 @@ typedef struct cmd
 
 typedef struct infile
 {
-	int				is_herdoc;
 	char			*filename;
+	int				is_herdoc;
 	int				mode;
 	struct infile	*next;
 }					t_infile;
@@ -124,24 +124,23 @@ enum				e_buitins
 
 typedef struct herdoc
 {
-	int				id;
 	char			*delimiter;
+	int				id;
 	int				is_expanded;
 	struct herdoc	*next;
 }					t_herdoc;
 
 typedef struct mshell
 {
-	t_env			*env;
-	t_history		*history;
 	int				exit_value;
-	pid_t			pid;
 	int				n_herdoc;
 	int				n_herdoc_executed;
+	pid_t			pid;
+	t_env			*env;
+	t_history		*history;
 	t_herdoc		*herdocs;
 	t_tnode			*cmd_tree;
 	t_token			*token;
-	//  t_signal   sig;
 }					t_mshell;
 
 extern t_mshell		g_mshell;
@@ -302,7 +301,6 @@ void				set_under_score(t_env *env, t_cmd *cmd);
 
 /*=============== execution utils ===================*/
 char				*check_command(char *cmd, char **paths, int *status);
-void				run_curr(char **cmd_args, char **paths, char **envp);
 char				**cmd_args_getter(t_cmd *cmd);
 char				**get_path(char *path);
 char				**get_envp(t_env *env);
@@ -318,7 +316,7 @@ void				edit_env(t_env *env, char *key, char *value);
 void				env_add_back(t_env **env, t_env *new);
 void				add_env(t_env *env, char *key, char *value);
 int					count_args(t_cmd *cmd);
-int					find_env_rem(t_env *env, char *key);
+int					find_env_rem(t_env **env, char *key);
 t_env				*find_env(t_env *env, char *key);
 t_env				*sort_env(t_env *env);
 t_env				*copy_env(t_env *env);
@@ -340,6 +338,7 @@ void				create_heredoc(char *del, int id, int write_fd);
 /*================= Printers =================*/
 void				print_stderr(char *str);
 int					export_erorr(char *arg, int status);
+void				print_file_error(char *name, char *error);
 
 /*================ wildcards ===================*/
 void				star_expansion(t_cmd *cmd, char ***args);

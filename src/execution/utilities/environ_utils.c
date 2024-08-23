@@ -16,13 +16,17 @@ static void	swap_envs(t_env *env1, t_env *env2)
 {
 	char	*tmp_key;
 	char	*tmp_value;
+	int		tmp_export;
 
 	tmp_key = env1->key;
 	tmp_value = env1->value;
+	tmp_export = env1->is_exported;
 	env1->key = env2->key;
 	env1->value = env2->value;
+	env1->is_exported = env2->is_exported;
 	env2->key = tmp_key;
 	env2->value = tmp_value;
+	env2->is_exported = tmp_export;
 }
 
 t_env	*sort_env(t_env *env)
@@ -58,6 +62,7 @@ static t_env	*copy_env_node(t_env *node)
 		new_node->value = ft_strdup(node->value);
 	else
 		new_node->value = NULL;
+	new_node->is_exported = node->is_exported;
 	new_node->next = NULL;
 	return (new_node);
 }

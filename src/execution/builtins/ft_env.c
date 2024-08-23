@@ -20,7 +20,7 @@ int	ft_env(t_cmd *cmd, t_mshell *shell)
 	tmp = shell->env;
 	while (tmp)
 	{
-		if (tmp->value)
+		if (tmp->value && tmp->is_exported == 1)
 		{
 			if (ft_strcmp(tmp->key, "_") != 0)
 				printf("%s=%s\n", tmp->key, tmp->value);

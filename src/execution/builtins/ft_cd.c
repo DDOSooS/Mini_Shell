@@ -46,6 +46,7 @@ static void	update_env(char *key, char *value)
 	{
 		free(tmp->value);
 		tmp->value = ft_strdup(value);
+		tmp->is_exported = 1;
 	}
 	else
 		add_env(g_mshell.env, ft_strdup(key), ft_strdup(value));

@@ -6,7 +6,7 @@
 /*   By: aghergho <aghergho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/21 16:33:03 by mkartit           #+#    #+#             */
-/*   Updated: 2024/08/23 15:08:36 by aghergho         ###   ########.fr       */
+/*   Updated: 2024/08/23 18:52:07 by aghergho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,7 @@ void	ft_execute_cmd(t_tnode *root, t_mshell *shell)
 		cmd_runner(cmd, shell);
 	else
 		shell->exit_value = status;
-	// printf("exit after running %d\n", shell->exit_value);
+
 	set_under_score(shell->env, root->cmd);
 }
 

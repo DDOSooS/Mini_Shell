@@ -39,6 +39,19 @@ void	ft_reset_token(t_token **token, t_token **root)
 		(*token)->previous->next = NULL;
 }
 
+
+// int ft_check_export_var(char *var)
+// {
+// 	int		i;
+	
+// 	i = -1;
+// 	while (var[++i])
+// 	{
+// 		if (is_dollar_sign(var))
+// 	}
+	
+// }
+
 void	ft_expand_token_helper(int *flag, t_token **token)
 {
 	if ((*token)->value && ft_check_dollar((*token)->value))
