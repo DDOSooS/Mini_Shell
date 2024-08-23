@@ -6,7 +6,7 @@
 /*   By: aghergho <aghergho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/06 16:01:09 by aghergho          #+#    #+#             */
-/*   Updated: 2024/08/23 11:27:20 by aghergho         ###   ########.fr       */
+/*   Updated: 2024/08/23 20:36:30 by aghergho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,6 +126,7 @@ enum				e_buitins
 typedef struct herdoc
 {
 	char			*delimiter;
+	char			*filename;
 	int				id;
 	int				is_expanded;
 	struct herdoc	*next;

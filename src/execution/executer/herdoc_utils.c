@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   herdoc_utils.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mkartit <marvin@42.fr>                     +#+  +:+       +#+        */
+/*   By: aghergho <aghergho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/21 16:33:11 by mkartit           #+#    #+#             */
-/*   Updated: 2024/08/21 16:33:13 by mkartit          ###   ########.fr       */
+/*   Updated: 2024/08/23 20:36:46 by aghergho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,17 +64,14 @@ int	write_to_fd(int fd, char *str)
 	return (0);
 }
 
-void	create_heredoc(char *del, int id, int write_fd)
+void	create_heredoc(t_herdoc **herdoc, int id, int write_fd)
 {
 	char	*line;
-	char	*filename;
-	char	*delimiter;
 
 	int (fd), (expand_flag);
-	expand_flag = ft_check_expand_delimiter(del);
-	delimiter = ft_trim_delimiter_quotes(del);
-	filename = create_heredoc_filename(id);
-	fd = open(filename, O_CREAT | O_RDWR | O_TRUNC, 0644);
+	expand_flag = ft_check_expand_delimiter((*herdoc)->delimiter);
+	ft_trim_delimiter_quotes(&(*herdoc)->delimiter);
+	fd = open((*herdoc)->filename, O_CREAT | O_RDWR | O_TRUNC, 0644);
 	if (fd == -1)
 		(perror("open"), exit(EXIT_FAILURE));
 	while (1)
@@ -82,7 +79,7 @@ void	create_heredoc(char *del, int id, int write_fd)
 		line = readline(">");
 		if (line)
 			write_to_fd(write_fd, line);
-		if (heredoc_cheker(line, delimiter, fd))
+		if (heredoc_cheker(line, (*herdoc)->delimiter, fd))
 			break ;
 		if (expand_flag)
 			ft_expand_herdoc_arg(&line);
@@ -90,5 +87,5 @@ void	create_heredoc(char *del, int id, int write_fd)
 		if (line)
 			free(line);
 	}
-	(free(delimiter), free(filename), close(fd));
+	close(fd);
 }
