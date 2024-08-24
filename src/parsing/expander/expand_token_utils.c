@@ -6,7 +6,7 @@
 /*   By: aghergho <aghergho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/22 20:26:08 by aghergho          #+#    #+#             */
-/*   Updated: 2024/08/23 11:06:53 by aghergho         ###   ########.fr       */
+/*   Updated: 2024/08/24 10:27:16 by aghergho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,19 +38,6 @@ void	ft_reset_token(t_token **token, t_token **root)
 	else if ((*token)->previous && !(*token)->next)
 		(*token)->previous->next = NULL;
 }
-
-
-// int ft_check_export_var(char *var)
-// {
-// 	int		i;
-	
-// 	i = -1;
-// 	while (var[++i])
-// 	{
-// 		if (is_dollar_sign(var))
-// 	}
-	
-// }
 
 void	ft_expand_token_helper(int *flag, t_token **token)
 {

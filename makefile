@@ -19,6 +19,7 @@ SRC = src/main.c \
 		src/parsing/lexer/syntax_error_utils2.c\
 		src/parsing/lexer/syntax_error_utils3.c\
 		src/parsing/tokenizer/tokenizer.c\
+		src/parsing/tokenizer/tokenizer_utils.c\
 		src/parsing/tokenizer/tokenizer_checker.c \
 		src/parsing/expander/expander.c\
 		src/parsing/expander/herdoc_expnader.c\
@@ -49,6 +50,7 @@ SRC = src/main.c \
 		src/execution/utilities/signals.c\
 		src/execution/utilities/environ.c\
 		src/execution/utilities/environ_utils.c\
+		src/execution/utilities/environ_utils1.c\
 		src/execution/utilities/freeier.c\
 		src/execution/utilities/freeier_utils.c\
 		src/execution/utilities/freeier_utils1.c\

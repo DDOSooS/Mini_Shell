@@ -6,11 +6,18 @@
 /*   By: aghergho <aghergho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/21 16:34:18 by mkartit           #+#    #+#             */
-/*   Updated: 2024/08/23 18:53:31 by aghergho         ###   ########.fr       */
+/*   Updated: 2024/08/24 10:39:53 by aghergho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../../includes/mshell.h"
+
+int	check_tty(void)
+{
+	if (isatty(STDIN_FILENO))
+		return (1);
+	return (0);
+}
 
 void	print_stderr(char *str)
 {
