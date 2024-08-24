@@ -16,23 +16,16 @@ static char	*costum_getcwd(void)
 {
 	char	*buffer;
 	char	*tmp;
-	size_t	size;
 
-	size = 20;
-	buffer = ft_calloc(sizeof(char), size);
-	if (buffer != NULL)
-		tmp = getcwd(buffer, size);
-	else
+	buffer = ft_calloc(sizeof(char), 1024);
+	if (buffer == NULL)
 		return (NULL);
-	while (tmp == NULL)
+	tmp = getcwd(buffer, 1024);
+	if (tmp == NULL)
 	{
-		free(buffer);
-		size *= 2;
-		buffer = ft_calloc(sizeof(char), size);
-		if (buffer != NULL)
-			tmp = getcwd(buffer, size);
-		else
-			return (NULL);
+		if (buffer)
+			free(buffer);
+		return (NULL);
 	}
 	return (buffer);
 }
@@ -54,13 +47,10 @@ static void	update_env(char *key, char *value)
 
 static int	cd_runner(char *dir)
 {
-	char	*buffer;
 	char	*oldpwd;
 	char	*curr;
 
 	oldpwd = costum_getcwd();
-	if (oldpwd == NULL)
-		return (1);
 	if (chdir(dir) == 0)
 	{
 		curr = costum_getcwd();
@@ -72,9 +62,16 @@ static int	cd_runner(char *dir)
 	}
 	else
 	{
-		buffer = ft_strjoin("cd: ", dir);
-		perror(buffer);
-		free(buffer);
+		if (errno == 116)
+		{
+			write(2, "bash: cd: ", ft_strlen("bash: cd: "));
+			write(2, dir, ft_strlen(dir));
+			write(2, ": No such file or directory\n", 28);
+			return (1);
+		}
+		write(2, "bash: cd: ", ft_strlen("bash: cd: "));
+		perror(dir);
+		return (1);
 	}
 	free(oldpwd);
 	return (1);
@@ -113,7 +110,9 @@ int	ft_cd(t_cmd *cmd, t_mshell *shell)
 
 	(void)(shell);
 	cmd_count = count_args(cmd);
-	if (cmd_count == 1)
+	if (ft_strcmp(cmd->next->arg, "") == 0)
+		return (1);
+	else if (cmd_count == 1)
 		return (cha_dir("HOME"));
 	else if (cmd_count == 2 && (ft_strcmp(cmd->next->arg, "-") == 0))
 		return (cha_dir("OLDPWD"));
