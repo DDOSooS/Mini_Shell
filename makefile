@@ -1,7 +1,7 @@
 NAME = minishell
 
 CC = cc
-CFLAGS = -Wall -Wextra 
+CFLAGS = -Wall -Wextra  -Werror -pedantic -g3
 LIBS = -lreadline
 LIBFT = includes/libft/libft.a
 PRINTF = includes/printf/libftprintf.a
@@ -86,9 +86,11 @@ $(PRINTF) :
 clean:
 	rm -f $(OBJ)
 	$(MAKE) -C includes/libft clean
+	$(MAKE) -C includes/printf clean
 fclean: clean
 	rm -f $(NAME)
 	$(MAKE) -C includes/libft fclean
+	$(MAKE) -C includes/printf fclean
 re: fclean all	
 sup: all
 	@echo "Running valgrind"

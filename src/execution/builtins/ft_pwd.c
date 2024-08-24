@@ -12,30 +12,28 @@
 
 #include "../../../includes/mshell.h"
 
-static void	print_pwd(void)
+static void	print_pwd(t_mshell *shell)
 {
 	char	*cwd;
-	char	*buffer;
-	int		size;
+	char	buffer[1024];
 
-	size = 1024;
-	buffer = ft_calloc(sizeof(char), size);
-	cwd = getcwd(buffer, size);
-	while (!cwd)
+	if (find_env(shell->env, "PWD") && find_env(shell->env, "PWD")->value)
+		cwd = find_env(shell->env, "PWD")->value;
+	else
 	{
-		free(buffer);
-		size *= 2;
-		buffer = ft_calloc(sizeof(char), size);
-		cwd = getcwd(buffer, size);
+		cwd = getcwd(buffer, 1024);
+		if (!cwd)
+		{
+			perror("getcwd");
+			return ;
+		}
 	}
 	printf("%s\n", cwd);
-	free(cwd);
 }
 
 int	ft_pwd(t_cmd *cmd, t_mshell *shell)
 {
 	(void)cmd;
-	(void)shell;
-	print_pwd();
+	print_pwd(shell);
 	return (0);
 }

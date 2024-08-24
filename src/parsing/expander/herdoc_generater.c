@@ -6,7 +6,7 @@
 /*   By: aghergho <aghergho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/22 10:57:21 by aghergho          #+#    #+#             */
-/*   Updated: 2024/08/22 11:59:51 by aghergho         ###   ########.fr       */
+/*   Updated: 2024/08/23 20:40:41 by aghergho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,16 +26,17 @@ char	*ft_get_delimiter(char *delimiter)
 	return (new_delimiter);
 }
 
-char	*ft_trim_delimiter_quotes(char *delimiter)
+void	ft_trim_delimiter_quotes(char **delimiter)
 {
 	char	*trimed_delimter;
 
 	trimed_delimter = NULL;
-	if (is_exist_quote(delimiter))
-		trimed_delimter = ft_get_delimiter(delimiter);
-	else
-		trimed_delimter = ft_strdup(delimiter);
-	return (trimed_delimter);
+	if (is_exist_quote(*delimiter))
+	{
+		trimed_delimter = ft_get_delimiter(*delimiter);
+		free(*delimiter);
+		*delimiter = trimed_delimter;
+	}
 }
 
 t_herdoc	*ft_new_herdoc(char *delimiter)
@@ -45,7 +46,7 @@ t_herdoc	*ft_new_herdoc(char *delimiter)
 	new = malloc(sizeof(t_herdoc));
 	if (!new)
 		return (NULL);
-	new->delimiter = delimiter;
+	new->delimiter = ft_strdup(delimiter);
 	new->next = NULL;
 	return (new);
 }
@@ -61,6 +62,7 @@ int	ft_add_herdoc(t_herdoc **root, char *del)
 	if (!*root)
 	{
 		new->id = 0;
+		new->filename = create_heredoc_filename(new->id);
 		*root = new;
 		return (1);
 	}

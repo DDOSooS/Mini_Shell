@@ -46,7 +46,6 @@ static int	exit_handler(char *arg)
 	if (exit_value < 0)
 		exit_value = 256 + exit_value;
 	free_gvar(1);
-	printf("--- (%d)--\n",exit_value);
 	return (exit_value);
 }
 

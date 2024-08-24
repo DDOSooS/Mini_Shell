@@ -26,30 +26,30 @@ t_env	*find_env(t_env *env, char *key)
 	return (NULL);
 }
 
-int find_env_rem(t_env **env, char *key)
+int	find_env_rem(t_env **env, char *key)
 {
-    t_env *prev;
-    t_env *current;
+	t_env	*prev;
+	t_env	*current;
 
-    prev = NULL;
-    current = *env;
-    while (current != NULL)
-    {
-        if (ft_strcmp(current->key, key) == 0)
-        {
-            if (prev == NULL)
-                *env = current->next;
-            else
-                prev->next = current->next;
-            free(current->key);
-            free(current->value);
-            free(current);
-            return (1);
-        }
-        prev = current;
-        current = current->next;
-    }
-    return (0);
+	prev = NULL;
+	current = *env;
+	while (current != NULL)
+	{
+		if (ft_strcmp(current->key, key) == 0)
+		{
+			if (prev == NULL)
+				*env = current->next;
+			else
+				prev->next = current->next;
+			free(current->key);
+			free(current->value);
+			free(current);
+			return (1);
+		}
+		prev = current;
+		current = current->next;
+	}
+	return (0);
 }
 
 void	edit_env(t_env *env, char *key, char *value)

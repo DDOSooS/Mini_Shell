@@ -6,7 +6,7 @@
 /*   By: aghergho <aghergho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/06 16:01:09 by aghergho          #+#    #+#             */
-/*   Updated: 2024/08/23 11:27:20 by aghergho         ###   ########.fr       */
+/*   Updated: 2024/08/23 20:36:30 by aghergho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,6 @@
 # include "./gnl/get_next_line.h"
 # include "./libft/libft.h"
 # include "./printf/ft_printf.h"
-// # include "./garbage_collector/header.h"
 # include <dirent.h>
 # include <errno.h>
 # include <limits.h>
@@ -242,7 +241,7 @@ void				ft_expand_token_helper(int *flag, t_token **token);
 
 t_herdoc			*ft_gen_herdocs(t_token *tokens);
 int					ft_check_sing_dollor(char *token, int i);
-char				*ft_trim_delimiter_quotes(char *delimiter);
+void				ft_trim_delimiter_quotes(char **delimiter);
 char				*ft_get_delimiter(char *delimiter);
 int					ft_count_expanded_len(char *delimimiter);
 /*============  parser functions  ===================*/
@@ -335,7 +334,7 @@ int					heredoc_cheker(char *str, char *filename, int fd);
 char				*create_heredoc_filename(int here_doc_num);
 void				update_history_from_pipe(int fd, t_history *history);
 int					write_to_fd(int fd, char *str);
-void				create_heredoc(char *del, int id, int write_fd);
+void				create_heredoc(t_herdoc **herdoc, int write_fd);
 
 /*================= Printers =================*/
 void				print_stderr(char *str);

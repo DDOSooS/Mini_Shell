@@ -48,14 +48,12 @@ static void	execute_command(char **cmd_args, char **path, char **envp)
 	if (execve(cmd_path, cmd_args, envp) == -1)
 	{
 		print_file_error(cmd_path, strerror(errno));
-		free(cmd_path);
-		free_func(cmd_args);
+		(free(cmd_path), free_func(cmd_args));
 		if (path)
 			free_func(path);
 		if (envp)
 			free_func(envp);
-		free_gvar(1);
-		exit(126);
+		(free_gvar(1), exit(126));
 	}
 }
 
@@ -82,10 +80,11 @@ static void	handle_parent_process(int pid, t_mshell *shell)
 	if (status == 2 || status == 131)
 	{
 		if (status == 2)
-			shell->exit_value = 130;
+			status += 128;
 		else
 			write(2, "Quit (core dumped)", 18);
 		write(2, "\n", 1);
+		shell->exit_value = status;
 	}
 	else
 		shell->exit_value = get_status(status);

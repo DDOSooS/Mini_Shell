@@ -24,7 +24,11 @@ void	ft_free_herdoc(t_herdoc **herdocs)
 	{
 		tmp2 = tmp->next;
 		if (tmp)
+		{
+			free(tmp->delimiter);
+			free(tmp->filename);
 			free(tmp);
+		}
 		tmp = tmp2;
 	}
 	tmp = NULL;
