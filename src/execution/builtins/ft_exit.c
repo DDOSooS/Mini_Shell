@@ -58,7 +58,7 @@ int	ft_exit(t_cmd *cmd, t_mshell *shell)
 	if (cmd->next != NULL)
 		tmp = cmd->next;
 	write(2, "exit\n", 5);
-	if (tmp && tmp->next != NULL)
+	if (tmp && tmp->next != NULL && !exit_value_check(tmp->next->arg))
 	{
 		print_stderr("exit: too many arguments");
 		return (1);

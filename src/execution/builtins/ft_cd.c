@@ -37,12 +37,13 @@ static void	update_env(char *key, char *value)
 	tmp = find_env(g_mshell.env, key);
 	if (tmp != NULL)
 	{
-		free(tmp->value);
-		tmp->value = ft_strdup(value);
+		if (value)
+		{
+			free(tmp->value);
+			tmp->value = ft_strdup(value);
+		}
 		tmp->is_exported = 1;
 	}
-	else
-		add_env(g_mshell.env, ft_strdup(key), ft_strdup(value));
 }
 
 static int	cd_runner(char *dir)
@@ -56,8 +57,7 @@ static int	cd_runner(char *dir)
 		curr = costum_getcwd();
 		update_env("PWD", curr);
 		update_env("OLDPWD", oldpwd);
-		free(oldpwd);
-		free(curr);
+		(free(oldpwd), free(curr));
 		return (0);
 	}
 	else
@@ -70,11 +70,9 @@ static int	cd_runner(char *dir)
 			return (1);
 		}
 		write(2, "bash: cd: ", ft_strlen("bash: cd: "));
-		perror(dir);
-		return (1);
+		return (perror(dir), 1);
 	}
-	free(oldpwd);
-	return (1);
+	return (free(oldpwd), 1);
 }
 
 static int	cha_dir(char *dir)
@@ -110,7 +108,7 @@ int	ft_cd(t_cmd *cmd, t_mshell *shell)
 
 	(void)(shell);
 	cmd_count = count_args(cmd);
-	if (ft_strcmp(cmd->next->arg, "") == 0)
+	if (cmd->next && cmd->next->arg && ft_strcmp(cmd->next->arg, "") == 0)
 		return (1);
 	else if (cmd_count == 1)
 		return (cha_dir("HOME"));
