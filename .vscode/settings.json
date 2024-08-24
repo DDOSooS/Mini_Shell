@@ -59,6 +59,7 @@
   "files.associations": {
     "mshell.h": "c",
     "wait.h": "c",
-    "header.h": "c"
+    "header.h": "c",
+    "libft.h": "c"
   }
 }

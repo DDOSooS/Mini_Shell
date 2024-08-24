@@ -12,24 +12,6 @@
 
 #include "../../../includes/mshell.h"
 
-static char	*costum_getcwd(void)
-{
-	char	*buffer;
-	char	*tmp;
-
-	buffer = ft_calloc(sizeof(char), 1024);
-	if (buffer == NULL)
-		return (NULL);
-	tmp = getcwd(buffer, 1024);
-	if (tmp == NULL)
-	{
-		if (buffer)
-			free(buffer);
-		return (NULL);
-	}
-	return (buffer);
-}
-
 static void	update_env(char *key, char *value)
 {
 	t_env	*tmp;
@@ -48,16 +30,15 @@ static void	update_env(char *key, char *value)
 
 static int	cd_runner(char *dir)
 {
-	char	*oldpwd;
-	char	*curr;
+	char	oldpwd[1024];
+	char	curr[1024];
 
-	oldpwd = costum_getcwd();
+	getcwd(oldpwd, 1024);
 	if (chdir(dir) == 0)
 	{
-		curr = costum_getcwd();
+		getcwd(curr, 1024);
 		update_env("PWD", curr);
 		update_env("OLDPWD", oldpwd);
-		(free(oldpwd), free(curr));
 		return (0);
 	}
 	else
@@ -72,7 +53,7 @@ static int	cd_runner(char *dir)
 		write(2, "bash: cd: ", ft_strlen("bash: cd: "));
 		return (perror(dir), 1);
 	}
-	return (free(oldpwd), 1);
+	return (1);
 }
 
 static int	cha_dir(char *dir)

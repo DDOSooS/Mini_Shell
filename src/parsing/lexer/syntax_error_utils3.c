@@ -56,15 +56,17 @@ int	ft_check_parenthise(char *cmd_line)
 	while (cmd_line[i] && is_whites_space(cmd_line[i]))
 		i++;
 	if (cmd_line[i] && is_r_parenthise(cmd_line[i]))
-		return (ft_printf("syntax error near unexpected token `()'\n"), 0);
+		return (ft_putstr_fd("syntax error near unexpected token `)'\n"
+				, 2), 0);
 	if (cmd_line[i] && (!is_operator(cmd_line[i]) || !is_pipe(cmd_line[i])
 			|| !is_r_parenthise(cmd_line[i]) || !is_l_parenthise(cmd_line[i])))
 	{
 		if (is_l_parenthise(cmd_line[i]))
-			return (ft_printf("syntax error near unexpected token `('\n"), 0);
+			return (ft_putstr_fd("syntax error near unexpected token `('\n"
+					, 2), 0);
 		else
-			return (ft_printf("syntax error near unexpected token `%s'\n",
-					&cmd_line[i]), 0);
+			return (ft_putstr_fd("syntax error near unexpected token `)'\n"
+					, 2), 0);
 	}
 	return (1);
 }
@@ -82,7 +84,7 @@ int	ft_check_closed_parenthise(char *cmd_line)
 	{
 		if (is_r_parenthise(cmd_line[i]) && !ft_check_quote(cmd_line, i)
 			&& !closed_parenth)
-			return (ft_printf("parse error near `)'\n"), 0);
+			return (ft_putstr_fd("parse error near `)'\n", 2), 0);
 		else if (is_r_parenthise(cmd_line[i]) && !ft_check_quote(cmd_line, i))
 			closed_parenth--;
 		if (is_l_parenthise(cmd_line[i]) && !ft_check_quote(cmd_line, i))
@@ -90,7 +92,7 @@ int	ft_check_closed_parenthise(char *cmd_line)
 	}
 	if (closed_parenth)
 	{
-		ft_printf("parenthisec are not closed correctly\n");
+		ft_putstr_fd("parenthisec are not closed correctly\n", 2);
 		return (0);
 	}
 	return (1);

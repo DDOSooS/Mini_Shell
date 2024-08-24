@@ -47,7 +47,7 @@ int	ft_history(t_cmd *cmd, t_mshell *shell)
 	while (tmp && tmp->cmd)
 	{
 		if (!tmp->herdoc)
-			printf(" %d  %s\n", tmp->id, tmp->cmd);
+			printf("  %d  %s\n", tmp->id, tmp->cmd);
 		else
 			printf("%s\n", tmp->cmd);
 		tmp = tmp->next;

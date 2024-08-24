@@ -69,8 +69,8 @@ int	ft_check_empty_parenthise(char *cmd_line)
 				i++;
 			if (is_r_parenthise(cmd_line[i])
 				|| is_logical_operator(&cmd_line[i]) || is_pipe(cmd_line[i]))
-				return (ft_printf("syntax error near unexpected token `()'\n"),
-					0);
+				return (ft_putstr_fd("syntax error near unexpected token `)'\n"
+						, 2), 0);
 		}
 		i++;
 	}

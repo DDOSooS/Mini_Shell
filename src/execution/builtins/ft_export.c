@@ -49,7 +49,7 @@ static int	print_export(t_env *env)
 	tmp2 = tmp;
 	while (tmp)
 	{
-		if (ft_strcmp(tmp->key, "_") != 0 && tmp->is_exported != 0)
+		if (ft_strcmp(tmp->key, "_") != 0)
 		{
 			if (tmp->value)
 				printf("declare -x %s=\"%s\"\n", tmp->key, tmp->value);
@@ -76,10 +76,10 @@ static int	add_export(t_cmd *cmd, t_mshell *shell)
 	int		status;
 	int		returned_status;
 
-	status = 0;
 	returned_status = 0;
 	while (cmd && cmd->arg && cmd->arg[0])
 	{
+		status = 0;
 		new = extarct_node(cmd->arg);
 		status = export_checker(new, cmd->arg);
 		if (status)

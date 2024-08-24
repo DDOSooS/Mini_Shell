@@ -44,7 +44,8 @@ void	ft_expand_token_helper(int *flag, t_token **token)
 	if ((*token)->value && ft_check_dollar((*token)->value))
 	{
 		*flag = 1;
-		(*token)->is_exported = 1;
+		if (ft_check_unquoted_dollar((*token)->value))
+			(*token)->is_exported = 1;
 	}
 	ft_expand_arg(&(*token)->value);
 }

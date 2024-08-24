@@ -48,6 +48,7 @@ void	appned_export(t_env *env, t_env *new)
 		tmp_value = ft_strjoin(found_env->value, new->value);
 		free(found_env->value);
 		found_env->value = tmp_value;
+		found_env->is_exported = new->is_exported;
 		free_env(new);
 	}
 	else

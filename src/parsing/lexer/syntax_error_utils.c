@@ -55,7 +55,8 @@ int	ft_check_quote_error(char *cmd_line)
 			s_quote = 0;
 	}
 	if (d_quote || s_quote)
-		return (ft_printf(";( Syntax error please verify your quotes\n"), 1);
+		return (ft_putstr_fd(";( Syntax error please verify your quotes\n"
+				, 2), 1);
 	return (0);
 }
 
@@ -72,14 +73,14 @@ int	ft_check_redirection_sequence(char *cmd_line)
 			&& cmd_line[i + 2] && cmd_line[i + 2] == '>'
 			&& !ft_check_quote(cmd_line, i))
 		{
-			perror("parse error near `>'\n");
+			ft_putstr_fd("parse error near `>'\n", 2);
 			return (1);
 		}
 		if (cmd_line[i] == '<' && cmd_line[i + 1] && cmd_line[i + 1] == '<'
 			&& cmd_line[i + 2] && cmd_line[i + 2] == '<'
 			&& !ft_check_quote(cmd_line, i))
 		{
-			perror("parse error near `<'\n");
+			ft_putstr_fd("parse error near `<'\n", 2);
 			return (1);
 		}
 	}
@@ -94,21 +95,21 @@ int	ft_check_file_name(char *cmd)
 	while (cmd[++i] && is_whites_space(cmd[i]))
 		;
 	if (!cmd[i])
-		return (ft_printf("parse error near `/n'\n"), 0);
+		return (ft_putstr_fd("parse error near `/n'\n", 2), 0);
 	if (is_operator(cmd[i]) && cmd[i + 1] && is_operator(cmd[i + 1]))
-		return (ft_printf("parse error near `&&'\n"), 0);
+		return (ft_putstr_fd("parse error near `&&'\n", 2), 0);
 	if (is_operator(cmd[i]))
-		return (ft_printf("parse error near `&'\n"), 0);
+		return (ft_putstr_fd("parse error near `&'\n", 2), 0);
 	else if (is_pipe(cmd[i]) && cmd[i + 1] && is_pipe(cmd[i + 1]))
-		return (ft_printf("parse error near `||'\n"), 0);
+		return (ft_putstr_fd("parse error near `||'\n", 2), 0);
 	else if (is_pipe(cmd[i]))
-		return (ft_printf("parse error near `|'\n"), 0);
+		return (ft_putstr_fd("parse error near `|'\n", 2), 0);
 	else if (in_redirection(cmd[i]))
-		return (ft_printf("parse error near `<'\n"), 0);
+		return (ft_putstr_fd("parse error near `<'\n", 2), 0);
 	else if (out_redirection(cmd[i]))
-		return (ft_printf("parse error near `>'\n"), 0);
+		return (ft_putstr_fd("parse error near `>'\n", 2), 0);
 	else if (is_r_parenthise(cmd[i]) || is_r_parenthise(cmd[i]))
-		return (ft_printf("parse error near `)'\n"), 0);
+		return (ft_putstr_fd("parse error near `)'\n", 2), 0);
 	return (1);
 }
 

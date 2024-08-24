@@ -16,21 +16,26 @@ int	ft_expand_token(t_token **tokens)
 {
 	t_token	*tmp;
 	int		flag;
+	char	*sd_tmp;
 
+	sd_tmp = NULL;
 	tmp = *tokens;
 	while (tmp)
 	{
 		flag = 0;
+		sd_tmp = ft_strdup(tmp->value);
 		if (!tmp->previous || (tmp->previous->type_id != 7))
 			ft_expand_token_helper(&flag, &tmp);
 		if (tmp->value && !tmp->value[0] && flag && tmp->previous
 			&& (tmp->previous->type_id == 6 || tmp->previous->type_id == 8
 				|| tmp->previous->type_id == 9))
-			return (ft_putstr_fd("ambiguous redirect\n", 2), 0);
+			return (print_file_error(sd_tmp, "ambiguous redirect")
+				, free(sd_tmp), 0);
 		if (tmp->value && !tmp->value[0] && tmp->is_exported)
 			ft_delete_token(&tmp, tokens);
 		else
 			tmp = tmp->next;
+		free(sd_tmp);
 	}
 	return (1);
 }
@@ -64,8 +69,9 @@ void	ft_handle_export_expand(t_token **tokens)
 	tmp = *tokens;
 	while (tmp)
 	{
-		if (tmp->is_exported && ft_check_white_spaces(tmp->value))
+		if (tmp->is_exported && ft_check_white_spaces(tmp->value) && tmp->value)
 		{
+			printf("==== (%s)=== (%d)===\n", tmp->value, tmp->is_exported);
 			ft_expand_exported_tokens(tokens, &tmp);
 		}
 		else
@@ -106,7 +112,10 @@ int	ft_expand_tokens(t_token **tokens)
 {
 	ft_expand_parenthisis(tokens);
 	if (!ft_expand_token(tokens))
+	{
+		g_mshell.exit_value = 1;
 		return (0);
+	}
 	ft_handle_export_expand(tokens);
 	return (1);
 }

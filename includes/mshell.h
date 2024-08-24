@@ -15,7 +15,6 @@
 
 # include "./gnl/get_next_line.h"
 # include "./libft/libft.h"
-# include "./printf/ft_printf.h"
 # include <dirent.h>
 # include <errno.h>
 # include <limits.h>
@@ -145,7 +144,6 @@ typedef struct mshell
 }					t_mshell;
 
 extern t_mshell		g_mshell;
-
 void				varDumpOutFile(t_outfile *redirection);
 void				varDumpInFile(t_infile *redirection);
 
@@ -242,6 +240,7 @@ int					ft_expand_herdoc_arg(char **arg);
 void				ft_gen_expanded_delimiter(char **new_del, char *del);
 void				ft_delete_token(t_token **token, t_token **root);
 void				ft_expand_token_helper(int *flag, t_token **token);
+int					ft_check_unquoted_dollar(char *token);
 
 /*============  generate herdoc functions ==========*/
 

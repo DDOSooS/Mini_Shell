@@ -12,6 +12,21 @@
 
 #include "../../../includes/mshell.h"
 
+int	ft_check_unquoted_dollar(char *token)
+{
+	int	i;
+
+	i = -1;
+	while (token[++i])
+	{
+		if (is_dollar_sign(token[i]) && ft_check_quote(token, i))
+			return (0);
+		else if (is_dollar_sign(token[i]) && !ft_check_quote(token, i))
+			return (1);
+	}
+	return (0);
+}
+
 int	check_tty(void)
 {
 	if (isatty(STDIN_FILENO))
