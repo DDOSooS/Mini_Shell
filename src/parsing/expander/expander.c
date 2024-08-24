@@ -6,7 +6,7 @@
 /*   By: aghergho <aghergho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/01 01:15:21 by aghergho          #+#    #+#             */
-/*   Updated: 2024/08/24 19:00:06 by aghergho         ###   ########.fr       */
+/*   Updated: 2024/08/24 19:49:47 by aghergho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,14 +53,19 @@ void	ft_expand_exported_tokens(t_token **tokens, t_token **curr_token)
 	else
 		*tokens = t_tmp;
 	next_tmp = (*curr_token)->next;
-	free((*curr_token)->value);
-	free((*curr_token));
+	if ((*curr_token)->value)
+		free((*curr_token)->value);
+	free(*curr_token);
+	*curr_token = NULL;
 	last_t_tmp = t_tmp;
 	while (last_t_tmp->next)
 		last_t_tmp = last_t_tmp->next;
 	last_t_tmp->next = next_tmp;
-	(*curr_token) = next_tmp;
+	if (next_tmp)
+		next_tmp->previous = last_t_tmp;
+	*curr_token = next_tmp;
 }
+
 
 void	ft_handle_export_expand(t_token **tokens)
 {
