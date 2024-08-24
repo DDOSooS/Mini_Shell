@@ -6,7 +6,7 @@
 /*   By: aghergho <aghergho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/21 13:03:55 by aghergho          #+#    #+#             */
-/*   Updated: 2024/08/22 16:10:08 by aghergho         ###   ########.fr       */
+/*   Updated: 2024/08/24 19:42:11 by aghergho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,8 @@ int	ft_add_cmd(t_cmd **cmd, char *str)
 		return (0);
 	if (str)
 		new->arg = ft_strdup(str);
+	else
+		new->arg = NULL;
 	new->check_wildcard = ft_check_wild_card(new->arg);
 	new->next = NULL;
 	if (!cmd || !*cmd)
