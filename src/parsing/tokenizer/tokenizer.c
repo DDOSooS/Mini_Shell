@@ -6,7 +6,7 @@
 /*   By: aghergho <aghergho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/13 15:14:32 by aghergho          #+#    #+#             */
-/*   Updated: 2024/08/22 12:20:06 by aghergho         ###   ########.fr       */
+/*   Updated: 2024/08/24 10:16:21 by aghergho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,8 +102,6 @@ int	ft_add_token(t_token **tokens, char *cmd_line, int start, int end)
 	return (1);
 }
 
-// to be resized
-
 t_token	*ft_tokinizer(char *cmd)
 {
 	t_token	*tokens;
@@ -116,34 +114,17 @@ t_token	*ft_tokinizer(char *cmd)
 	{
 		if (is_whites_space(cmd[i]) && ft_check_opened_token(cmd, i))
 			continue ;
-		if (is_doubled_token(&cmd[i]) && (!ft_check_quote(cmd, i)
-				&& is_closed_parenthise(cmd, i)))
-		{
-			if (!ft_add_token(&tokens, cmd, i, i + 1))
-				return (ft_free_tokens(&tokens), NULL);
-			i++;
-		}
-		else if ((is_pipe(cmd[i]) || is_redirection(cmd[i]))
-			&& !ft_check_quote(cmd, i) && is_closed_parenthise(cmd, i))
-		{
-			if (!ft_add_token(&tokens, cmd, i, i))
-				return (ft_free_tokens(&tokens), NULL);
-		}
+		if (ft_check_double_token(cmd, i))
+			(ft_add_token(&tokens, cmd, i, i + 1), i++);
+		else if (ft_check_sing_token(cmd, i))
+			ft_add_token(&tokens, cmd, i, i);
 		else if ((is_parenthise(cmd[i]) && (!ft_check_quote(cmd, i))))
-		{
-			if (!ft_add_token(&tokens, cmd, i, i))
-				return (ft_free_tokens(&tokens), NULL);
-		}
+			ft_add_token(&tokens, cmd, i, i);
 		else if (start == -1)
 			start = i;
-		if (((is_whites_space(cmd[i + 1]) && ft_check_opened_token(cmd, i + 1))
-				|| (is_r_parenthise(cmd[i + 1]) && !ft_check_quote(cmd, i + 1))
-				|| !cmd[i + 1]
-				|| (is_tokens(cmd[i + 1]) && !ft_check_quote(cmd, i + 1)
-				&& is_closed_parenthise(cmd, i + 1))) && start != -1)
+		if (ft_check_end_token(cmd, i, start))
 		{
-			if (!ft_add_token(&tokens, cmd, start, i))
-				return (ft_free_tokens(&tokens), NULL);
+			ft_add_token(&tokens, cmd, start, i);
 			start = -1;
 		}
 	}

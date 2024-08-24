@@ -6,11 +6,18 @@
 /*   By: aghergho <aghergho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/23 11:14:05 by aghergho          #+#    #+#             */
-/*   Updated: 2024/08/23 11:59:25 by aghergho         ###   ########.fr       */
+/*   Updated: 2024/08/24 10:31:39 by aghergho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../../includes/mshell.h"
+
+void	ft_free_cmd_var(void)
+{
+	ft_free_tokens(&g_mshell.token);
+	ft_free_herdoc(&g_mshell.herdocs);
+	ft_free_tree(&g_mshell.cmd_tree);
+}
 
 void	ft_free_tokens(t_token **tokens)
 {

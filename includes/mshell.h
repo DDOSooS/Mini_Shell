@@ -6,7 +6,7 @@
 /*   By: aghergho <aghergho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/06 16:01:09 by aghergho          #+#    #+#             */
-/*   Updated: 2024/08/23 20:36:30 by aghergho         ###   ########.fr       */
+/*   Updated: 2024/08/24 10:34:43 by aghergho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -210,6 +210,11 @@ int					ft_check_opened_token(char *cmd, int len);
 int					ft_check_parenthisis_spaces(char *cmd, int index);
 int					ft_check_l_parenthise(char *cmd, int i);
 int					ft_check_r_parenthise(char *cmd, int i);
+int					ft_check_end_token(char *cmd, int i, int start);
+int					ft_check_double_token(char *cmd, int i);
+int					ft_check_sing_token(char *cmd, int i);
+int					ft_check_comments(char *cmd_line);
+void				ft_handle_comment(char **cmd_line);
 
 /*========== expnder functions =====================*/
 
@@ -237,6 +242,7 @@ int					ft_expand_herdoc_arg(char **arg);
 void				ft_gen_expanded_delimiter(char **new_del, char *del);
 void				ft_delete_token(t_token **token, t_token **root);
 void				ft_expand_token_helper(int *flag, t_token **token);
+
 /*============  generate herdoc functions ==========*/
 
 t_herdoc			*ft_gen_herdocs(t_token *tokens);
@@ -244,6 +250,7 @@ int					ft_check_sing_dollor(char *token, int i);
 void				ft_trim_delimiter_quotes(char **delimiter);
 char				*ft_get_delimiter(char *delimiter);
 int					ft_count_expanded_len(char *delimimiter);
+
 /*============  parser functions  ===================*/
 
 void				ft_parse_ast(t_tnode **root, t_token **tokens);
@@ -299,6 +306,7 @@ void				cmd_runner(t_cmd *cmd, t_mshell *shell);
 void				handle_word(t_tnode *root, t_mshell *shell);
 int					get_status(int status);
 void				set_under_score(t_env *env, t_cmd *cmd);
+int					open_file(char *filename);
 
 /*=============== execution utils ===================*/
 char				*check_command(char *cmd, char **paths, int *status);
@@ -323,6 +331,11 @@ t_env				*sort_env(t_env *env);
 t_env				*copy_env(t_env *env);
 t_env				*find_env(t_env *env, char *key);
 t_env				*create_env_node(char *key, char *value, int is_exported);
+int					check_tty(void);
+int					get_status(int status);
+void				extarct_env(char **envp, t_env **env);
+t_env				*create_env(void);
+void				update_shlvl(t_env *env);
 
 /*================ Clear Allocted ============*/
 void				free_env(t_env *env);
@@ -381,4 +394,5 @@ void				ft_free_out_files(t_outfile *outfile);
 void				ft_free_cmds(t_cmd *cmds);
 void				ft_free_out_files(t_outfile *outfile);
 void				ft_free_in_file(t_infile *infile);
+void				ft_free_cmd_var(void);
 #endif

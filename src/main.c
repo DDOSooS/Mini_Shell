@@ -6,20 +6,17 @@
 /*   By: aghergho <aghergho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/06 16:02:56 by aghergho          #+#    #+#             */
-/*   Updated: 2024/08/23 18:53:08 by aghergho         ###   ########.fr       */
+/*   Updated: 2024/08/24 10:40:32 by aghergho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/mshell.h"
 
 t_mshell	g_mshell;
-int open_file(char *filename);
-
-/*==================================end of var dump function ===========================*/
 
 /*
 	@var_dump function is a function that debug double 2d char variable
-*/
+
 void	var_dump(char **str)
 {
 	int	i;
@@ -155,76 +152,12 @@ void	var_dump_herdocs(t_herdoc *herdoc)
 		printf("------------------id:(%d)--------------------\n", herdoc->id);
 		printf("-------------------del:(%s)--------------------\n",
 				herdoc->delimiter);
-			/*==================================end of var dump function ===========================*/
 		herdoc = herdoc->next;
 	}
 	printf("herdoooooooooooocs==========END====\n");
 }
-/*==================================end of var dump function ===========================*/
 
-int	check_tty(void)
-{
-	if (isatty(STDIN_FILENO))
-		return (1);
-	return (0);
-}
-
-void	update_shlvl(t_env *env)
-{
-	t_env	*tmp;
-	char	*shlvl;
-	int		i;
-
-	tmp = find_env(env, "SHLVL");
-	if (tmp)
-	{
-		i = ft_atoi(tmp->value);
-		i++;
-		shlvl = ft_itoa(i);
-		edit_env(env, "SHLVL", shlvl);
-	}
-}
-
-t_env	*create_env(void)
-{
-	t_env	*env;
-	char	*path;
-
-	path = "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin";
-	env = NULL;
-	env_add_back(&env, create_env_node(ft_strdup("PATH"), ft_strdup(path), 0));
-	env_add_back(&env, create_env_node(ft_strdup("PWD"), getcwd(NULL, 0), 1));
-	env_add_back(&env, create_env_node(ft_strdup("SHLVL"), ft_strdup("1"), 1));
-	env_add_back(&env, create_env_node(ft_strdup("OLDPWD"), NULL, 2));
-	return (env);
-}
-
-void	extarct_env(char **envp, t_env **env)
-{
-	int		i;
-	char	*sep;
-	char	*Key;
-	char	*value;
-
-	if (envp == NULL || envp[0] == NULL)
-	{
-		*env = create_env();
-		return ;
-	}
-	i = 0;
-	while (envp[i])
-	{
-		sep = ft_strchr(envp[i], '=');
-		if (sep)
-		{
-			Key = ft_substr(envp[i], 0, sep - envp[i]);
-			value = ft_strdup(sep + 1);
-			env_add_back(env, create_env_node(Key, value, 1));
-		}
-		i++;
-	}
-	update_shlvl(*env);
-}
+==================================end of var dump function ===========================*/
 
 void	m_shell_init(char **envp)
 {
@@ -243,7 +176,7 @@ void	m_shell_init(char **envp)
 	g_mshell.history->next = NULL;
 }
 
-char	*costum_readline()
+char	*costum_readline(void)
 {
 	char	*line;
 
@@ -261,54 +194,6 @@ char	*costum_readline()
 	return (line);
 }
 
-int	get_status(int status)
-{
-	return (((status)&0xff00) >> 8);
-}
-
-void	ft_free_cmd_var(void)
-{
-	ft_free_tokens(&g_mshell.token);
-	ft_free_herdoc(&g_mshell.herdocs);
-	ft_free_tree(&g_mshell.cmd_tree);
-}
-
-int ft_check_comments(char *cmd_line)
-{
-	int i;
-
-	i = -1;
-	if (!cmd_line)
-		return (0);
-	while (cmd_line[++i])
-	{
-		if (cmd_line[i] == '#' && !ft_check_quote(cmd_line, i) && (!i || is_white_space(cmd_line[i - 1])))
-			return (1);
-	}
-	return (0);
-}
-
-void ft_handle_comment(char **cmd_line)
-{
-	char *new_cli;
-	char *tmp;
-	int i;
-
-	tmp = *cmd_line;
-	i = -1;
-	while (tmp[++i])
-	{
-		if (tmp[i] == '#' && !ft_check_quote(tmp, i) && (!i || is_white_space(tmp[i - 1])))
-			break;
-	}
-	if (tmp[i])
-	{
-		new_cli = ft_substr(tmp, 0, i);
-		free(*cmd_line);
-		*cmd_line = new_cli;
-	}
-}
-
 void	ft_handle_history(char **cmd_line)
 {
 	if (check_tty() && *cmd_line && check_white_spaces(*cmd_line))
@@ -317,7 +202,7 @@ void	ft_handle_history(char **cmd_line)
 		put_tohistory(*cmd_line, g_mshell.history, 0);
 	}
 	if (ft_check_comments(*cmd_line))
-		ft_handle_comment(cmd_line);	
+		ft_handle_comment(cmd_line);
 }
 
 void	ft_execute_cli(void)
@@ -327,14 +212,6 @@ void	ft_execute_cli(void)
 	g_mshell.herdocs = ft_gen_herdocs(g_mshell.token);
 	execute(g_mshell.cmd_tree, &g_mshell);
 	ft_free_cmd_var();
-}
-int open_file(char *filename)
-{
-	int fd;
-	fd = open(filename, O_RDONLY);
-	if (fd < 0)
-		return (perror("minishell"), exit(127), 127);
-	return (fd);
 }
 
 int	main(int ac, char **av, char **envp)
