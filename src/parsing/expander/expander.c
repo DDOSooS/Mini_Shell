@@ -6,7 +6,7 @@
 /*   By: aghergho <aghergho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/01 01:15:21 by aghergho          #+#    #+#             */
-/*   Updated: 2024/08/23 11:06:45 by aghergho         ###   ########.fr       */
+/*   Updated: 2024/08/24 19:00:06 by aghergho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,10 +70,7 @@ void	ft_handle_export_expand(t_token **tokens)
 	while (tmp)
 	{
 		if (tmp->is_exported && ft_check_white_spaces(tmp->value) && tmp->value)
-		{
-			printf("==== (%s)=== (%d)===\n", tmp->value, tmp->is_exported);
 			ft_expand_exported_tokens(tokens, &tmp);
-		}
 		else
 			tmp = tmp->next;
 	}
