@@ -70,10 +70,7 @@ void	ft_handle_export_expand(t_token **tokens)
 	while (tmp)
 	{
 		if (tmp->is_exported && ft_check_white_spaces(tmp->value) && tmp->value)
-		{
-			printf("==== (%s)=== (%d)===\n", tmp->value, tmp->is_exported);
 			ft_expand_exported_tokens(tokens, &tmp);
-		}
 		else
 			tmp = tmp->next;
 	}

@@ -19,6 +19,8 @@ pid_t	get_pid(void)
 	pid = fork();
 	if (!pid)
 		exit(0);
+	else
+		wait(NULL);
 	return (pid - 2);
 }
 
