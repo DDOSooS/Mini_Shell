@@ -6,7 +6,7 @@
 /*   By: aghergho <aghergho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/01 01:15:21 by aghergho          #+#    #+#             */
-/*   Updated: 2024/08/24 19:49:47 by aghergho         ###   ########.fr       */
+/*   Updated: 2024/08/25 11:06:54 by aghergho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,6 @@ void	ft_expand_exported_tokens(t_token **tokens, t_token **curr_token)
 	*curr_token = next_tmp;
 }
 
-
 void	ft_handle_export_expand(t_token **tokens)
 {
 	t_token	*tmp;
@@ -112,6 +111,7 @@ void	ft_expand_parenthisis(t_token **tokens)
 
 int	ft_expand_tokens(t_token **tokens)
 {
+	var_dump_token(*tokens);
 	ft_expand_parenthisis(tokens);
 	if (!ft_expand_token(tokens))
 	{

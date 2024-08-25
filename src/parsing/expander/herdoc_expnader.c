@@ -6,7 +6,7 @@
 /*   By: aghergho <aghergho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/21 16:08:32 by aghergho          #+#    #+#             */
-/*   Updated: 2024/08/24 18:56:18 by aghergho         ###   ########.fr       */
+/*   Updated: 2024/08/25 11:07:17 by aghergho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,10 +29,7 @@ int	ft_count_expanded_line(char *line, int *counter)
 	tmp = ft_substr(line, 0, i);
 	sd_tmp = ft_get_env_var(tmp);
 	if (sd_tmp)
-	{
 		*counter += ft_strlen(sd_tmp);
-		// free(sd_tmp);
-	}
 	free(tmp);
 	return (i);
 }
@@ -54,10 +51,7 @@ int	ft_gen_expanded_line(char *line, char **new)
 	tmp = ft_substr(line, 0, i);
 	sd_tmp = ft_get_env_var(tmp);
 	if (sd_tmp)
-	{
 		ft_strcat(*new, sd_tmp);
-		// free(sd_tmp);
-	}
 	free(tmp);
 	return (i);
 }

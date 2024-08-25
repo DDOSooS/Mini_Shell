@@ -6,13 +6,25 @@
 /*   By: aghergho <aghergho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/06 16:02:56 by aghergho          #+#    #+#             */
-/*   Updated: 2024/08/24 10:40:32 by aghergho         ###   ########.fr       */
+/*   Updated: 2024/08/24 22:51:17 by aghergho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/mshell.h"
 
 t_mshell	g_mshell;
+
+void	var_dump_token(t_token *tokens)
+{
+	if (!tokens)
+		printf("=====tokens are Null====\n");
+	while (tokens)
+	{
+		printf("==type===(%s)-----\n", tokens->type);
+		printf("===value==(%s)====\n", tokens->value);
+		tokens = tokens->next;
+	}
+}
 
 /*
 	@var_dump function is a function that debug double 2d char variable
@@ -29,17 +41,6 @@ void	var_dump(char **str)
 	}
 }
 
-void	var_dump_token(t_token *tokens)
-{
-	if (!tokens)
-		printf("=====tokens are Null====\n");
-	while (tokens)
-	{
-		printf("==type===(%s)-----\n", tokens->type);
-		printf("===value==(%s)====\n", tokens->value);
-		tokens = tokens->next;
-	}
-}
 
 void	var_dump_cmd(t_cmd *cmds)
 {
