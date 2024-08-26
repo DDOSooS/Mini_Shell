@@ -6,7 +6,7 @@
 /*   By: aghergho <aghergho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/06 16:01:09 by aghergho          #+#    #+#             */
-/*   Updated: 2024/08/25 11:07:55 by aghergho         ###   ########.fr       */
+/*   Updated: 2024/08/26 10:05:21 by aghergho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -384,6 +384,7 @@ void				interactive_sigint(int sig);
 // void	star_expansion(char ***cmd_args, int i);
 // void star_expansion(t_cmd *cmd);
 // void star_expansion(char **cmd_args);
+// void	var_dump_token(t_token *tokens);
 
 /*=============== cleaning ressources =============*/
 void				ft_free_tokens(t_token **tokens);
@@ -394,5 +395,4 @@ void				ft_free_cmds(t_cmd *cmds);
 void				ft_free_out_files(t_outfile *outfile);
 void				ft_free_in_file(t_infile *infile);
 void				ft_free_cmd_var(void);
-// void	var_dump_token(t_token *tokens);
 #endif

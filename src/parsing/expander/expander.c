@@ -6,7 +6,7 @@
 /*   By: aghergho <aghergho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/01 01:15:21 by aghergho          #+#    #+#             */
-/*   Updated: 2024/08/25 11:06:54 by aghergho         ###   ########.fr       */
+/*   Updated: 2024/08/26 10:05:45 by aghergho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,10 +108,10 @@ void	ft_expand_parenthisis(t_token **tokens)
 }
 
 // ft_expand_quotes(tokens);
+// var_dump_token(*tokens);
 
 int	ft_expand_tokens(t_token **tokens)
 {
-	var_dump_token(*tokens);
 	ft_expand_parenthisis(tokens);
 	if (!ft_expand_token(tokens))
 	{

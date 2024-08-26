@@ -6,7 +6,7 @@
 /*   By: aghergho <aghergho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/21 12:50:16 by aghergho          #+#    #+#             */
-/*   Updated: 2024/08/22 15:02:47 by aghergho         ###   ########.fr       */
+/*   Updated: 2024/08/26 10:07:21 by aghergho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,10 +95,14 @@ int	ft_check_syntax(char *cmd_line)
 	if (!ft_strlen(cmd_line) || ft_check_empty_command(cmd_line))
 		return (1);
 	if (ft_check_operation_error(cmd_line) || ft_check_quote_error(cmd_line)
-		|| !ft_check_redirection_error(cmd_line)
-		|| !ft_check_parenthise_error(cmd_line))
+		|| !ft_check_redirection_error(cmd_line))
 	{
 		g_mshell.exit_value = 2;
+		return (0);
+	}
+	if (!ft_check_parenthise_error(cmd_line))
+	{
+		g_mshell.exit_value = 1;
 		return (0);
 	}
 	return (1);
