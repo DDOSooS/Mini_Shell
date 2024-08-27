@@ -6,7 +6,7 @@
 /*   By: aghergho <aghergho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/21 13:03:58 by aghergho          #+#    #+#             */
-/*   Updated: 2024/08/27 18:39:03 by aghergho         ###   ########.fr       */
+/*   Updated: 2024/08/27 21:20:25 by aghergho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,13 +46,7 @@ t_cmd	*ft_gen_cmd(t_token *tokens)
 	while (tokens && tokens->value)
 	{
 		if (!tokens->type_id && !flag)
-		{
-			if (tokens->value[0] && is_quote(tokens->value[0])
-				&& is_quote(tokens->value[ft_strlen(tokens->value) - 1]))
-				ft_add_to_cmd(&cmd, tokens->value);
-			else if (!ft_add_cmd(&cmd, tokens->value))
-				return (NULL);
-		}
+			ft_add_to_cmd(&cmd, tokens->value);
 		if (tokens->type_id >= 6 && tokens->type_id <= 9)
 			flag = 1;
 		if (!tokens->type_id && flag)

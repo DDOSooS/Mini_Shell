@@ -6,7 +6,7 @@
 /*   By: aghergho <aghergho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/21 12:50:16 by aghergho          #+#    #+#             */
-/*   Updated: 2024/08/27 18:59:55 by aghergho         ###   ########.fr       */
+/*   Updated: 2024/08/27 22:02:18 by aghergho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,7 +102,7 @@ int	ft_check_syntax(char *cmd_line)
 	}
 	if (!ft_check_parenthise_error(cmd_line))
 	{
-		g_mshell.exit_value = 1;
+		g_mshell.exit_value = 2;
 		return (0);
 	}
 	return (1);

@@ -6,7 +6,7 @@
 /*   By: aghergho <aghergho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/06 16:01:09 by aghergho          #+#    #+#             */
-/*   Updated: 2024/08/27 19:04:00 by aghergho         ###   ########.fr       */
+/*   Updated: 2024/08/27 22:26:06 by aghergho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -152,7 +152,7 @@ extern t_mshell		g_mshell;
 int					is_last_right_parentise(char *cmd, int index);
 void				varDumpOutFile(t_outfile *redirection);
 void				varDumpInFile(t_infile *redirection);
-
+void	var_dump_token(t_token *tokens);
 /*========== lexer functions ============*/
 
 int					is_tokens(char c);
