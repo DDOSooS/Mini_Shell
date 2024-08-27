@@ -33,6 +33,7 @@ SRC = src/main.c \
 		src/parsing/expander/expander_generator_utils.c \
 		src/parsing/expander/herdoc_generater.c \
 		src/parsing/expander/herdoc_expand_utils.c \
+		src/parsing/expander/expand_token_utils1.c \
 		src/parsing/expander/expand_token_utils.c \
 		src/parsing/parser/parser.c\
 		src/parsing/parser/parser_utils.c\
