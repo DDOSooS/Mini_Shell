@@ -52,17 +52,21 @@ void	ft_handle_comment(char **cmd_line)
 
 int	ft_check_end_token(char *cmd, int i, int start)
 {
-	if ((is_whites_space(cmd[i + 1]) && ft_check_opened_token(cmd, i + 1)) && start != -1)
+	if ((is_whites_space(cmd[i + 1]) && ft_check_opened_token(cmd, i + 1))
+		&& start != -1)
 		return (1);
-	if ((is_whites_space(cmd[i + 1]) && ft_check_opened_token(cmd, i + 1)) && start != -1)
+	if ((is_whites_space(cmd[i + 1]) && ft_check_opened_token(cmd, i + 1))
+		&& start != -1)
 		return (1);
-	if (((is_tokens(cmd[i + 1]) && !ft_check_quote(cmd, i+ 1) && is_closed_parenthise(cmd, i + 1))) && start != -1)
+	if (((is_tokens(cmd[i + 1]) && !ft_check_quote(cmd, i + 1)
+				&& is_closed_parenthise(cmd, i + 1))) && start != -1)
 		return (1);
-	if (is_r_parenthise(cmd[i + 1]) && check_parenthise_token(cmd, i+1) && !ft_check_quote(cmd, i + 1))
+	if (is_r_parenthise(cmd[i + 1]) && check_parenthise_token(cmd, i + 1)
+		&& !ft_check_quote(cmd, i + 1))
 		return (1);
-	if (!cmd[i + 1]  && start != -1 )
+	if (!cmd[i + 1] && start != -1)
 		return (1);
-	return 0;
+	return (0);
 }
 
 int	ft_check_double_token(char *cmd, int i)
@@ -73,6 +77,6 @@ int	ft_check_double_token(char *cmd, int i)
 
 int	ft_check_sing_token(char *cmd, int i)
 {
-	return ((is_pipe(cmd[i])
-	|| is_redirection(cmd[i])) && !ft_check_quote(cmd, i) && is_closed_parenthise(cmd, i));
+	return ((is_pipe(cmd[i]) || is_redirection(cmd[i])) && !ft_check_quote(cmd,
+			i) && is_closed_parenthise(cmd, i));
 }

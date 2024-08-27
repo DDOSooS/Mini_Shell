@@ -6,7 +6,7 @@
 /*   By: aghergho <aghergho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/06 16:01:09 by aghergho          #+#    #+#             */
-/*   Updated: 2024/08/27 18:34:23 by aghergho         ###   ########.fr       */
+/*   Updated: 2024/08/27 19:04:00 by aghergho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,11 @@
 # include <sys/types.h>
 # include <sys/wait.h>
 # include <unistd.h>
+
+# define BLUE "\001\033[0;34m\002"
+# define GREEN "\001\033[0;32m\002"
+# define CYAN "\001\033[0;36m\002"
+# define RESET "\001\033[0m\002"
 
 typedef struct token
 {
@@ -144,7 +149,7 @@ typedef struct mshell
 }					t_mshell;
 
 extern t_mshell		g_mshell;
-int is_last_right_parentise(char *cmd, int index);
+int					is_last_right_parentise(char *cmd, int index);
 void				varDumpOutFile(t_outfile *redirection);
 void				varDumpInFile(t_infile *redirection);
 
@@ -214,12 +219,14 @@ int					ft_check_double_token(char *cmd, int i);
 int					ft_check_sing_token(char *cmd, int i);
 int					ft_check_comments(char *cmd_line);
 void				ft_handle_comment(char **cmd_line);
-int 				is_last_right_parentise(char *cmd, int index);
-int 				is_last_right_parentise(char *cmd, int index);
-int check_left_p_token(char *token, int index);
-int check_r_parenthis(char *token , int i);
-int check_right_p_token(char *token, int index);
-int check_parenthise_token(char *token, int index);
+int					is_last_right_parentise(char *cmd, int index);
+int					is_last_right_parentise(char *cmd, int index);
+int					check_left_p_token(char *token, int index);
+int					check_r_parenthis(char *token, int i);
+int					check_right_p_token(char *token, int index);
+int					check_parenthise_token(char *token, int index);
+int					check_parenthis_token(char *cmd, int i, int start);
+
 /*========== expnder functions =====================*/
 
 int					ft_expand_tokens(t_token **tokens, int flag);
@@ -237,7 +244,8 @@ int					ft_gen_pid_token(char **str, char token);
 char				*ft_get_env_var(char *str);
 void				ft_join_expanded_token(char **joined_str, char *tmp,
 						char *str);
-int					ft_get_expanded_quoted_token(char *token, int *counter, int flag);
+int					ft_get_expanded_quoted_token(char *token, int *counter,
+						int flag);
 int					ft_count_number_len(char token);
 int					ft_check_env_var(char *str);
 int					check_unclosed_quote(char *token);
@@ -245,9 +253,11 @@ pid_t				get_pid(void);
 int					ft_expand_herdoc_arg(char **arg);
 void				ft_gen_expanded_delimiter(char **new_del, char *del);
 void				ft_delete_token(t_token **token, t_token **root);
-void				ft_expand_token_helper(int *flag, t_token **token, int type);
+void				ft_expand_token_helper(int *flag, t_token **token,
+						int type);
 int					ft_check_unquoted_dollar(char *token);
-
+int					is_expanded_token(char *token, int i);
+int					is_pid_token(char *token, int i);
 /*============  generate herdoc functions ==========*/
 
 t_herdoc			*ft_gen_herdocs(t_token *tokens);
@@ -353,14 +363,16 @@ char				*create_heredoc_filename(int here_doc_num);
 void				update_history_from_pipe(int fd, t_history *history);
 int					write_to_fd(int fd, char *str);
 void				create_heredoc(t_herdoc **herdoc, int write_fd);
-
+void				unlink_herdoc(t_herdoc *herdoc);
 /*================= Printers =================*/
 void				print_stderr(char *str);
 int					export_erorr(char *arg, int status);
 void				print_file_error(char *name, char *error);
 
 /*================ wildcards ===================*/
-void				star_expansion(t_cmd *cmd, char ***args);
+// void				star_expansion(t_cmd *cmd, char ***args);
+void				astrict_exp(t_cmd **cmd);
+char				**star_expansion(t_cmd *cmd);
 int					find_char(char *str, char c);
 void				get_list_files(char *exp, char ***file_list);
 int					open_dir(char *directory, DIR **dir);
@@ -375,6 +387,7 @@ int					match_symbol(char *regexp, char *text);
 
 /*================ var dumping data==============*/
 void				ft_free_herdoc(t_herdoc **herdocs);
+void				var_dump_herdoc(t_herdoc *herdocs);
 
 /*=============== signals =======================*/
 void				handle_signals(void (*sigint)(int), void (*sigquit)(int),
@@ -389,6 +402,7 @@ void				interactive_sigint(int sig);
 // void	star_expansion(char ***cmd_args, int i);
 // void star_expansion(t_cmd *cmd);
 // void star_expansion(char **cmd_args);
+// void	var_dump_token(t_token *tokens);
 
 /*=============== cleaning ressources =============*/
 void				ft_free_tokens(t_token **tokens);
@@ -399,5 +413,5 @@ void				ft_free_cmds(t_cmd *cmds);
 void				ft_free_out_files(t_outfile *outfile);
 void				ft_free_in_file(t_infile *infile);
 void				ft_free_cmd_var(void);
-int check_parenthise_token(char *token, int index);
+int					check_parenthise_token(char *token, int index);
 #endif

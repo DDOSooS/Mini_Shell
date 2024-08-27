@@ -12,20 +12,53 @@
 
 #include "../../../includes/mshell.h"
 
+long long int	ft_atoll(char *str)
+{
+	long long int	status;
+	int				sign;
+	int				i;
+
+	status = 0;
+	sign = 1;
+	i = 0;
+	if (str[i] == '-' || str[i] == '+')
+		if (str[i++] == '-')
+			sign *= -1;
+	while (str && str[i] && str[i] >= '0' && str[i] <= '9')
+	{
+		if (status > LLONG_MAX / 10 || (status == LLONG_MAX / 10
+				&& (str[i] - '0') > LLONG_MAX % 10))
+		{
+			if (sign == -1 && status == LLONG_MAX / 10
+				&& str[i] == '8' && str[i + 1] == '\0')
+				return (0);
+			if (sign == 1 || (sign == -1 && status > LLONG_MAX / 10))
+				return (1);
+			return (1);
+		}
+		status = status * 10 + (str[i++] - '0');
+	}
+	return (0);
+}
+
 static int	exit_value_check(char *arg)
 {
-	int	i;
+	int				i;
+	int				status;
 
 	i = 0;
-	if (arg[i] == '-')
+	if (arg[i] == '-' || arg[i] == '+')
 		i++;
 	while (arg[i])
 	{
 		if (!ft_isdigit(arg[i]))
-			return (0);
+			return (1);
 		i++;
 	}
-	return (1);
+	status = ft_atoll(arg);
+	if (status)
+		return (1);
+	return (0);
 }
 
 static int	exit_handler(char *arg)
@@ -33,7 +66,8 @@ static int	exit_handler(char *arg)
 	int		exit_value;
 	char	*buffer;
 
-	if (!exit_value_check(arg))
+	buffer = NULL;
+	if (exit_value_check(arg))
 	{
 		buffer = ft_strjoin("minishell: exit: ", arg);
 		write(2, buffer, ft_strlen(buffer));
@@ -57,8 +91,9 @@ int	ft_exit(t_cmd *cmd, t_mshell *shell)
 	(void)shell;
 	if (cmd->next != NULL)
 		tmp = cmd->next;
-	write(2, "exit\n", 5);
-	if (tmp && tmp->next != NULL && exit_value_check(tmp->arg))
+	if (check_tty())
+		write(2, "exit\n", 5);
+	if (tmp && tmp->next != NULL && !exit_value_check(tmp->arg))
 	{
 		print_stderr("exit: too many arguments");
 		return (1);

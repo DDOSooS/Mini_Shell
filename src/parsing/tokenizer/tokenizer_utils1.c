@@ -12,9 +12,9 @@
 
 #include "../../../includes/mshell.h"
 
-int is_first_left_parenthise(char *cmd, int index)
+int	is_first_left_parenthise(char *cmd, int index)
 {
-	int i;
+	int	i;
 
 	if (!cmd)
 		return (0);
@@ -32,9 +32,9 @@ int is_first_left_parenthise(char *cmd, int index)
 	return (1);
 }
 
-int is_last_right_parentise(char *cmd, int index)
+int	is_last_right_parentise(char *cmd, int index)
 {
-	int i;
+	int	i;
 
 	i = ft_strlen(cmd);
 	while (--i >= 0)
@@ -49,38 +49,39 @@ int is_last_right_parentise(char *cmd, int index)
 	return (1);
 }
 
-int check_left_p_token(char *token, int index)
+int	check_left_p_token(char *token, int index)
 {
 	if (!index)
-		return 1;
+		return (1);
 	while (index - 1 >= 0 && token[--index])
 	{
-		if ((is_pipe(token[index]) || is_operator(token[index])) && !ft_check_quote(token, index))
-			break;
+		if ((is_pipe(token[index]) || is_operator(token[index]))
+			&& !ft_check_quote(token, index))
+			break ;
 		if (is_l_parenthise(token[index]) && !ft_check_quote(token, index))
 			return (0);
 	}
-	
 	return (1);
 }
 
-int check_r_parenthis(char *token , int i)
+int	check_r_parenthis(char *token, int i)
 {
 	while (token[++i])
 	{
-		if ((is_pipe(token[i]) || is_operator(token[i])) && !ft_check_quote(token, i))
-			break;
+		if ((is_pipe(token[i]) || is_operator(token[i]))
+			&& !ft_check_quote(token, i))
+			break ;
 		if (is_r_parenthise(token[i]) && !ft_check_quote(token, i))
 			return (0);
 	}
 	return (1);
 }
 
-int check_right_p_token(char *token, int index)
+int	check_right_p_token(char *token, int index)
 {
-	int i;
-	int r_counter;
-	int l_counter;
+	int	i;
+	int	r_counter;
+	int	l_counter;
 
 	r_counter = 1;
 	l_counter = 0;
@@ -90,9 +91,10 @@ int check_right_p_token(char *token, int index)
 	i = index;
 	while (--i >= 0 && token[i])
 	{
-		if ((is_pipe(token[i]) || is_operator(token[i])) && !ft_check_quote(token, i))
-			break;
-		if(is_r_parenthise(token[i]) && !ft_check_quote(token, i))
+		if ((is_pipe(token[i]) || is_operator(token[i]))
+			&& !ft_check_quote(token, i))
+			break ;
+		if (is_r_parenthise(token[i]) && !ft_check_quote(token, i))
 			r_counter++;
 		if (is_l_parenthise(token[i]) && !ft_check_quote(token, i))
 			l_counter++;
@@ -102,4 +104,3 @@ int check_right_p_token(char *token, int index)
 			return (1);
 	return (0);
 }
-

@@ -6,7 +6,7 @@
 /*   By: aghergho <aghergho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/21 12:50:48 by aghergho          #+#    #+#             */
-/*   Updated: 2024/08/26 23:01:02 by aghergho         ###   ########.fr       */
+/*   Updated: 2024/08/27 19:00:46 by aghergho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,11 +107,13 @@ int	ft_pipe_sequence_error(char *cmd)
 			{
 				if (is_whites_space(cmd[i]))
 					continue ;
-				if (is_pipe(cmd[i]) || is_operator(cmd[i]) || is_r_parenthise(cmd[i]))
+				if (is_pipe(cmd[i]) || is_operator(cmd[i])
+					|| is_r_parenthise(cmd[i]))
 					return (0);
-				else
-					break ;
+				break ;
 			}
+			if (!cmd[i])
+				return (0);
 		}
 	}
 	return (1);
@@ -136,10 +138,10 @@ int	ft_operatore_sequence_error(char *cmd)
 			{
 				if (is_whites_space(cmd[i]))
 					continue ;
-				if (is_pipe(cmd[i]) || is_operator(cmd[i]) || is_r_parenthise(cmd[i]))
+				if (is_pipe(cmd[i]) || is_operator(cmd[i])
+					|| is_r_parenthise(cmd[i]))
 					return (0);
-				else
-					break ;
+				break ;
 			}
 		}
 	}

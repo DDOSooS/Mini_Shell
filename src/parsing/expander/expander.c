@@ -12,7 +12,7 @@
 
 #include "../../../includes/mshell.h"
 
-int	ft_expand_token(t_token **tokens,int helper)
+int	ft_expand_token(t_token **tokens, int helper)
 {
 	t_token	*tmp;
 	int		flag;
@@ -29,8 +29,8 @@ int	ft_expand_token(t_token **tokens,int helper)
 		if (tmp->value && !tmp->value[0] && flag && tmp->previous
 			&& (tmp->previous->type_id == 6 || tmp->previous->type_id == 8
 				|| tmp->previous->type_id == 9))
-			return (print_file_error(sd_tmp, "ambiguous redirect")
-				, free(sd_tmp), 0);
+			return (print_file_error(sd_tmp, "ambiguous redirect"),
+				free(sd_tmp), 0);
 		if (tmp->value && !tmp->value[0] && tmp->is_exported)
 			ft_delete_token(&tmp, tokens);
 		else
@@ -111,7 +111,7 @@ void	ft_expand_parenthisis(t_token **tokens)
 // ft_expand_parenthisis(tokens);
 
 int	ft_expand_tokens(t_token **tokens, int flag)
-{ 
+{
 	if (!ft_expand_token(tokens, flag))
 	{
 		g_mshell.exit_value = 1;

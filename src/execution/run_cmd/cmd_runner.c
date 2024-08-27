@@ -65,7 +65,7 @@ static void	handle_child_process(t_cmd *cmd, t_mshell *shell)
 
 	path = NULL;
 	handle_signals(active_sigint, active_sigquit, SIG_IGN, SIG_IGN);
-	star_expansion(cmd, &cmd_args);
+	cmd_args = cmd_args_getter(cmd);
 	if (find_env(shell->env, "PATH"))
 		path = get_path(find_env(shell->env, "PATH")->value);
 	envp = get_envp(shell->env);
@@ -77,6 +77,7 @@ static void	handle_parent_process(int pid, t_mshell *shell)
 	int	status;
 
 	waitpid(pid, &status, 0);
+	unlink_herdoc(shell->herdocs);
 	if (status == 2 || status == 131)
 	{
 		if (status == 2)

@@ -25,7 +25,7 @@ static int	list_size(char **list)
 
 	i = 0;
 	while (list[i])
-		i += 1;
+		i++;
 	return (i);
 }
 
@@ -35,7 +35,7 @@ static void	move_pointer(char **dest, char **src, int *b_i)
 	{
 		dest[*b_i] = *src;
 		*b_i += 1;
-		src += 1;
+		src++;
 	}
 }
 
@@ -58,9 +58,25 @@ char	**list_join(char **list_one, char **list_two, int i)
 		else
 		{
 			buff[b_i] = *list_one;
-			b_i += 1;
+			b_i++;
 		}
-		list_one += 1;
+		list_one++;
 	}
 	return (buff);
+}
+
+int	find_char(char *str, char c)
+{
+	int	i;
+
+	if (str == 0)
+		return (-1);
+	i = 0;
+	while (str[i])
+	{
+		if (str[i] == c)
+			return (i);
+		i += 1;
+	}
+	return (-1);
 }

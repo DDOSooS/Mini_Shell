@@ -48,8 +48,8 @@ int	ft_check_expand(char *tmp)
 
 int	ft_check_expand_delimiter(char *delimiter)
 {
-	int		checker;
-	int		i;
+	int	checker;
+	int	i;
 
 	checker = 0;
 	i = -1;

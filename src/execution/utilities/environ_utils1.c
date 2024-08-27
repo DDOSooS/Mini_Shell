@@ -23,6 +23,15 @@ void	update_shlvl(t_env *env)
 	{
 		i = ft_atoi(tmp->value);
 		i++;
+		if (i >= 1000)
+		{
+			write(2, "minishell: warning: shell level (", 33);
+			shlvl = ft_itoa(i);
+			write(2, shlvl, ft_strlen(shlvl));
+			write(2, ") too high, resetting to 1\n", 27);
+			i = 1;
+			free(shlvl);
+		}
 		shlvl = ft_itoa(i);
 		edit_env(env, "SHLVL", shlvl);
 	}

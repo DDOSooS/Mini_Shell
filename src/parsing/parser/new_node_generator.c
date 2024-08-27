@@ -6,7 +6,7 @@
 /*   By: aghergho <aghergho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/21 13:03:58 by aghergho          #+#    #+#             */
-/*   Updated: 2024/08/27 18:32:38 by aghergho         ###   ########.fr       */
+/*   Updated: 2024/08/27 18:39:03 by aghergho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ t_cmd	*ft_gen_cmd(t_token *tokens)
 {
 	int		flag;
 	t_cmd	*cmd;
-	char 	**args;
+	char	**args;
 
 	args = NULL;
 	cmd = NULL;
@@ -58,7 +58,8 @@ t_cmd	*ft_gen_cmd(t_token *tokens)
 		if (!tokens->type_id && flag)
 			flag = 0;
 		tokens = tokens->next;
-	}	
+	}
+	astrict_exp(&cmd);
 	return (cmd);
 }
 

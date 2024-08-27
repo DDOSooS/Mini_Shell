@@ -6,7 +6,7 @@
 /*   By: aghergho <aghergho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/22 11:19:40 by aghergho          #+#    #+#             */
-/*   Updated: 2024/08/27 17:59:09 by aghergho         ###   ########.fr       */
+/*   Updated: 2024/08/27 18:54:50 by aghergho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ int	ft_gen_expanded_quoted_token(char **str, char *token, int flag)
 
 	i = 0;
 	if (flag)
-	*str = ft_strcat_char(*str, token[i]);
+		*str = ft_strcat_char(*str, token[i]);
 	while (token[++i] && ft_check_quote(token, i + 1))
 	{
 		if (!is_dollar_sign(token[i]))
@@ -53,12 +53,12 @@ int	ft_gen_expanded_quoted_token(char **str, char *token, int flag)
 			*str = ft_strcat_char(*str, token[i]);
 			continue ;
 		}
-		if (is_dollar_sign(token[i]) && token[i + 1] && is_dollar_sign(token[i + 1]))
+		if (is_pid_token(token, i))
 		{
 			ft_gen_pid_token(str, token[i + 1]);
 			i++;
 		}
-		else if (is_dollar_sign(token[i]) && token[i + 1]&& ft_isalnum(token[i + 1]))
+		else if (is_expanded_token(token, i))
 			i += ft_gen_search_expanded_token(str, &token[i]);
 		else
 			*str = ft_strcat_char(*str, token[i]);
@@ -99,8 +99,8 @@ int	ft_gen_expanded_token(char **str, char *token, int flag)
 			i += ft_gen_expanded_quoted_token(str, &token[i], flag);
 			return (i);
 		}
-		else if (is_dollar_sign(token[i]) && token[i + 1]
-			&& is_symbol(token[i + 1]))
+		else if (is_dollar_sign(token[i])
+			&& token[i + 1] && is_symbol(token[i + 1]))
 		{
 			i += ft_gen_expanded_unquoted_token(str, &token[i]);
 			return (i);
