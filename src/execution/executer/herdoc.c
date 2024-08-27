@@ -12,6 +12,23 @@
 
 #include "../../../includes/mshell.h"
 
+void	unlink_herdoc(t_herdoc *herdoc)
+{
+	t_herdoc	*tmp;
+
+	tmp = herdoc;
+	while (tmp && tmp->filename)
+	{
+		if (access(tmp->filename, F_OK) == 0)
+		{
+			printf("unlinking (%s)\n", tmp->filename);
+			if (unlink(tmp->filename))
+				perror("unlink");
+		}
+		tmp = tmp->next;
+	}
+}
+
 static int	run_heredoc_child(t_mshell *shell, int pipe_fds[2])
 {
 	t_herdoc	*herdoc;

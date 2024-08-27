@@ -12,22 +12,6 @@
 
 #include "../../../includes/mshell.h"
 
-int	find_char(char *str, char c)
-{
-	int	i;
-
-	if (str == 0)
-		return (-1);
-	i = 0;
-	while (str[i])
-	{
-		if (str[i] == c)
-			return (i);
-		i += 1;
-	}
-	return (-1);
-}
-
 static void	append_slash(char **file_list)
 {
 	char	*tmp;
@@ -64,28 +48,6 @@ void	fill_list(char *directory, char *exp, char **file_list, int dir_flag)
 	closedir(dir);
 }
 
-/*
-void	expand_wild(char ***parsed_line, int i)
-{
-	char	**file_list;
-	char	**tmp;
-
-	if (parsed_line == 0
-		|| *parsed_line == 0
-		|| **parsed_line == 0)
-		return ;
-	get_list_filter((*parsed_line)[i], &file_list);
-	tmp = list_join(*parsed_line, file_list, i);
-	if (tmp != 0)
-	{
-		free((*parsed_line)[i]);
-		free(*parsed_line);
-		*parsed_line = tmp;
-		free(file_list);
-	}
-}
-*/
-
 void	expand_wild(char ***args, int i)
 {
 	char	**file_list;
@@ -97,18 +59,22 @@ void	expand_wild(char ***args, int i)
 	current_args = *args;
 	get_list_files(current_args[i], &file_list);
 	tmp = list_join(current_args, file_list, i);
-	if (tmp == 0)
+	if (tmp == NULL)
 		return ;
+	if (current_args[i])
+		free(current_args[i]);
+	free(file_list);
+	free(current_args);
 	*args = tmp;
 }
 
-void	star_expansion(t_cmd *cmd, char ***args)
+char	**star_expansion(t_cmd *cmd)
 {
 	int		i;
 	char	**cmd_args;
 
 	if (cmd == NULL)
-		return ;
+		return (NULL);
 	i = 1;
 	cmd_args = cmd_args_getter(cmd);
 	while (cmd_args[i])
@@ -117,5 +83,25 @@ void	star_expansion(t_cmd *cmd, char ***args)
 			expand_wild(&cmd_args, i);
 		i++;
 	}
-	*args = cmd_args;
+	return (cmd_args);
+}
+
+void	astrict_exp(t_cmd **cmd)
+{
+	char	**args;
+	int		i;
+
+	i = 0;
+	args = NULL;
+	if (cmd == NULL || *cmd == NULL)
+		return ;
+	args = star_expansion(*cmd);
+	ft_free_cmds(*cmd);
+	*cmd = NULL;
+	while (args && args[i])
+	{
+		ft_add_cmd(cmd, args[i]);
+		i++;
+	}
+	free_func(args);
 }

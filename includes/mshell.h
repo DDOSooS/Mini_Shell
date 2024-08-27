@@ -28,6 +28,12 @@
 # include <sys/types.h>
 # include <sys/wait.h>
 # include <unistd.h>
+# include <limits.h>
+
+# define BLUE "\001\033[0;34m\002"
+# define GREEN "\001\033[0;32m\002"
+# define CYAN "\001\033[0;36m\002"
+# define RESET "\001\033[0m\002"
 
 typedef struct token
 {
@@ -354,7 +360,9 @@ int					export_erorr(char *arg, int status);
 void				print_file_error(char *name, char *error);
 
 /*================ wildcards ===================*/
-void				star_expansion(t_cmd *cmd, char ***args);
+// void				star_expansion(t_cmd *cmd, char ***args);
+void				astrict_exp(t_cmd **cmd);
+char				**star_expansion(t_cmd *cmd);
 int					find_char(char *str, char c);
 void				get_list_files(char *exp, char ***file_list);
 int					open_dir(char *directory, DIR **dir);
@@ -369,6 +377,7 @@ int					match_symbol(char *regexp, char *text);
 
 /*================ var dumping data==============*/
 void				ft_free_herdoc(t_herdoc **herdocs);
+void				unlink_herdoc(t_herdoc *herdoc);
 void				var_dump_herdoc(t_herdoc *herdocs);
 
 /*=============== signals =======================*/
@@ -378,13 +387,6 @@ void				active_sigquit(int sig);
 void				active_sigint(int sig);
 void				interactive_sigquit(int sig);
 void				interactive_sigint(int sig);
-
-/*============= expansion ======================*/
-// void star_expansion(char ***cmd_args);
-// void	star_expansion(char ***cmd_args, int i);
-// void star_expansion(t_cmd *cmd);
-// void star_expansion(char **cmd_args);
-// void	var_dump_token(t_token *tokens);
 
 /*=============== cleaning ressources =============*/
 void				ft_free_tokens(t_token **tokens);

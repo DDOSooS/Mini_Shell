@@ -34,17 +34,28 @@ void	m_shell_init(char **envp)
 char	*costum_readline(void)
 {
 	char	*line;
+	char	curr[2024];
+	char	*path;
+	char	*tmp;
 
+	if (getcwd(curr, 2024) != NULL)
+	{
+		tmp = ft_strjoin(CYAN "minishell" RESET GREEN "$>" RESET, curr);
+		path = ft_strjoin(tmp, ":$ ");
+		free(tmp);
+	}
+	else
+		path = ft_strdup(CYAN "minishell" RESET ":$ ");
 	if (check_tty())
-		line = readline("minishell:$ ");
+		line = readline(path);
 	else
 		line = get_next_line(STDIN_FILENO);
+	free(path);
 	if (!line)
 	{
 		if (check_tty())
 			ft_putstr_fd("exit\n", 1);
-		free_gvar(1);
-		exit(0);
+		(free_gvar(1), exit(0));
 	}
 	return (line);
 }

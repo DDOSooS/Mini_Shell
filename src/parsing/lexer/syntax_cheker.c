@@ -107,9 +107,10 @@ int	ft_pipe_sequence_error(char *cmd)
 					continue ;
 				if (is_pipe(cmd[i]) || is_operator(cmd[i]))
 					return (0);
-				else
-					break ;
+				break ;
 			}
+			if (!cmd[i])
+				return (0);
 		}
 	}
 	return (1);

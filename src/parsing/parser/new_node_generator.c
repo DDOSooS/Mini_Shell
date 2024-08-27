@@ -57,6 +57,7 @@ t_cmd	*ft_gen_cmd(t_token *tokens)
 			flag = 0;
 		tokens = tokens->next;
 	}
+	astrict_exp(&cmd);
 	return (cmd);
 }
 

@@ -40,15 +40,19 @@ int	ft_add_cmd(t_cmd **cmd, char *str)
 
 int	ft_add_to_cmd(t_cmd **root, char *token)
 {
-	char	*cmd;
 	t_cmd	*tmp;
 	t_cmd	*new;
 
 	tmp = *root;
-	cmd = ft_strdup(token);
 	new = malloc(sizeof(t_cmd));
-	new->arg = cmd;
-	new->check_wildcard = 0;
+	if (token)
+	{
+		new->arg = ft_substr(token, 1, ft_strlen(token) - 2);
+		free(token);
+	}
+	else
+		new->arg = NULL;
+	new->check_wildcard = ft_check_wild_card(new->arg);
 	new->next = NULL;
 	if (!root || !*root)
 	{
