@@ -6,20 +6,22 @@
 /*   By: aghergho <aghergho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/22 11:02:13 by aghergho          #+#    #+#             */
-/*   Updated: 2024/08/23 09:47:25 by aghergho         ###   ########.fr       */
+/*   Updated: 2024/08/27 18:36:54 by aghergho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../../includes/mshell.h"
 
-int	ft_get_unexpanded_token(char *token, int *counter)
+int	ft_get_unexpanded_token(char *token, int *counter, int flag)
 {
 	int	i;
 
 	i = 0;
-	if (check_unclosed_quote(token))
+	if(flag)
 		(*counter)++;
 	while (token[++i] && ft_check_quote(token, i + 1))
+		(*counter)++;
+	if (flag)
 		(*counter)++;
 	return (i);
 }
@@ -51,7 +53,7 @@ int	ft_get_expanded_unquoted_token(char *token, int *counter)
 	return (i);
 }
 
-int	ft_count_expanded_token(char *token, int *counter)
+int	ft_count_expanded_token(char *token, int *counter, int flag)
 {
 	int	i;
 
@@ -60,12 +62,12 @@ int	ft_count_expanded_token(char *token, int *counter)
 	{
 		if (is_single_quote(token[i]))
 		{
-			i += ft_get_unexpanded_token(&token[i], counter);
+			i += ft_get_unexpanded_token(&token[i], counter, flag);
 			return (i);
 		}
 		else if (is_quote(token[i]))
 		{
-			i += ft_get_expanded_quoted_token(&token[i], counter);
+			i += ft_get_expanded_quoted_token(&token[i], counter, flag);
 			return (i);
 		}
 		else if (is_dollar_sign(token[i]) && token[i + 1]
@@ -78,7 +80,7 @@ int	ft_count_expanded_token(char *token, int *counter)
 	return (i);
 }
 
-int	ft_expanded_token_len(char *token)
+int	ft_expanded_token_len(char *token, int flag)
 {
 	int	i;
 	int	counter;
@@ -91,7 +93,7 @@ int	ft_expanded_token_len(char *token)
 	{
 		if (is_quote(token[i]) || (is_dollar_sign(token[i]) && token[i + 1]
 				&& (is_symbol(token[i + 1]) || is_quote(token[i + 1]))))
-			i += ft_count_expanded_token(&token[i], &counter);
+			i += ft_count_expanded_token(&token[i], &counter, flag);
 		else
 			counter++;
 		i++;
@@ -99,7 +101,7 @@ int	ft_expanded_token_len(char *token)
 	return (counter);
 }
 
-int	ft_expand_arg(char **arg)
+int	ft_expand_arg(char **arg, int flag)
 {
 	int		len;
 	char	*tmp;
@@ -108,12 +110,12 @@ int	ft_expand_arg(char **arg)
 	tmp = *arg;
 	if (tmp)
 	{
-		len = ft_expanded_token_len(tmp);
+		len = ft_expanded_token_len(tmp, flag);
 		new = malloc(sizeof(char) * (len + 1));
 		if (!new)
 			return (0);
 		new[0] = '\0';
-		ft_gen_expanded_arg(&new, tmp);
+		ft_gen_expanded_arg(&new, tmp, flag);
 		free(*arg);
 		*arg = new;
 	}

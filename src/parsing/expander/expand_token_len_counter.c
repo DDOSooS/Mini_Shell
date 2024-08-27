@@ -6,7 +6,7 @@
 /*   By: aghergho <aghergho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/22 11:08:35 by aghergho          #+#    #+#             */
-/*   Updated: 2024/08/22 12:17:18 by aghergho         ###   ########.fr       */
+/*   Updated: 2024/08/27 00:24:49 by aghergho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,11 +69,13 @@ int	ft_count_number_len(char token)
 	return (counter);
 }
 
-int	ft_get_expanded_quoted_token(char *token, int *counter)
+int	ft_get_expanded_quoted_token(char *token, int *counter,int flag)
 {
 	int	i;
 
 	i = 0;
+	if (flag)
+		(*counter)++;
 	while (token[++i] && ft_check_quote(token, i + 1))
 	{
 		if (!is_dollar_sign(token[i]))
@@ -81,17 +83,17 @@ int	ft_get_expanded_quoted_token(char *token, int *counter)
 			(*counter)++;
 			continue ;
 		}
-		if (is_dollar_sign(token[i]) && token[i + 1]
-			&& is_dollar_sign(token[i + 1]))
+		if (is_dollar_sign(token[i]) && token[i + 1] && is_dollar_sign(token[i + 1]))
 		{
 			(*counter) += ft_count_number_len(token[i + 1]);
 			i++;
 		}
-		else if (is_dollar_sign(token[i])
-			&& token[i + 1] && ft_isalnum(token[i + 1]))
+		else if (is_dollar_sign(token[i]) && token[i + 1] && ft_isalnum(token[i + 1]))
 			i += ft_search_expanded_token(&token[i], counter);
 		else
 			(*counter)++;
 	}
+	if (flag)
+		(*counter)++;
 	return (i);
 }

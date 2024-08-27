@@ -6,7 +6,7 @@
 /*   By: aghergho <aghergho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/06 16:01:09 by aghergho          #+#    #+#             */
-/*   Updated: 2024/08/26 10:05:21 by aghergho         ###   ########.fr       */
+/*   Updated: 2024/08/27 18:34:23 by aghergho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -144,6 +144,7 @@ typedef struct mshell
 }					t_mshell;
 
 extern t_mshell		g_mshell;
+int is_last_right_parentise(char *cmd, int index);
 void				varDumpOutFile(t_outfile *redirection);
 void				varDumpInFile(t_infile *redirection);
 
@@ -213,25 +214,30 @@ int					ft_check_double_token(char *cmd, int i);
 int					ft_check_sing_token(char *cmd, int i);
 int					ft_check_comments(char *cmd_line);
 void				ft_handle_comment(char **cmd_line);
-
+int 				is_last_right_parentise(char *cmd, int index);
+int 				is_last_right_parentise(char *cmd, int index);
+int check_left_p_token(char *token, int index);
+int check_r_parenthis(char *token , int i);
+int check_right_p_token(char *token, int index);
+int check_parenthise_token(char *token, int index);
 /*========== expnder functions =====================*/
 
-int					ft_expand_tokens(t_token **tokens);
-int					ft_expand_token(t_token **tokens);
+int					ft_expand_tokens(t_token **tokens, int flag);
+int					ft_expand_token(t_token **tokens, int helper);
 char				**ft_split_words(char *words, char *delimiter);
 int					ft_check_expand_delimiter(char *delimiter);
 int					ft_check_expand(char *tmp);
 int					ft_check_dollar(char *token);
 int					check_closed_quote_sequence(char *token, int index);
 int					check_dollar_sign_quoted(char *token, int index);
-int					ft_expand_arg(char **arg);
-int					ft_gen_expanded_arg(char **str, char *token);
+int					ft_expand_arg(char **arg, int type);
+int					ft_gen_expanded_arg(char **str, char *token, int flag);
 int					ft_gen_search_expanded_token(char **s1, char *token);
 int					ft_gen_pid_token(char **str, char token);
 char				*ft_get_env_var(char *str);
 void				ft_join_expanded_token(char **joined_str, char *tmp,
 						char *str);
-int					ft_get_expanded_quoted_token(char *token, int *counter);
+int					ft_get_expanded_quoted_token(char *token, int *counter, int flag);
 int					ft_count_number_len(char token);
 int					ft_check_env_var(char *str);
 int					check_unclosed_quote(char *token);
@@ -239,7 +245,7 @@ pid_t				get_pid(void);
 int					ft_expand_herdoc_arg(char **arg);
 void				ft_gen_expanded_delimiter(char **new_del, char *del);
 void				ft_delete_token(t_token **token, t_token **root);
-void				ft_expand_token_helper(int *flag, t_token **token);
+void				ft_expand_token_helper(int *flag, t_token **token, int type);
 int					ft_check_unquoted_dollar(char *token);
 
 /*============  generate herdoc functions ==========*/
@@ -369,7 +375,6 @@ int					match_symbol(char *regexp, char *text);
 
 /*================ var dumping data==============*/
 void				ft_free_herdoc(t_herdoc **herdocs);
-void				var_dump_herdoc(t_herdoc *herdocs);
 
 /*=============== signals =======================*/
 void				handle_signals(void (*sigint)(int), void (*sigquit)(int),
@@ -384,7 +389,6 @@ void				interactive_sigint(int sig);
 // void	star_expansion(char ***cmd_args, int i);
 // void star_expansion(t_cmd *cmd);
 // void star_expansion(char **cmd_args);
-// void	var_dump_token(t_token *tokens);
 
 /*=============== cleaning ressources =============*/
 void				ft_free_tokens(t_token **tokens);
@@ -395,4 +399,5 @@ void				ft_free_cmds(t_cmd *cmds);
 void				ft_free_out_files(t_outfile *outfile);
 void				ft_free_in_file(t_infile *infile);
 void				ft_free_cmd_var(void);
+int check_parenthise_token(char *token, int index);
 #endif

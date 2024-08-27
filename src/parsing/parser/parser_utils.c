@@ -6,7 +6,7 @@
 /*   By: aghergho <aghergho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/21 13:04:10 by aghergho          #+#    #+#             */
-/*   Updated: 2024/08/21 13:05:49 by aghergho         ###   ########.fr       */
+/*   Updated: 2024/08/27 13:25:04 by aghergho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,6 @@ void	ft_parse_cmd(t_tnode **root, t_token **tokens)
 			(*root)->t_right = new;
 	}
 }
-
 void	ft_parse_parenthise(t_tnode **root, t_token **tokens)
 {
 	t_token	*tmp;

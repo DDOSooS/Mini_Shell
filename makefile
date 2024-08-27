@@ -20,6 +20,8 @@ SRC = src/main.c \
 		src/parsing/lexer/syntax_error_utils3.c\
 		src/parsing/tokenizer/tokenizer.c\
 		src/parsing/tokenizer/tokenizer_utils.c\
+		src/parsing/tokenizer/tokenizer_utils1.c\
+		src/parsing/tokenizer/tokenizer_utils2.c\
 		src/parsing/tokenizer/tokenizer_checker.c \
 		src/parsing/expander/expander.c\
 		src/parsing/expander/herdoc_expnader.c\

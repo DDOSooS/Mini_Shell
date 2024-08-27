@@ -6,7 +6,7 @@
 /*   By: aghergho <aghergho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/21 12:50:16 by aghergho          #+#    #+#             */
-/*   Updated: 2024/08/26 10:07:21 by aghergho         ###   ########.fr       */
+/*   Updated: 2024/08/27 16:34:57 by aghergho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ int	ft_check_right_parenthise(char *cmd)
 		;
 	while (cmd[i] && !is_pipe(cmd[i]) && !is_operator(cmd[i]))
 	{
-		if (is_whites_space(cmd[i]) || is_r_parenthise(cmd[i])
+		if (is_white_space(cmd[i]) || is_r_parenthise(cmd[i])
 			|| is_redirection(cmd[i]))
 		{
 			ft_check_redirection(cmd[i], &redirection_found);
@@ -103,7 +103,7 @@ int	ft_check_syntax(char *cmd_line)
 	if (!ft_check_parenthise_error(cmd_line))
 	{
 		g_mshell.exit_value = 1;
-		return (0);
+		return (0);	
 	}
 	return (1);
 }

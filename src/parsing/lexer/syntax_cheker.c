@@ -6,7 +6,7 @@
 /*   By: aghergho <aghergho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/21 12:50:48 by aghergho          #+#    #+#             */
-/*   Updated: 2024/08/21 16:52:57 by aghergho         ###   ########.fr       */
+/*   Updated: 2024/08/26 23:01:02 by aghergho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,8 +32,10 @@ int	ft_check_quote(char *cmd_line, int len)
 		else if (cmd_line[i] == 39 && s_quote)
 			s_quote = 0;
 	}
-	if (d_quote || s_quote)
+	if (d_quote)
 		return (1);
+	if (s_quote)
+		return (2);
 	return (0);
 }
 
@@ -105,7 +107,7 @@ int	ft_pipe_sequence_error(char *cmd)
 			{
 				if (is_whites_space(cmd[i]))
 					continue ;
-				if (is_pipe(cmd[i]) || is_operator(cmd[i]))
+				if (is_pipe(cmd[i]) || is_operator(cmd[i]) || is_r_parenthise(cmd[i]))
 					return (0);
 				else
 					break ;
@@ -134,7 +136,7 @@ int	ft_operatore_sequence_error(char *cmd)
 			{
 				if (is_whites_space(cmd[i]))
 					continue ;
-				if (is_pipe(cmd[i]) || is_operator(cmd[i]))
+				if (is_pipe(cmd[i]) || is_operator(cmd[i]) || is_r_parenthise(cmd[i]))
 					return (0);
 				else
 					break ;

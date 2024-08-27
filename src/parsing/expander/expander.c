@@ -6,13 +6,13 @@
 /*   By: aghergho <aghergho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/01 01:15:21 by aghergho          #+#    #+#             */
-/*   Updated: 2024/08/26 10:05:45 by aghergho         ###   ########.fr       */
+/*   Updated: 2024/08/27 18:37:06 by aghergho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../../includes/mshell.h"
 
-int	ft_expand_token(t_token **tokens)
+int	ft_expand_token(t_token **tokens,int helper)
 {
 	t_token	*tmp;
 	int		flag;
@@ -25,7 +25,7 @@ int	ft_expand_token(t_token **tokens)
 		flag = 0;
 		sd_tmp = ft_strdup(tmp->value);
 		if (!tmp->previous || (tmp->previous->type_id != 7))
-			ft_expand_token_helper(&flag, &tmp);
+			ft_expand_token_helper(&flag, &tmp, helper);
 		if (tmp->value && !tmp->value[0] && flag && tmp->previous
 			&& (tmp->previous->type_id == 6 || tmp->previous->type_id == 8
 				|| tmp->previous->type_id == 9))
@@ -47,7 +47,7 @@ void	ft_expand_exported_tokens(t_token **tokens, t_token **curr_token)
 	t_token	*last_t_tmp;
 
 	t_tmp = ft_tokinizer((*curr_token)->value);
-	ft_expand_tokens(&t_tmp);
+	ft_expand_tokens(&t_tmp, 1);
 	if ((*curr_token)->previous)
 		(*curr_token)->previous->next = t_tmp;
 	else
@@ -108,12 +108,11 @@ void	ft_expand_parenthisis(t_token **tokens)
 }
 
 // ft_expand_quotes(tokens);
-// var_dump_token(*tokens);
+// ft_expand_parenthisis(tokens);
 
-int	ft_expand_tokens(t_token **tokens)
-{
-	ft_expand_parenthisis(tokens);
-	if (!ft_expand_token(tokens))
+int	ft_expand_tokens(t_token **tokens, int flag)
+{ 
+	if (!ft_expand_token(tokens, flag))
 	{
 		g_mshell.exit_value = 1;
 		return (0);

@@ -6,7 +6,7 @@
 /*   By: aghergho <aghergho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/21 12:55:23 by aghergho          #+#    #+#             */
-/*   Updated: 2024/08/23 10:05:11 by aghergho         ###   ########.fr       */
+/*   Updated: 2024/08/26 23:09:39 by aghergho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,8 +28,7 @@ int	is_or_operator(char *token)
 
 int	is_tokens(char c)
 {
-	if (is_redirection(c) || is_l_parenthise(c) || is_r_parenthise(c)
-		|| is_pipe(c) || is_operator(c))
+	if (is_redirection(c) || is_pipe(c) || is_operator(c))
 		return (1);
 	return (0);
 }

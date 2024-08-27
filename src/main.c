@@ -6,7 +6,7 @@
 /*   By: aghergho <aghergho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/06 16:02:56 by aghergho          #+#    #+#             */
-/*   Updated: 2024/08/26 10:05:21 by aghergho         ###   ########.fr       */
+/*   Updated: 2024/08/27 18:34:15 by aghergho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ void	ft_handle_history(char **cmd_line)
 
 void	ft_execute_cli(void)
 {
-	if (ft_expand_tokens(&g_mshell.token))
+	if (ft_expand_tokens(&g_mshell.token, 1))
 	{
 		ft_parse_ast(&g_mshell.cmd_tree, &g_mshell.token);
 		g_mshell.herdocs = ft_gen_herdocs(g_mshell.token);

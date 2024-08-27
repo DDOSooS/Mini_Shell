@@ -6,7 +6,7 @@
 /*   By: aghergho <aghergho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/13 15:14:32 by aghergho          #+#    #+#             */
-/*   Updated: 2024/08/24 10:16:21 by aghergho         ###   ########.fr       */
+/*   Updated: 2024/08/27 18:28:10 by aghergho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,7 +118,7 @@ t_token	*ft_tokinizer(char *cmd)
 			(ft_add_token(&tokens, cmd, i, i + 1), i++);
 		else if (ft_check_sing_token(cmd, i))
 			ft_add_token(&tokens, cmd, i, i);
-		else if ((is_parenthise(cmd[i]) && (!ft_check_quote(cmd, i))))
+		else if ((is_parenthise(cmd[i]) && check_parenthise_token(cmd, i)) && !ft_check_quote(cmd, i) && start == -1)
 			ft_add_token(&tokens, cmd, i, i);
 		else if (start == -1)
 			start = i;
@@ -130,3 +130,5 @@ t_token	*ft_tokinizer(char *cmd)
 	}
 	return (tokens);
 }
+
+

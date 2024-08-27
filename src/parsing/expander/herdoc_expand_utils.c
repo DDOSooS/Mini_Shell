@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   herdoc_utils.c                                     :+:      :+:    :+:   */
+/*   herdoc_expand_utils.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: aghergho <aghergho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/22 10:57:34 by aghergho          #+#    #+#             */
-/*   Updated: 2024/08/22 12:09:50 by aghergho         ###   ########.fr       */
+/*   Updated: 2024/08/27 18:27:18 by aghergho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,31 +34,62 @@ void	ft_free_herdoc(t_herdoc **herdocs)
 	tmp = NULL;
 }
 
-int	ft_count_expanded_len(char *delimimiter)
+void ft_count_delimiter_helper(int *counter, char *del, int *i, char *quote)
 {
-	char	quote;
+	if (is_quote(del[(*i)]))
+	{
+		*quote = del[(*i)];
+		(*i)++;
+		while (del[(*i)] && del[(*i)] != *quote)
+		{
+			(*counter)++;
+			(*i)++;
+		}
+	}
+	else
+		(*counter)++;
+}
 
-	int (counter), i;
+int ft_count_expanded_len(char *delimiter)
+{
+	char quote;
+	int counter, i;
+
 	i = -1;
 	counter = 0;
-	while (delimimiter[++i])
+	while (delimiter[++i])
 	{
-		if (is_quote(delimimiter[i]) && delimimiter[i + 1]
-			&& delimimiter[i] == delimimiter[i + 1])
+		if (is_quote(delimiter[i]) && delimiter[i + 1] && delimiter[i] == delimiter[i + 1])
 		{
 			i++;
-			continue ;
+			continue;
 		}
-		if (is_quote(delimimiter[i]))
+		if (is_dollar_sign(delimiter[i]) && delimiter[i + 1] && is_quote(delimiter[i+1]) && !ft_check_quote(delimiter, i + 1))
 		{
-			quote = delimimiter[i];
-			while (delimimiter[++i] && delimimiter[i] != quote)
-				counter++;
+			if (i - 1 < 0)
+				continue;
+			if (i - 1 >= 0 && !is_dollar_sign(delimiter[i -1]))
+				continue;
 		}
-		else
-			counter++;
+		ft_count_delimiter_helper(&counter, delimiter, &i, &quote);
 	}
 	return (counter);
+}
+
+void ft_gen_delimiter_helper(char **new_del, char *del, int *i, char *quote)
+{
+		if (is_quote(del[(*i)]))
+		{
+			*quote = del[(*i)];
+			(*i)++;
+			while (del[(*i)] && del[(*i)] != *quote)
+			{
+				ft_strcat_char(*new_del, del[(*i)]);
+				(*i)++;
+			}
+		}
+		else
+			ft_strcat_char(*new_del, del[(*i)]);
 }
 
 void	ft_gen_expanded_delimiter(char **new_del, char *del)
@@ -74,17 +105,13 @@ void	ft_gen_expanded_delimiter(char **new_del, char *del)
 			i++;
 			continue ;
 		}
-		if (is_quote(del[i]))
+		if (is_dollar_sign(del[i]) && del[i + 1] && is_quote(del[i+1]) && !ft_check_quote(del, i + 1))
 		{
-			quote = del[i];
-			i++;
-			while (del[i] && del[i] != quote)
-			{
-				ft_strcat_char(*new_del, del[i]);
-				i++;
-			}
+			if (i - 1 < 0)
+				continue;
+			if (i - 1 >= 0 && !is_dollar_sign(del[i -1]))
+				continue;
 		}
-		else
-			ft_strcat_char(*new_del, del[i]);
+		ft_gen_delimiter_helper(new_del,del,&i, &quote);
 	}
 }

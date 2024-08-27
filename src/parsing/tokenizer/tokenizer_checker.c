@@ -6,7 +6,7 @@
 /*   By: aghergho <aghergho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/22 11:49:43 by aghergho          #+#    #+#             */
-/*   Updated: 2024/08/22 11:50:31 by aghergho         ###   ########.fr       */
+/*   Updated: 2024/08/26 17:47:36 by aghergho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ int	ft_check_parenthisis_spaces(char *cmd, int index)
 
 int	ft_check_opened_token(char *cmd, int len)
 {
-	if (!ft_check_quote(cmd, len) && !ft_check_parenthisis_spaces(cmd, len))
+	if (!ft_check_quote(cmd, len) && is_closed_parenthise(cmd, len))
 		return (1);
 	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: aghergho <aghergho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/22 20:26:08 by aghergho          #+#    #+#             */
-/*   Updated: 2024/08/24 10:27:16 by aghergho         ###   ########.fr       */
+/*   Updated: 2024/08/27 00:32:41 by aghergho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ void	ft_reset_token(t_token **token, t_token **root)
 		(*token)->previous->next = NULL;
 }
 
-void	ft_expand_token_helper(int *flag, t_token **token)
+void	ft_expand_token_helper(int *flag, t_token **token, int type)
 {
 	if ((*token)->value && ft_check_dollar((*token)->value))
 	{
@@ -47,7 +47,7 @@ void	ft_expand_token_helper(int *flag, t_token **token)
 		if (ft_check_unquoted_dollar((*token)->value))
 			(*token)->is_exported = 1;
 	}
-	ft_expand_arg(&(*token)->value);
+	ft_expand_arg(&(*token)->value, type);
 }
 
 void	ft_delete_token(t_token **token, t_token **root)
