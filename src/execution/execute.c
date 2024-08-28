@@ -44,10 +44,8 @@ void	set_under_score(t_env *env, t_cmd *cmd)
 
 void	reset_in_out(int stdin, int stdout)
 {
-	if (dup2(stdin, STDIN_FILENO) == -1)
-		perror("dup2");
-	if (dup2(stdout, STDOUT_FILENO) == -1)
-		perror("dup2");
+	dup2(stdin, STDIN_FILENO);
+	dup2(stdout, STDOUT_FILENO);
 	close(stdin);
 	close(stdout);
 }
@@ -69,6 +67,7 @@ void	ft_execute_tree(t_tnode *root, t_mshell *shell)
 	int (stdout_fd), (stdin_fd);
 	stdout_fd = dup(STDOUT_FILENO);
 	stdin_fd = dup(STDIN_FILENO);
+	(close(stdin_fd), close(stdout_fd));
 	if (root == NULL)
 	{
 		reset_in_out(stdin_fd, stdout_fd);

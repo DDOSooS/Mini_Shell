@@ -149,12 +149,10 @@ typedef struct mshell
 }					t_mshell;
 
 extern t_mshell		g_mshell;
-int					is_last_right_parentise(char *cmd, int index);
-void				varDumpOutFile(t_outfile *redirection);
-void				varDumpInFile(t_infile *redirection);
-/*========== lexer functions ============*/
 
+/*========== lexer functions ============*/
 int					is_tokens(char c);
+int					is_last_right_parentise(char *cmd, int index);
 int					is_parenthise(char c);
 int					is_or_operator(char *token);
 int					is_dollar_sign(char c);
