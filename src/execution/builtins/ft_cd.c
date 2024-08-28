@@ -83,6 +83,33 @@ static int	cha_dir(char *dir)
 	return (cd_runner(path));
 }
 
+int	cha_dir_exp(char **dir, t_env *env)
+{
+	char	*path;
+	char	*tmp_char;
+	t_env	*tmp;
+
+	tmp = find_env(env, "HOME");
+	if (tmp)
+		path = ft_strdup(tmp->value);
+	else
+		path = ft_strdup("/nfs/homes/mkartit");
+	if (*dir && (*dir)[0] == '~' && (*dir)[1] == '\0')
+	{
+		free(*dir);
+		*dir = ft_strdup(path);
+	}
+	else
+	{
+		tmp_char = ft_substr(*dir, 1, ft_strlen(*dir) - 1);
+		free(*dir);
+		*dir = ft_strjoin(path, tmp_char);
+		free(tmp_char);
+	}
+	free(path);
+	return (cd_runner(*dir));
+}
+
 int	ft_cd(t_cmd *cmd, t_mshell *shell)
 {
 	int	cmd_count;
@@ -95,6 +122,8 @@ int	ft_cd(t_cmd *cmd, t_mshell *shell)
 		return (cha_dir("HOME"));
 	else if (cmd_count == 2 && (ft_strcmp(cmd->next->arg, "-") == 0))
 		return (cha_dir("OLDPWD"));
+	else if (cmd_count == 2 && (cmd->next->arg[0] == '~'))
+		return (cha_dir_exp(&(cmd->next->arg), shell->env));
 	else if (cmd_count == 2)
 		return (cd_runner(cmd->next->arg));
 	else

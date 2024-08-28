@@ -6,7 +6,7 @@
 #    By: aghergho <aghergho@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/11/11 19:51:41 by aghergho          #+#    #+#              #
-#    Updated: 2024/06/07 16:37:51 by aghergho         ###   ########.fr        #
+#    Updated: 2024/08/28 11:45:29 by mkartit          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -50,24 +50,24 @@ $(NAME): $(OBJ)
 
 # Build object files for main functions
 $(OBJ): %.o: %.c
-	$(CC) $(CFLAGS) $< -c -o $@
-	$(AR) $(NAME) $@
+	@$(CC) $(CFLAGS) $< -c -o $@
+	@$(AR) $(NAME) $@
 
 # Build object files for bonus functions
 $(BONUS_OBJ): %.o: %.c
-	$(CC) $(CFLAGS) $< -c -o $@
-	$(AR) $(NAME) $@
+	@$(CC) $(CFLAGS) $< -c -o $@
+	@$(AR) $(NAME) $@
 
 # Bonus target
 bonus: $(BONUS_OBJ)
 
 # Clean the object files
 clean:
-	rm -f $(OBJ) $(BONUS_OBJ)
+	@rm -f $(OBJ) $(BONUS_OBJ)
 
 # Clean everything
 fclean: clean
-	rm -f $(NAME)
+	@rm -f $(NAME)
 
 # Clean and rebuild
 re: fclean all

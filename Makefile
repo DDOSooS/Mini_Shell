@@ -1,10 +1,8 @@
 NAME = minishell
-
 CC = cc
-CFLAGS = -Wall -Wextra  -Werror  -g3
+CFLAGS = -Wall -Wextra -Werror -g3
 LIBS = -lreadline
 LIBFT = includes/libft/libft.a
-# PRINTF = includes/printf/libftprintf.a
 SRC = src/main.c \
 		includes/gnl/get_next_line.c\
 		includes/gnl/get_next_line_utils.c\
@@ -81,7 +79,7 @@ OBJ = $(SRC:.c=.o)
 
 all: $(NAME)
 
-$(NAME): $(OBJ) $(LIBFT) $(PRINTF)
+$(NAME): $(OBJ) $(LIBFT)
 	@echo "Compiling Minishell project..."
 	@$(CC) $(CFLAGS) -g3 $^ -o $@ $(LIBS)
 	@echo "Minishell project compiled successfully ✅✅"
@@ -90,18 +88,20 @@ $(NAME): $(OBJ) $(LIBFT) $(PRINTF)
 	@$(CC) $(CFLAGS) -c $< -o $@
 
 $(LIBFT):
-	@$(MAKE) -C includes/libft
+	@echo "Compiling libft project..."
+	@make -C includes/libft
+	@echo "LIBFT project compiled successfully ✅✅"
+
 
 clean:
 	@rm -f $(OBJ)
-	@$(MAKE) -C includes/libft clean
+	@make clean -C includes/libft
 	@echo "Cleaning complete. All build object files removed  ✅✅"
 
 fclean: clean
 	@rm -f $(NAME)
-	@$(MAKE) -C includes/libft fclean
+	@make fclean -C includes/libft
 	@echo "Cleaning complete. All build files removed  ✅✅"
-
 
 re: fclean all
 

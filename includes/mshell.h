@@ -152,7 +152,6 @@ extern t_mshell		g_mshell;
 int					is_last_right_parentise(char *cmd, int index);
 void				varDumpOutFile(t_outfile *redirection);
 void				varDumpInFile(t_infile *redirection);
-void	var_dump_token(t_token *tokens);
 /*========== lexer functions ============*/
 
 int					is_tokens(char c);
