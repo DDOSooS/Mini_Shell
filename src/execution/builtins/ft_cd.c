@@ -17,41 +17,42 @@ static void	update_env(char *key, char *value)
 	t_env	*tmp;
 
 	tmp = find_env(g_mshell.env, key);
-	if (tmp != NULL)
+	if (tmp != NULL && tmp->value)
 	{
+		free(tmp->value);
 		if (value)
-		{
-			free(tmp->value);
 			tmp->value = ft_strdup(value);
-		}
+		else
+			tmp->value = ft_strdup("");
 		tmp->is_exported = 1;
 	}
 }
 
 static int	cd_runner(char *dir)
 {
-	char	oldpwd[1024];
 	char	curr[1024];
+	char	*oldpwd;
 
-	getcwd(oldpwd, 1024);
+	oldpwd = NULL;
 	if (chdir(dir) == 0)
 	{
 		getcwd(curr, 1024);
-		update_env("PWD", curr);
-		update_env("OLDPWD", oldpwd);
+		if (find_env(g_mshell.env, "PWD"))
+			oldpwd = ft_strdup(find_env(g_mshell.env, "PWD")->value);
+		(update_env("PWD", curr), update_env("OLDPWD", oldpwd));
+		if (oldpwd)
+			free(oldpwd);
 		return (0);
 	}
 	else
 	{
 		if (errno == 116)
 		{
-			write(2, "bash: cd: ", ft_strlen("bash: cd: "));
-			write(2, dir, ft_strlen(dir));
+			(write(2, "bash: cd: ", 11), write(2, dir, ft_strlen(dir)));
 			write(2, ": No such file or directory\n", 28);
 			return (1);
 		}
-		write(2, "bash: cd: ", ft_strlen("bash: cd: "));
-		return (perror(dir), 1);
+		return (write(2, "bash: cd: ", 11), perror(dir), 1);
 	}
 	return (1);
 }
@@ -99,7 +100,7 @@ int	cha_dir_exp(char **dir, t_env *env)
 		free(*dir);
 		*dir = ft_strdup(path);
 	}
-	else
+	else if (*dir && (*dir)[0] == '~' && (*dir)[1] == '/')
 	{
 		tmp_char = ft_substr(*dir, 1, ft_strlen(*dir) - 1);
 		free(*dir);

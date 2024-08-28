@@ -45,7 +45,7 @@ char	*costum_readline(void)
 		free(tmp);
 	}
 	else
-		path = ft_strdup(CYAN "minishell" RESET ":$ ");
+		path = ft_strdup(CYAN "minishell" RESET GREEN "$>" RESET ".:$ ");
 	if (check_tty())
 		line = readline(path);
 	else

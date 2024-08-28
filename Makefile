@@ -106,7 +106,7 @@ fclean: clean
 re: fclean all
 
 sup: all
-	@valgrind -s  --track-fds=yes --leak-check=full --show-leak-kinds=all --suppressions=readline.supp ./minishell
+	@valgrind -s --leak-check=full --show-leak-kinds=all --suppressions=readline.supp ./minishell
 
 .PHONY: all clean fclean re
 .SECONDARY: $(OBJ)
