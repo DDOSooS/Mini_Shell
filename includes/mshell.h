@@ -6,7 +6,7 @@
 /*   By: aghergho <aghergho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/06 16:01:09 by aghergho          #+#    #+#             */
-/*   Updated: 2024/08/27 22:26:06 by aghergho         ###   ########.fr       */
+/*   Updated: 2024/08/28 10:13:34 by aghergho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -258,6 +258,7 @@ void				ft_expand_token_helper(int *flag, t_token **token,
 int					ft_check_unquoted_dollar(char *token);
 int					is_expanded_token(char *token, int i);
 int					is_pid_token(char *token, int i);
+int					check_middle_white_space(char *token);
 /*============  generate herdoc functions ==========*/
 
 t_herdoc			*ft_gen_herdocs(t_token *tokens);

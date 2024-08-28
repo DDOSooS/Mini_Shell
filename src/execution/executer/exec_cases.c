@@ -6,7 +6,7 @@
 /*   By: aghergho <aghergho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/21 16:33:03 by mkartit           #+#    #+#             */
-/*   Updated: 2024/08/23 18:52:07 by aghergho         ###   ########.fr       */
+/*   Updated: 2024/08/28 10:33:37 by aghergho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,10 +68,12 @@ void	ft_execute_cmd(t_tnode *root, t_mshell *shell)
 		return ;
 	status = builtins_finder(cmd, shell, builtins_checker(cmd));
 	if (status == -1)
+	{
 		cmd_runner(cmd, shell);
+		set_under_score(shell->env, root->cmd);
+	}
 	else
 		shell->exit_value = status;
-	set_under_score(shell->env, root->cmd);
 }
 
 void	handle_word(t_tnode *root, t_mshell *shell)

@@ -6,7 +6,7 @@
 /*   By: aghergho <aghergho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/22 20:26:08 by aghergho          #+#    #+#             */
-/*   Updated: 2024/08/27 00:32:41 by aghergho         ###   ########.fr       */
+/*   Updated: 2024/08/28 10:40:32 by aghergho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,8 @@ int	is_question_symbol(char c)
 
 int	is_symbol(char c)
 {
-	return (ft_isalnum(c) || is_dollar_sign(c) || is_question_symbol(c));
+	return (ft_isalnum(c) || is_dollar_sign(c)
+		|| is_question_symbol(c) || c == '_');
 }
 
 void	ft_reset_token(t_token **token, t_token **root)

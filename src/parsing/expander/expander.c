@@ -6,7 +6,7 @@
 /*   By: aghergho <aghergho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/01 01:15:21 by aghergho          #+#    #+#             */
-/*   Updated: 2024/08/27 22:39:18 by aghergho         ###   ########.fr       */
+/*   Updated: 2024/08/28 10:40:12 by aghergho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,9 +26,9 @@ int	ft_expand_token(t_token **tokens, int helper)
 		sd_tmp = ft_strdup(tmp->value);
 		if (!tmp->previous || (tmp->previous->type_id != 7))
 			ft_expand_token_helper(&flag, &tmp, helper);
-		if (tmp->value && !tmp->value[0] && flag && tmp->previous
-			&& (tmp->previous->type_id == 6 || tmp->previous->type_id == 8
-				|| tmp->previous->type_id == 9))
+		if (tmp->value && check_middle_white_space(tmp->value)
+			&& flag && tmp->previous && (tmp->previous->type_id == 6
+				|| tmp->previous->type_id == 8 || tmp->previous->type_id == 9))
 			return (print_file_error(sd_tmp, "ambiguous redirect"),
 				free(sd_tmp), 0);
 		if (tmp->value && !tmp->value[0] && tmp->is_exported)
