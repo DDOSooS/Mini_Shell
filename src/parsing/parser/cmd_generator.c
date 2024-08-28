@@ -6,7 +6,7 @@
 /*   By: aghergho <aghergho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/21 13:03:55 by aghergho          #+#    #+#             */
-/*   Updated: 2024/08/27 22:39:51 by aghergho         ###   ########.fr       */
+/*   Updated: 2024/08/28 12:24:50 by aghergho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,30 @@ int	ft_add_cmd(t_cmd **cmd, char *str)
 	return (1);
 }
 
+void	ft_trim_cmd(char **cmd)
+{
+	int		i;
+	int		start;
+	char	*new;
+
+	if (!cmd || !*cmd)
+		return ;
+	i = 0;
+	start = 0;
+	while ((*cmd)[i] && is_white_space((*cmd)[i]))
+		i++;
+	start = i;
+	i = ft_strlen(*cmd) - 1;
+	while (i >= start && is_white_space((*cmd)[i]))
+		i--;
+	if (i < start)
+		new = ft_strdup("");
+	else
+		new = ft_substr(*cmd, start, i - start + 1);
+	free(*cmd);
+	*cmd = new;
+}
+
 int	ft_add_to_cmd(t_cmd **root, char *token)
 {
 	char	*cmd;
@@ -47,6 +71,7 @@ int	ft_add_to_cmd(t_cmd **root, char *token)
 	tmp = *root;
 	cmd = ft_strdup(token);
 	ft_expand_arg(&cmd, 0);
+	ft_trim_cmd(&cmd);
 	new = malloc(sizeof(t_cmd));
 	new->arg = cmd;
 	new->check_wildcard = 0;

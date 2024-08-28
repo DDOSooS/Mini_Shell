@@ -100,8 +100,6 @@ clean:
 fclean: clean
 	@rm -f $(NAME)
 	@$(MAKE) -C includes/libft fclean
-	@echo "Cleaning complete. All build files removed  ✅✅"
-
 
 re: fclean all
 
