@@ -78,27 +78,35 @@ SRC = src/main.c \
 
 
 OBJ = $(SRC:.c=.o)
+
 all: $(NAME)
+
 $(NAME): $(OBJ) $(LIBFT) $(PRINTF)
-	$(CC) $(CFLAGS) -g3 $^ -o $@ $(LIBS)
-# $(CC) $(CFLAGS) -g3 -fsanitize=address $^ -o $@ $(LIBS)
+	@echo "Compiling Minishell project..."
+	@$(CC) $(CFLAGS) -g3 $^ -o $@ $(LIBS)
+	@echo "Minishell project compiled successfully ✅✅"
+
 %.o: %.c
-	$(CC) $(CFLAGS) -c $< -o $@
+	@$(CC) $(CFLAGS) -c $< -o $@
+
 $(LIBFT):
-	$(MAKE) -C includes/libft
-# $(PRINTF) :
-# $(MAKE) -C includes/printf
+	@$(MAKE) -C includes/libft
+
 clean:
-	rm -f $(OBJ)
-	$(MAKE) -C includes/libft clean
-# $(MAKE) -C includes/printf clean
+	@rm -f $(OBJ)
+	@$(MAKE) -C includes/libft clean
+	@echo "Cleaning complete. All build object files removed  ✅✅"
+
 fclean: clean
-	rm -f $(NAME)
-	$(MAKE) -C includes/libft fclean
-# $(MAKE) -C includes/printf fclean
-re: fclean all	
+	@rm -f $(NAME)
+	@$(MAKE) -C includes/libft fclean
+	@echo "Cleaning complete. All build files removed  ✅✅"
+
+
+re: fclean all
+
 sup: all
-	@echo "Running valgrind"
-	valgrind -s --leak-check=full  --show-leak-kinds=all --suppressions=readline.supp ./minishell
+	@valgrind -s --leak-check=full --show-leak-kinds=all --suppressions=readline.supp ./minishell
+
 .PHONY: all clean fclean re
 .SECONDARY: $(OBJ)
