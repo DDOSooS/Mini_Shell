@@ -47,12 +47,12 @@ void	set_under_score(t_env *env, t_cmd *cmd)
 	}
 }
 
-void	reset_in_out(int stdin, int stdout)
+void	reset_in_out(int stdin_fd, int stdout_fd)
 {
-	dup2(stdin, STDIN_FILENO);
-	dup2(stdout, STDOUT_FILENO);
-	close(stdin);
-	close(stdout);
+	dup2(stdin_fd, STDIN_FILENO);
+	dup2(stdout_fd, STDOUT_FILENO);
+	close(stdin_fd);
+	close(stdout_fd);
 }
 
 void	execute(t_tnode *root, t_mshell *shell)
@@ -72,7 +72,6 @@ void	ft_execute_tree(t_tnode *root, t_mshell *shell)
 	int (stdout_fd), (stdin_fd);
 	stdout_fd = dup(STDOUT_FILENO);
 	stdin_fd = dup(STDIN_FILENO);
-	(close(stdin_fd), close(stdout_fd));
 	if (root == NULL)
 	{
 		reset_in_out(stdin_fd, stdout_fd);

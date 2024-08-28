@@ -12,7 +12,7 @@
 
 #include "../../../includes/mshell.h"
 
-static void	print_pwd(t_mshell *shell)
+static int	print_pwd(t_mshell *shell)
 {
 	char	*cwd;
 	char	buffer[1024];
@@ -25,15 +25,15 @@ static void	print_pwd(t_mshell *shell)
 		if (!cwd)
 		{
 			perror("getcwd");
-			return ;
+			return (1);
 		}
 	}
 	printf("%s\n", cwd);
+	return (0);
 }
 
 int	ft_pwd(t_cmd *cmd, t_mshell *shell)
 {
 	(void)cmd;
-	print_pwd(shell);
-	return (0);
+	return (print_pwd(shell));
 }
