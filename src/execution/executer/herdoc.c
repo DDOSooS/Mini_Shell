@@ -21,7 +21,6 @@ void	unlink_herdoc(t_herdoc *herdoc)
 	{
 		if (access(tmp->filename, F_OK) == 0)
 		{
-			printf("unlinking (%s)\n", tmp->filename);
 			if (unlink(tmp->filename))
 				perror("unlink");
 		}

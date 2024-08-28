@@ -70,10 +70,10 @@ void	ft_execute_cmd(t_tnode *root, t_mshell *shell)
 	if (status == -1)
 	{
 		cmd_runner(cmd, shell);
-		set_under_score(shell->env, root->cmd);
 	}
 	else
 		shell->exit_value = status;
+	set_under_score(shell->env, root->cmd);
 }
 
 void	handle_word(t_tnode *root, t_mshell *shell)
