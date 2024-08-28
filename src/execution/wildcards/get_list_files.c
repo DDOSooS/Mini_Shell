@@ -90,20 +90,27 @@ int	check_valid(struct dirent *file_entry, int dir_flag, char *exp)
 
 void	get_list_files(char *exp, char ***file_list)
 {
-	int		quant;
+	int		counter;
 	char	*directory;
 	int		dir_exp_flag;
 
 	*file_list = 0;
+	dir_exp_flag = 0;
+	printf("exp: %s\n", exp);
 	directory = separate_and_get_dir(&exp);
+	printf("dir: %s\n", directory);
+	printf("exp-2: %s | flag: %d\n", exp, dir_exp_flag);
 	is_dir(exp, &dir_exp_flag);
-	quant = count_file(directory, exp, dir_exp_flag);
-	if (quant > 0)
-		*file_list = ft_calloc(quant + 1, sizeof(char *));
+	printf("exp-3: %s | flag: %d\n", exp, dir_exp_flag);
+	counter = count_file(directory, exp, dir_exp_flag);
+	if (counter > 0)
+		*file_list = ft_calloc(counter + 1, sizeof(char *));
 	if (*file_list == 0)
 	{
 		if (dir_exp_flag)
 			exp[ft_strlen(exp)] = '/';
+		if (directory)
+			free(directory);
 		return ;
 	}
 	fill_list(directory, exp, *file_list, dir_exp_flag);
