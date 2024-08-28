@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mkartit <marvin@42.fr>                     +#+  +:+       +#+        */
+/*   By: aghergho <aghergho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/21 16:34:56 by mkartit           #+#    #+#             */
-/*   Updated: 2024/08/21 16:34:57 by mkartit          ###   ########.fr       */
+/*   Updated: 2024/08/28 18:15:42 by aghergho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,12 @@ char	*get_last_arg(t_cmd *cmd)
 void	set_under_score(t_env *env, t_cmd *cmd)
 {
 	t_env	*env_under_score;
-
+	t_env *tmp = env;
+	while (tmp)
+	{
+		// printf("key (%s) | value (%s)\n", tmp->key ? tmp->key: "no key", tmp->value ? tmp->value: "no value");
+		tmp = tmp->next;
+	}
 	env_under_score = find_env(env, "_");
 	if (env_under_score)
 	{

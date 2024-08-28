@@ -6,11 +6,12 @@
 /*   By: aghergho <aghergho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/22 11:49:43 by aghergho          #+#    #+#             */
-/*   Updated: 2024/08/26 17:47:36 by aghergho         ###   ########.fr       */
+/*   Updated: 2024/08/28 18:34:39 by aghergho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../../includes/mshell.h"
+
 
 /*
 	@return (int)
@@ -20,15 +21,15 @@
 
 int	ft_get_token_id(char *token)
 {
-	if (is_operator(token[0]))
+	if (is_operator(token[0]) && g_mshell.flag)
 		return (3);
-	if (is_or_operator(token))
+	if (is_or_operator(token) && g_mshell.flag)
 		return (2);
-	else if (is_pipe(token[0]))
+	else if (is_pipe(token[0]) && g_mshell.flag)
 		return (1);
-	else if (is_l_parenthise(token[0]))
+	else if (is_l_parenthise(token[0]) && g_mshell.flag)
 		return (4);
-	else if (is_r_parenthise(token[0]))
+	else if (is_r_parenthise(token[0]) && g_mshell.flag)
 		return (5);
 	else if (is_append(token))
 		return (6);
@@ -95,3 +96,4 @@ int	ft_check_r_parenthise(char *cmd, int i)
 	}
 	return (0);
 }
+

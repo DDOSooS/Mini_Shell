@@ -6,7 +6,7 @@
 /*   By: aghergho <aghergho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/01 01:15:21 by aghergho          #+#    #+#             */
-/*   Updated: 2024/08/28 10:40:12 by aghergho         ###   ########.fr       */
+/*   Updated: 2024/08/28 18:34:12 by aghergho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,10 @@ void	ft_expand_exported_tokens(t_token **tokens, t_token **curr_token)
 	t_token	*next_tmp;
 	t_token	*last_t_tmp;
 
+	// printf("<< %s >>\n", (*curr_token)->value);
+	g_mshell.flag = 0;
 	t_tmp = ft_tokinizer((*curr_token)->value);
+	g_mshell.flag = 1;
 	ft_expand_tokens(&t_tmp, 1);
 	if ((*curr_token)->previous)
 		(*curr_token)->previous->next = t_tmp;
@@ -73,7 +76,7 @@ void	ft_handle_export_expand(t_token **tokens)
 	tmp = *tokens;
 	while (tmp)
 	{
-		if (tmp->is_exported && ft_check_white_spaces(tmp->value) && tmp->value)
+		if (tmp->value && tmp->is_exported && ft_check_white_spaces(tmp->value))
 			ft_expand_exported_tokens(tokens, &tmp);
 		else
 			tmp = tmp->next;

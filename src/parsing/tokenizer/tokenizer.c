@@ -6,7 +6,7 @@
 /*   By: aghergho <aghergho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/13 15:14:32 by aghergho          #+#    #+#             */
-/*   Updated: 2024/08/27 19:03:33 by aghergho         ###   ########.fr       */
+/*   Updated: 2024/08/28 18:39:43 by aghergho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,15 +21,15 @@
 
 char	*ft_get_token_type(char *token)
 {
-	if (is_operator(token[0]))
+	if (is_operator(token[0]) && g_mshell.flag)
 		return ("T_OPERATOR");
-	if (is_or_operator(token))
+	if (is_or_operator(token) && g_mshell.flag)
 		return ("T_OPERATOR");
-	else if (is_pipe(token[0]))
+	else if (is_pipe(token[0])  && g_mshell.flag)
 		return ("T_PIPE");
-	else if (is_l_parenthise(token[0]))
+	else if (is_l_parenthise(token[0]) && g_mshell.flag)
 		return ("T_L_PARENTHISE");
-	else if (is_r_parenthise(token[0]))
+	else if (is_r_parenthise(token[0]) && g_mshell.flag)
 		return ("T_R_PARENTHISE");
 	else if (is_append(token))
 		return ("T_APPEND_RED");
@@ -112,7 +112,7 @@ t_token	*ft_tokinizer(char *cmd)
 	tokens = NULL;
 	while (cmd[++i])
 	{
-		if (is_whites_space(cmd[i]) && ft_check_opened_token(cmd, i))
+		if (is_white_space(cmd[i]) && ft_check_opened_token(cmd, i))
 			continue ;
 		if (ft_check_double_token(cmd, i))
 			(ft_add_token(&tokens, cmd, i, i + 1), i++);
