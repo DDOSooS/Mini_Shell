@@ -1,7 +1,7 @@
 NAME = minishell
 
 CC = cc
-CFLAGS = -Wall -Wextra  -Werror -pedantic -g3
+CFLAGS = -Wall -Wextra  -Werror  -g3
 LIBS = -lreadline
 LIBFT = includes/libft/libft.a
 # PRINTF = includes/printf/libftprintf.a
@@ -99,6 +99,6 @@ fclean: clean
 re: fclean all	
 sup: all
 	@echo "Running valgrind"
-	valgrind -s --leak-check=full --track-fds=yes --show-leak-kinds=all --suppressions=readline.supp ./minishell
+	valgrind -s --leak-check=full  --show-leak-kinds=all --suppressions=readline.supp ./minishell
 .PHONY: all clean fclean re
 .SECONDARY: $(OBJ)

@@ -6,7 +6,7 @@
 /*   By: aghergho <aghergho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/22 11:02:13 by aghergho          #+#    #+#             */
-/*   Updated: 2024/08/27 18:58:55 by aghergho         ###   ########.fr       */
+/*   Updated: 2024/08/27 21:18:37 by aghergho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,6 +116,7 @@ int	ft_expand_arg(char **arg, int flag)
 			return (0);
 		new[0] = '\0';
 		ft_gen_expanded_arg(&new, tmp, flag);
+		// if (flag)
 		free(*arg);
 		*arg = new;
 	}

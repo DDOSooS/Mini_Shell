@@ -6,7 +6,7 @@
 /*   By: aghergho <aghergho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/22 11:19:40 by aghergho          #+#    #+#             */
-/*   Updated: 2024/08/27 18:54:50 by aghergho         ###   ########.fr       */
+/*   Updated: 2024/08/27 22:37:24 by aghergho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,7 @@ int	ft_gen_unexpanded_token(char **str, char *token, int flag)
 	int	i;
 
 	i = 0;
-	if (flag)
+	if (flag || check_unclosed_quote(token))
 		*str = ft_strcat_char(*str, token[i]);
 	while (token[++i] && ft_check_quote(token, i + 1))
 		*str = ft_strcat_char(*str, token[i]);

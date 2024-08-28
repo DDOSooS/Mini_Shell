@@ -6,11 +6,21 @@
 /*   By: aghergho <aghergho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/21 13:04:16 by aghergho          #+#    #+#             */
-/*   Updated: 2024/08/22 11:44:38 by aghergho         ###   ########.fr       */
+/*   Updated: 2024/08/27 19:16:57 by aghergho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../../includes/mshell.h"
+
+int check_quote_file(char *filename)
+{
+	if (filename)
+	{
+		if (is_quote(filename[0]) && filename[0] == filename[ft_strlen(filename) - 1])
+			return (1);
+	}
+	return (0);
+}
 
 int	ft_add_out_file(t_outfile **root, t_token *token)
 {
@@ -21,7 +31,10 @@ int	ft_add_out_file(t_outfile **root, t_token *token)
 	if (!new)
 		return (0);
 	new->mode = token->type_id;
-	new->filename = ft_strdup(token->next->value);
+	if (check_quote_file(token->next->value))
+		new->filename = ft_substr(token->next->value, 1, ft_strlen(token->next->value) - 2);
+	else
+		new->filename = ft_strdup(token->next->value);
 	new->next = NULL;
 	if (!*root)
 	{
@@ -44,7 +57,10 @@ int	ft_add_in_file(t_infile **root, t_token *token)
 	if (!new)
 		return (0);
 	new->mode = token->type_id;
-	new->filename = ft_strdup(token->next->value);
+	if (check_quote_file(token->next->value))
+		new->filename = ft_substr(token->next->value, 1, ft_strlen(token->next->value) - 2);
+	else
+		new->filename = ft_strdup(token->next->value);
 	new->next = NULL;
 	if (!*root)
 	{

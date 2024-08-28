@@ -6,13 +6,144 @@
 /*   By: aghergho <aghergho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/06 16:02:56 by aghergho          #+#    #+#             */
-/*   Updated: 2024/08/27 18:34:15 by aghergho         ###   ########.fr       */
+/*   Updated: 2024/08/27 22:39:09 by aghergho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/mshell.h"
 
 t_mshell	g_mshell;
+/*
+void	var_dump_token(t_token *tokens)
+{
+	if (!tokens)
+		printf("=====tokens are Null====\n");
+	while (tokens)
+	{
+		printf("==type===(%s)-----\n", tokens->type);
+		printf("===value==(%s)====\n", tokens->value);
+		tokens = tokens->next;
+	}
+}
+
+
+void	var_dump_cmd(t_cmd *cmds)
+{
+	if (!cmds)
+		printf("=====cmds are Null====\n");
+	while (cmds)
+	{
+		printf("===value==(%s)====\n", cmds->arg);
+		cmds = cmds->next;
+	}
+	printf("================end cmds======================\n\n");
+}
+
+void	varDumpInFile(t_infile *redirection)
+{
+	if (!redirection)
+	{
+		printf("===========NO InFile Exist=====================\n");
+		return ;
+	}
+	printf("===========infile=====================\n");
+	while (redirection)
+	{
+		printf("===========(mode)(%d)(infile)(%s)=====================\n",
+			redirection->mode, redirection->filename);
+		redirection = redirection->next;
+	}
+	printf("===========end infile=====================\n");
+}
+
+void	varDumpOutFile(t_outfile *redirection)
+{
+	if (!redirection)
+	{
+		printf("===========NO outFile=====================\n");
+		return ;
+	}
+	printf("===========outFile=====================\n");
+	while (redirection)
+	{
+		printf("===========(mode)(%d)(outfile)(%s)=====================\n",
+			redirection->mode, redirection->filename);
+		redirection = redirection->next;
+	}
+}
+
+//(ls < in | cat -e ) >out  | (grep -c)
+
+void	var_dump_tree(t_tnode *tree)
+{
+	if (tree)
+	{
+		// Print node type
+		printf("\n|\n|==================>((N_TYPE))(%d)=============>)\n",
+			tree->node_type);
+		var_dump_cmd(tree->cmd);
+		// Check if parent node exists and print its redirection status
+		if (tree->t_parent)
+		{
+			if (tree->t_parent->redirection)
+			{
+				printf("================= Parent Redirection =================\n");
+				varDumpInFile(tree->t_parent->redirection->in_file);
+				varDumpOutFile(tree->t_parent->redirection->out_file);
+				printf("============= End Parent Redirection =================\n");
+			}
+			else
+				printf("=========== Parent Redirection is NULL ===============\n");
+		}
+		else
+			printf("========== No Parent Node Available ==================\n");
+		// Check current node's redirection
+		if (tree->redirection)
+		{
+			if (tree->redirection->in_file)
+				varDumpInFile(tree->redirection->in_file);
+			else
+				printf("========== No In-File Redirection Available ==========\n");
+			if (tree->redirection->out_file)
+				varDumpOutFile(tree->redirection->out_file);
+			else
+				printf("========== No Out-File Redirection Available =========\n");
+		}
+		else
+			printf("============ Redirection is NULL =====================\n");
+		// Recursively dump the left subtree
+		if (tree->t_left)
+		{
+			printf("\n|_____________> Left Subtree");
+			var_dump_tree(tree->t_left);
+		}
+		else
+			printf("\n|----------> Left Subtree is NULL");
+		// Recursively dump the right subtree
+		if (tree->t_right)
+		{
+			printf("\n|_____________> Right Subtree");
+			var_dump_tree(tree->t_right);
+		}
+		else
+			printf("\n|-----------> Right Subtree is NULL\n");
+	}
+}
+
+void	var_dump_herdocs(t_herdoc *herdoc)
+{
+	printf("herdoooooooooooocs==========START====\n");
+	while (herdoc)
+	{
+		printf("------------------id:(%d)--------------------\n", herdoc->id);
+		printf("-------------------del:(%s)--------------------\n",
+				herdoc->delimiter);
+		herdoc = herdoc->next;
+	}
+	printf("herdoooooooooooocs==========END====\n");
+}
+==================================end of var dump function ===========================*/
+
 
 void	m_shell_init(char **envp)
 {
@@ -76,6 +207,7 @@ void	ft_execute_cli(void)
 	if (ft_expand_tokens(&g_mshell.token, 1))
 	{
 		ft_parse_ast(&g_mshell.cmd_tree, &g_mshell.token);
+		// var_dump_tree(g_mshell.cmd_tree);
 		g_mshell.herdocs = ft_gen_herdocs(g_mshell.token);
 		execute(g_mshell.cmd_tree, &g_mshell);
 		ft_free_cmd_var();
