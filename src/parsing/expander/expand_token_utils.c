@@ -6,7 +6,7 @@
 /*   By: aghergho <aghergho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/22 20:26:08 by aghergho          #+#    #+#             */
-/*   Updated: 2024/08/28 18:23:27 by aghergho         ###   ########.fr       */
+/*   Updated: 2024/08/28 22:54:00 by aghergho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,10 +46,7 @@ void	ft_expand_token_helper(int *flag, t_token **token, int type)
 	{
 		*flag = 1;
 		if (ft_check_unquoted_dollar((*token)->value))
-		{
-			// printf("---exported----\n");
 			(*token)->is_exported = 1;
-		}
 	}
 	ft_expand_arg(&(*token)->value, type);
 }

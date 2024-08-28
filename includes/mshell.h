@@ -6,7 +6,7 @@
 /*   By: aghergho <aghergho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/06 16:01:09 by aghergho          #+#    #+#             */
-/*   Updated: 2024/08/28 18:33:22 by aghergho         ###   ########.fr       */
+/*   Updated: 2024/08/28 22:57:46 by aghergho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -140,7 +140,7 @@ typedef struct mshell
 	int				exit_value;
 	int				n_herdoc;
 	int				n_herdoc_executed;
-	int 			flag;
+	int				flag;
 	pid_t			pid;
 	t_env			*env;
 	t_history		*history;
@@ -386,7 +386,6 @@ int					match_symbol(char *regexp, char *text);
 
 /*================ var dumping data==============*/
 void				ft_free_herdoc(t_herdoc **herdocs);
-void				var_dump_herdoc(t_herdoc *herdocs);
 
 /*=============== signals =======================*/
 void				handle_signals(void (*sigint)(int), void (*sigquit)(int),
@@ -401,7 +400,7 @@ void				interactive_sigint(int sig);
 // void	star_expansion(char ***cmd_args, int i);
 // void star_expansion(t_cmd *cmd);
 // void star_expansion(char **cmd_args);
-void	var_dump_token(t_token *tokens);
+// void	var_dump_token(t_token *tokens);
 
 /*=============== cleaning ressources =============*/
 void				ft_free_tokens(t_token **tokens);

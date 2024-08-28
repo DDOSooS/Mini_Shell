@@ -6,12 +6,11 @@
 /*   By: aghergho <aghergho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/22 11:49:43 by aghergho          #+#    #+#             */
-/*   Updated: 2024/08/28 18:34:39 by aghergho         ###   ########.fr       */
+/*   Updated: 2024/08/28 22:55:24 by aghergho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../../includes/mshell.h"
-
 
 /*
 	@return (int)
@@ -96,4 +95,3 @@ int	ft_check_r_parenthise(char *cmd, int i)
 	}
 	return (0);
 }
-

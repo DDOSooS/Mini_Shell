@@ -6,7 +6,7 @@
 /*   By: aghergho <aghergho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/21 13:04:07 by aghergho          #+#    #+#             */
-/*   Updated: 2024/08/28 17:14:13 by aghergho         ###   ########.fr       */
+/*   Updated: 2024/08/28 22:54:29 by aghergho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,8 @@ int	ft_check_and_operator(t_token *token)
 {
 	while (token && token->value)
 	{
-		if (token->value && token->type_id == 3 && is_last_operator(token->next))
+		if (token->value && token->type_id == 3
+			&& is_last_operator(token->next))
 			return (1);
 		token = token->next;
 	}

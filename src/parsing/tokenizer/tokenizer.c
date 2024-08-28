@@ -6,7 +6,7 @@
 /*   By: aghergho <aghergho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/13 15:14:32 by aghergho          #+#    #+#             */
-/*   Updated: 2024/08/28 18:39:43 by aghergho         ###   ########.fr       */
+/*   Updated: 2024/08/28 22:54:58 by aghergho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ char	*ft_get_token_type(char *token)
 		return ("T_OPERATOR");
 	if (is_or_operator(token) && g_mshell.flag)
 		return ("T_OPERATOR");
-	else if (is_pipe(token[0])  && g_mshell.flag)
+	else if (is_pipe(token[0]) && g_mshell.flag)
 		return ("T_PIPE");
 	else if (is_l_parenthise(token[0]) && g_mshell.flag)
 		return ("T_L_PARENTHISE");

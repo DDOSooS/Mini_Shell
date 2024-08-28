@@ -6,7 +6,7 @@
 /*   By: aghergho <aghergho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/01 01:15:21 by aghergho          #+#    #+#             */
-/*   Updated: 2024/08/28 18:34:12 by aghergho         ###   ########.fr       */
+/*   Updated: 2024/08/28 22:53:33 by aghergho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,6 @@ int	ft_expand_token(t_token **tokens, int helper)
 	int		flag;
 	char	*sd_tmp;
 
-	sd_tmp = NULL;
 	tmp = *tokens;
 	while (tmp)
 	{
@@ -26,7 +25,8 @@ int	ft_expand_token(t_token **tokens, int helper)
 		sd_tmp = ft_strdup(tmp->value);
 		if (!tmp->previous || (tmp->previous->type_id != 7))
 			ft_expand_token_helper(&flag, &tmp, helper);
-		if (tmp->value && check_middle_white_space(tmp->value)
+		if (tmp->value && !is_quote(*sd_tmp)
+			&& check_middle_white_space(tmp->value)
 			&& flag && tmp->previous && (tmp->previous->type_id == 6
 				|| tmp->previous->type_id == 8 || tmp->previous->type_id == 9))
 			return (print_file_error(sd_tmp, "ambiguous redirect"),
@@ -46,7 +46,6 @@ void	ft_expand_exported_tokens(t_token **tokens, t_token **curr_token)
 	t_token	*next_tmp;
 	t_token	*last_t_tmp;
 
-	// printf("<< %s >>\n", (*curr_token)->value);
 	g_mshell.flag = 0;
 	t_tmp = ft_tokinizer((*curr_token)->value);
 	g_mshell.flag = 1;
