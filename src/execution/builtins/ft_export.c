@@ -49,7 +49,7 @@ static int	print_export(t_env *env)
 	tmp2 = tmp;
 	while (tmp)
 	{
-		if (ft_strcmp(tmp->key, "_") != 0)
+		if (ft_strcmp(tmp->key, "_") != 0 && tmp->is_exported != 2)
 		{
 			if (tmp->value)
 				printf("declare -x %s=\"%s\"\n", tmp->key, tmp->value);

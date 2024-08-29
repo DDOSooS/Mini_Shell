@@ -17,9 +17,10 @@ static void	update_env(char *key, char *value)
 	t_env	*tmp;
 
 	tmp = find_env(g_mshell.env, key);
-	if (tmp != NULL && tmp->value)
+	if (tmp != NULL)
 	{
-		free(tmp->value);
+		if (tmp->value)
+			free(tmp->value);
 		if (value)
 			tmp->value = ft_strdup(value);
 		else

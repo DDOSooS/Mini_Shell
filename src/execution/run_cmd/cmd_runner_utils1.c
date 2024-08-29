@@ -12,6 +12,16 @@
 
 #include "../../../includes/mshell.h"
 
+void	print_path_error(char *cmd, int *status)
+{
+	if (!cmd)
+		return ;
+	ft_putstr_fd("minishell: ", 2);
+	ft_putstr_fd(cmd, 2);
+	ft_putstr_fd(": No such file or directory\n", 2);
+	*status = 127;
+}
+
 char	**get_path(char *path)
 {
 	char	**path_arr;
@@ -58,8 +68,8 @@ char	*check_command(char *cmd, char **paths, int *status)
 
 	command = NULL;
 	path_part = NULL;
-	if (!paths || !cmd)
-		return (NULL);
+	if (!paths || !*paths || !cmd)
+		return (print_path_error(cmd, status), NULL);
 	*status = check_cmd(cmd);
 	if (*status == 1)
 		return (ft_strdup(cmd));

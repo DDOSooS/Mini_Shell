@@ -44,10 +44,12 @@ t_env	*create_env(void)
 
 	path = "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin";
 	env = NULL;
-	env_add_back(&env, create_env_node(ft_strdup("PATH"), ft_strdup(path), 0));
+	env_add_back(&env, create_env_node(ft_strdup("PATH"), ft_strdup(path), 2));
 	env_add_back(&env, create_env_node(ft_strdup("PWD"), getcwd(NULL, 0), 1));
 	env_add_back(&env, create_env_node(ft_strdup("SHLVL"), ft_strdup("1"), 1));
-	env_add_back(&env, create_env_node(ft_strdup("OLDPWD"), NULL, 2));
+	env_add_back(&env, create_env_node(ft_strdup("OLDPWD"), NULL, 1));
+	env_add_back(&env, create_env_node(ft_strdup("_"),
+			ft_strdup("./minishell"), 1));
 	return (env);
 }
 

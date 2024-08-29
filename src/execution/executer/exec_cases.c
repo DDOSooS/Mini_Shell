@@ -68,9 +68,7 @@ void	ft_execute_cmd(t_tnode *root, t_mshell *shell)
 		return ;
 	status = builtins_finder(cmd, shell, builtins_checker(cmd));
 	if (status == -1)
-	{
 		cmd_runner(cmd, shell);
-	}
 	else
 		shell->exit_value = status;
 	set_under_score(shell->env, root->cmd);
