@@ -6,7 +6,7 @@
 /*   By: aghergho <aghergho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/22 11:25:20 by aghergho          #+#    #+#             */
-/*   Updated: 2024/08/22 12:02:48 by aghergho         ###   ########.fr       */
+/*   Updated: 2024/08/29 10:09:40 by aghergho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,8 +69,10 @@ int	ft_gen_search_expanded_token(char **s1, char *token)
 	char	*tmp;
 
 	i = 0;
-	while (token[++i] && !is_quote(token[i + 1]) && ft_isalnum(token[i + 1]))
-		;
+	while (token[++i] && !is_quote(token[i + 1])
+		&& (ft_isalnum(token[i + 1] || token[i + i] == '_'))
+		&& !is_white_space(token[i + 1]) && !ft_check_quote(token, i + 1))
+	;
 	str = ft_substr(token, 1, i);
 	env_len = ft_check_env_var(str);
 	if (env_len)

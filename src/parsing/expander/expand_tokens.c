@@ -6,7 +6,7 @@
 /*   By: aghergho <aghergho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/22 11:02:13 by aghergho          #+#    #+#             */
-/*   Updated: 2024/08/28 10:01:43 by aghergho         ###   ########.fr       */
+/*   Updated: 2024/08/29 10:04:24 by aghergho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ int	ft_get_expanded_unquoted_token(char *token, int *counter)
 		(*counter)++;
 		return (0);
 	}
-	while (token[++i] && ft_isalnum(token[i + 1]))
+	while (token[++i] && (ft_isalnum(token[i + 1]) || token[i + i] == '_'))
 		;
 	str = ft_substr(token, 1, i);
 	(*counter) += ft_check_env_var(str);

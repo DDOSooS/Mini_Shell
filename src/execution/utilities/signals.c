@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   signals.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mkartit <marvin@42.fr>                     +#+  +:+       +#+        */
+/*   By: aghergho <aghergho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/21 16:34:31 by mkartit           #+#    #+#             */
-/*   Updated: 2024/08/21 16:34:32 by mkartit          ###   ########.fr       */
+/*   Updated: 2024/08/29 10:06:09 by aghergho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ void	interactive_sigquit(int sig)
 void	active_sigint(int sig)
 {
 	(void)sig;
-	printf("\n");
+	ft_putstr_fd("\n", 1);
 	free_gvar(1);
 	exit(130);
 }
@@ -39,7 +39,7 @@ void	active_sigint(int sig)
 void	active_sigquit(int sig)
 {
 	(void)sig;
-	printf("Quit (core dumped)\n");
+	ft_putstr_fd("Quit (core dumped)\n", 1);
 }
 
 void	handle_signals(void (*sigint)(int), void (*sigquit)(int),
