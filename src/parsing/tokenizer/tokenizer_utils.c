@@ -6,7 +6,7 @@
 /*   By: aghergho <aghergho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/24 10:16:39 by aghergho          #+#    #+#             */
-/*   Updated: 2024/08/27 18:29:31 by aghergho         ###   ########.fr       */
+/*   Updated: 2024/08/28 17:16:13 by aghergho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,10 +52,7 @@ void	ft_handle_comment(char **cmd_line)
 
 int	ft_check_end_token(char *cmd, int i, int start)
 {
-	if ((is_whites_space(cmd[i + 1]) && ft_check_opened_token(cmd, i + 1))
-		&& start != -1)
-		return (1);
-	if ((is_whites_space(cmd[i + 1]) && ft_check_opened_token(cmd, i + 1))
+	if ((is_white_space(cmd[i + 1]) && ft_check_opened_token(cmd, i + 1))
 		&& start != -1)
 		return (1);
 	if (((is_tokens(cmd[i + 1]) && !ft_check_quote(cmd, i + 1)

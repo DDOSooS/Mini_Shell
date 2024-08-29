@@ -6,7 +6,7 @@
 /*   By: aghergho <aghergho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/06 16:02:56 by aghergho          #+#    #+#             */
-/*   Updated: 2024/08/28 11:28:23 by aghergho         ###   ########.fr       */
+/*   Updated: 2024/08/28 22:56:13 by aghergho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@ void	m_shell_init(char **envp)
 	g_mshell.pid = get_pid();
 	g_mshell.herdocs = NULL;
 	g_mshell.n_herdoc = 0;
+	g_mshell.flag = 1;
 	g_mshell.n_herdoc_executed = 0;
 	g_mshell.exit_value = 0;
 	extarct_env(envp, &g_mshell.env);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   environ.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mkartit <marvin@42.fr>                     +#+  +:+       +#+        */
+/*   By: aghergho <aghergho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/21 16:34:05 by mkartit           #+#    #+#             */
-/*   Updated: 2024/08/21 16:34:06 by mkartit          ###   ########.fr       */
+/*   Updated: 2024/08/28 17:59:27 by aghergho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ t_env	*find_env(t_env *env, char *key)
 	tmp = env;
 	while (tmp != NULL)
 	{
-		if (ft_strcmp(tmp->key, key) == 0)
+		if (tmp->key && ft_strcmp(tmp->key, key) == 0)
 			return (tmp);
 		tmp = tmp->next;
 	}

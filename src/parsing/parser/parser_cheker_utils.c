@@ -6,7 +6,7 @@
 /*   By: aghergho <aghergho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/21 13:04:03 by aghergho          #+#    #+#             */
-/*   Updated: 2024/08/26 23:41:58 by aghergho         ###   ########.fr       */
+/*   Updated: 2024/08/28 16:54:38 by aghergho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ int	ft_check_pipe(t_token *token)
 {
 	while (token && token->value)
 	{
-		if (is_pipe(token->value[0]))
+		if (is_pipe(token->value[0]) && token->type_id == 1)
 			return (1);
 		token = token->next;
 	}
