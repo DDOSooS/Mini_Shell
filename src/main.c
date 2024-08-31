@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aghergho <aghergho@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aghergho <aghergho@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/06 16:02:56 by aghergho          #+#    #+#             */
-/*   Updated: 2024/07/20 02:33:33 by aghergho         ###   ########.fr       */
+/*   Updated: 2024/08/19 12:18:10 by aghergho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -147,7 +147,7 @@ void var_dump_tree(t_tnode *tree)
     }
 }
 
-void ft_free_tokens(t_token **tokens)
+void 	ft_free_tokens(t_token **tokens)
 {
     t_token *tmp;
 

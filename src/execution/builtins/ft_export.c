@@ -60,11 +60,11 @@ static void	add_append_env(t_env *env, t_env *new)
 static int	add_export(t_cmd *cmd, t_mshell *shell)
 {
 	t_env	*new;
-	int		i;
+	// int		i;
 	int		status;
 	int		returned_status;
 
-	i = 1;
+	// i = 1;
 	status = 0;
 	while (cmd && cmd->arg && cmd->arg[0])
 	{

@@ -8,8 +8,8 @@
       "args": [],
       "stopAtEntry": false,
       "externalConsole": false,
-      "cwd": "/home/mahllo-o/Desktop/13dev/Mini_Shell/includes/libft",
-      "program": "/home/mahllo-o/Desktop/13dev/Mini_Shell/includes/libft/build/Debug/outDebug",
+      "cwd": "/home/mrx/Mini_Shell/src/execution/builtins",
+      "program": "/home/mrx/Mini_Shell/src/execution/builtins/build/Debug/outDebug",
       "MIMode": "gdb",
       "miDebuggerPath": "gdb",
       "setupCommands": [

@@ -47,10 +47,10 @@ static void	handle_child_process(t_cmd *cmd, t_mshell *shell)
 	char	**cmd_args;
 	char	**path;
 	char	**envp;
-	int		i;
+	// int		i;
 
 	path = NULL;
-	i = 1;
+	// i = 1;
 	handle_signals(active_sigint, active_sigquit, SIG_IGN, SIG_IGN);
 	star_expansion(cmd, &cmd_args);
 	// cmd_args = cmd_args_getter(cmd);

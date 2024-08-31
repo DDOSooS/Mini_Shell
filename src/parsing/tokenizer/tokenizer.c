@@ -6,7 +6,7 @@
 /*   By: aghergho <aghergho@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/13 15:14:32 by aghergho          #+#    #+#             */
-/*   Updated: 2024/08/19 12:15:20 by aghergho         ###   ########.fr       */
+/*   Updated: 2024/08/19 18:33:25 by aghergho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ void ft_add_token_back(t_token **root, t_token *new)
 }
 
 t_token *ft_new_token(char *token)
-{
+{ 
     t_token *new;
     int type;
 

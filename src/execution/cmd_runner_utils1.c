@@ -4,9 +4,9 @@ char	**get_path(char *path)
 {
 	char	**path_arr;
 	char	*tmp;
-	int		i;
+	// int		i;
 
-	i = 0;
+	// i = 0;
 	if (!path)
 		return (NULL);
 	tmp = ft_strdup(path);

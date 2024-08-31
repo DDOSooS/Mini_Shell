@@ -17,7 +17,7 @@ static int	check_env_key(char *tmp)
 int	ft_unset(t_cmd *cmd, t_mshell *shell)
 {
 	t_cmd	*tmp;
-	t_env	*tmp_env;
+	// t_env	*tmp_env;
 
 	tmp = cmd->next;
 	while (tmp && tmp->arg)
